@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-class Advents
+class Advent
 {
 
   protected $pdo;

@@ -1,5 +1,8 @@
 <?php
+
 namespace App\Controllers;
+
+use App\Models\Advent;
 
 class AddController
 {
@@ -11,7 +14,7 @@ class AddController
 
   public function addRow($item, $description, $price, $image)
   {
-    $add = new Advents();
+    $add = new Advent();
 
     if ($add->pdoCreateRow($item, $description, $price, $image)) {
       // return;
@@ -19,12 +22,12 @@ class AddController
     $this->row_id = $add->insert_id;
   }
 
-  public function updateImage($id, $image) {
+  public function updateImage($id, $image)
+  {
 
-    if((new Advents)->pdoUpdateRow($id, $image)) {
+    if ((new Advent)->pdoUpdateRow($id, $image)) {
       print 'картинка добавлена';
     }
-   
   }
 
   public function addFile()
@@ -55,8 +58,6 @@ class AddController
       } else {
         return NULL;
       }
-
-
     }
   }
 }

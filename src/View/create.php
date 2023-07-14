@@ -35,7 +35,7 @@
 
 
 
-  <a href="index.php">Show</a>
+  <a href="../../index.php">Show</a>
 </body>
 
 </html>

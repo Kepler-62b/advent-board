@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-class Images extends Advents
+class Image extends Advent
 {
 
   // property for SQL queries
