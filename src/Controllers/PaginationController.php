@@ -1,4 +1,7 @@
 <?php
+namespace App\Controllers;
+
+use App\Models\Advents;
 
 class PaginationController
 {

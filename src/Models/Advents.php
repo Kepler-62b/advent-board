@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Models;
+
 class Advents
 {
 
@@ -19,9 +21,9 @@ class Advents
   public function __construct()
   {
     try {
-      $connection_PDO = new PDO("mysql:host=localhost;dbname=$this->dbname", $this->user, $this->pass);
+      $connection_PDO = new \PDO("mysql:host=localhost;dbname=$this->dbname", $this->user, $this->pass);
       $this->pdo = $connection_PDO;
-    } catch (PDOException $exception) {
+    } catch (\PDOException $exception) {
       die('Error: ' . $exception->getMessage());
     }
   }
@@ -51,13 +53,13 @@ class Advents
     $pdo_statment = $connection->prepare($sql);
 
     try {
-      $pdo_statment->bindValue(":offset", $offset, PDO::PARAM_INT);
+      $pdo_statment->bindValue(":offset", $offset, \PDO::PARAM_INT);
 
       $pdo_statment->execute();
 
-      $result = $pdo_statment->fetchAll(PDO::FETCH_ASSOC);
+      $result = $pdo_statment->fetchAll(\PDO::FETCH_ASSOC);
       return $result;
-    } catch (PDOException $exception) {
+    } catch (\PDOException $exception) {
       die('Ошибка: ' . $exception->getMessage());
     }
   }
@@ -72,11 +74,11 @@ class Advents
     $pdo_statement = $connection->prepare($sql);
 
     try {
-      $pdo_statement->bindValue("id", $id, PDO::PARAM_INT);
+      $pdo_statement->bindValue("id", $id, \PDO::PARAM_INT);
       $pdo_statement->execute();
-      $result = $pdo_statement->fetchAll(PDO::FETCH_ASSOC);
+      $result = $pdo_statement->fetchAll(\PDO::FETCH_ASSOC);
       return $result;
-    } catch (PDOException $exception) {
+    } catch (\PDOException $exception) {
       die('Ошибка: ' . $exception->getMessage());
     }
   }
@@ -93,15 +95,15 @@ class Advents
     $pdo_statment = $connection->prepare($sql);
 
     try {
-      $pdo_statment->bindValue(1, $item, PDO::PARAM_STR);
-      $pdo_statment->bindValue(2, $description, PDO::PARAM_STR);
-      $pdo_statment->bindValue(3, $price, PDO::PARAM_INT);
-      $pdo_statment->bindValue(4, $image, PDO::PARAM_STR);
+      $pdo_statment->bindValue(1, $item, \PDO::PARAM_STR);
+      $pdo_statment->bindValue(2, $description, \PDO::PARAM_STR);
+      $pdo_statment->bindValue(3, $price, \PDO::PARAM_INT);
+      $pdo_statment->bindValue(4, $image, \PDO::PARAM_STR);
       $pdo_statment->execute();
       $insert_id = $connection->lastInsertId();
       print "Row " . $insert_id . " added";
       $this->insert_id = $insert_id;
-    } catch (PDOException $exception) {
+    } catch (\PDOException $exception) {
       die('Ошибка: ' . $exception->getMessage());
     }
   }
@@ -119,15 +121,15 @@ class Advents
     $pdo_statment = $connection->prepare($sql);
 
     try {
-      $pdo_statment->bindValue(':id', $id, PDO::PARAM_INT);
-      $pdo_statment->bindValue(':item', $item, PDO::PARAM_STR);
-      $pdo_statment->bindValue(':description', $description, PDO::PARAM_STR);
-      $pdo_statment->bindValue(':price', $price, PDO::PARAM_INT);
-      $pdo_statment->bindValue(':image', $image, PDO::PARAM_STR);
+      $pdo_statment->bindValue(':id', $id, \PDO::PARAM_INT);
+      $pdo_statment->bindValue(':item', $item, \PDO::PARAM_STR);
+      $pdo_statment->bindValue(':description', $description, \PDO::PARAM_STR);
+      $pdo_statment->bindValue(':price', $price, \PDO::PARAM_INT);
+      $pdo_statment->bindValue(':image', $image, \PDO::PARAM_STR);
       $pdo_statment->execute();
       // $insert_id = $connection->lastInsertId();
       // $this->insert_id = $insert_id;
-    } catch (PDOException $exception) {
+    } catch (\PDOException $exception) {
       die('Ошибка: ' . $exception->getMessage());
     }
   }
@@ -144,13 +146,13 @@ class Advents
     $pdo_statment = $connection->prepare($sql);
 
     try {
-      $pdo_statment->bindValue(':id', $id, PDO::PARAM_INT);
-      $pdo_statment->bindValue(':image', $image, PDO::PARAM_STR);
+      $pdo_statment->bindValue(':id', $id, \PDO::PARAM_INT);
+      $pdo_statment->bindValue(':image', $image, \PDO::PARAM_STR);
       $pdo_statment->execute();
       print "Image added";
       // $insert_id = $connection->lastInsertId();
       // $this->insert_id = $insert_id;
-    } catch (PDOException $exception) {
+    } catch (\PDOException $exception) {
       die('Ошибка: ' . $exception->getMessage());
     }
   }
@@ -164,7 +166,7 @@ class Advents
     $sql = "SELECT COUNT(*) FROM $table";
 
     $pdo_statment = $connection->query($sql);
-    $result = $pdo_statment->fetch(PDO::FETCH_NUM);
+    $result = $pdo_statment->fetch(\PDO::FETCH_NUM);
     return $result[0];
   }
 
@@ -188,10 +190,10 @@ class Advents
 
     $pdo_statment = $connection->prepare($sql);
 
-    $pdo_statment->bindValue(":offset", $offset, PDO::PARAM_INT);
+    $pdo_statment->bindValue(":offset", $offset, \PDO::PARAM_INT);
     $pdo_statment->execute();
 
-    $result = $pdo_statment->fetchAll(PDO::FETCH_ASSOC);
+    $result = $pdo_statment->fetchAll(\PDO::FETCH_ASSOC);
     return $result;
   }
 }

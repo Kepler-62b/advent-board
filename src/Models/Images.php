@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Models;
+
 class Images extends Advents
 {
 
@@ -16,11 +18,11 @@ class Images extends Advents
     $pdo_statement = $connection->prepare($sql);
 
     try {
-      $pdo_statement->bindValue(":id", $id, PDO::PARAM_INT);
+      $pdo_statement->bindValue(":id", $id, \PDO::PARAM_INT);
       $pdo_statement->execute();
-      $result = $pdo_statement->fetchAll(PDO::FETCH_ASSOC);
+      $result = $pdo_statement->fetchAll(\PDO::FETCH_ASSOC);
       return $result;
-    } catch (PDOException $exception) {
+    } catch (\PDOException $exception) {
       die('Ошибка: ' . $exception->getMessage());
     }
   }

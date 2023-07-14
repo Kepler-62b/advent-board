@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Controllers;
+
 class ValidationController
 {
 
@@ -23,12 +25,12 @@ class ValidationController
     }
   }
 
-  public function imageNotFoundValidation($file) {
-    if(isset($file)) {
+  public function imageNotFoundValidation($file)
+  {
+    if (isset($file)) {
       return "user/" . $file;
     } else {
       return "system/image_not_found.png";
     }
-   
   }
 }

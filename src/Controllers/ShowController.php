@@ -1,5 +1,10 @@
 <?php
 
+namespace App\Controllers;
+
+use App\Models\Advents;
+use App\Models\Images;
+
 class ShowController
 {
   // methods for rows

@@ -1,16 +1,13 @@
 <?php
 
-// models
-require_once __DIR__ . "\src\Models\Advents.php";
-require_once __DIR__ . "\src\Models\Images.php";
+namespace App;
 
-// controllers
-require_once __DIR__ . "\src\Controllers\ShowController.php";
-require_once __DIR__ . "\src\Controllers\AddController.php";
-require_once __DIR__ . "\src\Controllers\SortController.php";
-require_once __DIR__ . "\src\Controllers\PaginationController.php";
-require_once __DIR__ . "\src\Controllers\ValidationController.php";
+require 'vendor/autoload.php';
 
+use App\Controllers\ShowController;
+use App\Controllers\SortController;
+use App\Controllers\AddController;
+use App\Controllers\ValidationController;
 
 $show = new ShowController();
 
@@ -20,7 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && $_SERVER['QUERY_STRING'] === '') {
   require_once __DIR__ . "\src\View\show.php";
   require_once __DIR__ . "\src\View\layout\pagination.php";
   require_once __DIR__ . "\src\View\layout\\navigation.php";
-} elseif (isset($_GET['id']) || isset($_GET["fields"])) {
+} 
+elseif (isset($_GET['id']) || isset($_GET["fields"])) {
   $rows = $show->showRow($_GET['id']);
   $row = $rows[0];
   $images = $show->showImages($_GET['id']);
@@ -64,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && $_SERVER['QUERY_STRING'] === '') {
 // var_dump($_SERVER);
 // var_dump($_SERVER['QUERY_STRING']);
 
-var_dump($_GET);
+// var_dump($_GET);
 // var_dump($_POST);
 // var_dump($_FILES);
 

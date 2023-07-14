@@ -1,6 +1,9 @@
 <?php
 
-class SortController {
+namespace App\Controllers;
+
+class SortController
+{
 
   public function createSort($param = null)
   {
@@ -11,14 +14,13 @@ class SortController {
     fclose($resourse);
     return $result;
   }
-  
+
   public function getSort()
   {
     $filename = 'config\sort.txt';
-    if(file_exists($filename)) {
+    if (file_exists($filename)) {
       $result = file_get_contents($filename);
       return $result;
     }
   }
-
 }
