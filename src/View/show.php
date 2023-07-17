@@ -35,7 +35,7 @@
       <th>Item</th>
       <th>Description</th>
       <!-- сортировка по цене -->
-      <? if (empty($_GET)) { ?>
+      <? if (count($request->query) <= 0) { ?>
         <th>
           <a href="index.php?sort=max&filter=price">Price</a>
         </th>
@@ -63,7 +63,7 @@
 
       <th>Image</th>
       <!-- сортировка по дате -->
-      <? if (empty($_GET)) { ?>
+      <? if ((count($request->query)) <= 0) { ?>
         <th>
           <a href="index.php?sort=max&filter=created_date">Date</a>
         </th>
