@@ -1,15 +1,14 @@
 <?php
 namespace App\Controllers;
 
-use App\Models\Advent;
+use App\Repository\AdventRepository;
 
 class PaginationController
 {
 
-  public static function countSeparator($limit)
+  public static function countSeparator(AdventRepository $repository, int $limit): int
   {
-    $count = new Advent();
-    $count = $count->pdoCountRows();
+    $count = $repository->getCountRows();
     return ceil($count / $limit);
   }
 }
