@@ -16,9 +16,12 @@ class RenderService
 
   public function contentRender(string $templait, mixed $rows = null): Response
   {
-    $content = require_once "../src/View/content/$templait.php";
+    require_once "../src/View/content/$templait.php";
+    require_once "../src/View/layout/main.php";
+
     // var_dump($out);
     // return $out;
-    return new Response($output);
+    return new Response($layout);
   }
+
 }

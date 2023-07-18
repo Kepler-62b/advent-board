@@ -6,7 +6,9 @@
   <h1>Show</h1>
   <table>
     <? if (isset($_GET['select'])) { ?>
-      <caption><? print "page " . $_GET['select']; ?></caption>
+      <caption>
+        <? print "page " . $_GET['select']; ?>
+      </caption>
     <? }; ?>
     <tr>
       <th>Id</th>
@@ -69,17 +71,27 @@
     </tr>
     <?php foreach ($rows as $row) { ?>
       <tr>
-        <td><?= $row['id']; ?></td>
-        <td><?= $row['item']; ?></td>
-        <td><?= $row['description']; ?></td>
-        <td><?= $row['price']; ?></td>
+        <td>
+          <?= $row['id']; ?>
+        </td>
+        <td>
+          <?= $row['item']; ?>
+        </td>
+        <td>
+          <?= $row['description']; ?>
+        </td>
+        <td>
+          <?= $row['price']; ?>
+        </td>
         <!-- менять директорию с системными картинками -->
         <td><img src=" <?= "public/img/user/" . $row['image']; ?>"></a></td>
-        <td><?= $row['created_date']; ?></td>
+        <td>
+          <?= $row['created_date']; ?>
+        </td>
       </tr>
     <?php }; ?>
   </table>
 </body>
 
-<?php $output = ob_get_clean();
+<?php $content = ob_get_clean();
 ob_end_clean(); ?>
