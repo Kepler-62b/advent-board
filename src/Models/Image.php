@@ -2,33 +2,44 @@
 
 namespace App\Models;
 
-class Image extends Advent
+class Image
 {
+  private int $id;
 
-  // property for SQL queries
-  protected $table = 'images_dev';
+  private string $name;
 
-  public function pdoGetRow($id)
+  private int $item_id;
+
+  public function setId(int $id): static
   {
-    $connection = $this->pdo;
-    $table = $this->table;
-
-    $sql = "SELECT name FROM $table WHERE item_id = :id";
-
-    $pdo_statement = $connection->prepare($sql);
-
-    try {
-      $pdo_statement->bindValue(":id", $id, \PDO::PARAM_INT);
-      $pdo_statement->execute();
-      $result = $pdo_statement->fetchAll(\PDO::FETCH_ASSOC);
-      return $result;
-    } catch (\PDOException $exception) {
-      die('Ошибка: ' . $exception->getMessage());
-    }
+    $this->id = $id;
+    return $this;
   }
 
-  public function test() {
-    var_dump($this->pdo);
-   
+  public function getId(): int
+  {
+    return $this->id;
+  }
+
+  public function setName(string $name): static
+  {
+    $this->name = $name;
+    return $this;
+  }
+
+  public function getName(): string
+  {
+    return $this->name;
+  }
+
+  public function setItemId(int $item_id): static
+  {
+    $this->item_id = $item_id;
+    return $this;
+  }
+
+  public function getItemId(): int
+  {
+    return $this->item_id;
   }
 }

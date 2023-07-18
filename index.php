@@ -4,20 +4,6 @@ namespace App;
 
 require 'vendor/autoload.php';
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-
-use App\Controllers\ShowController;
-use App\Controllers\SortController;
-use App\Controllers\AddController;
-use App\Controllers\ValidationController;
-use App\Database\DatabasePDO;
-use App\Models\Advent;
-use App\Repository\AdventRepository;
-
-$request = Request::createFromGlobals();
-$show = new ShowController();
-
 
 // if ($request->server->get('REQUEST_METHOD') === 'GET' && $request->server->get('QUERY_STRING') === '') {
 //   $rows = $show->showRows(1);
