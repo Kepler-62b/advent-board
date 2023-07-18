@@ -5,6 +5,7 @@
     }
   },
   "require": {
-    "symfony/http-kernel": "^6.3"
+    "symfony/http-kernel": "^6.3",
+    "symfony/framework-bundle": "^6.3"
   }
 }

@@ -47,7 +47,7 @@ class AdventRepository
     }
   }
 
-  public function getOneRow(int $id): array
+  public function findById(int $id): array
   {
     $connection = $this->pdo;
     $table = $this->table;
