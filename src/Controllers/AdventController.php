@@ -8,11 +8,11 @@ use App\Service\RenderViewService;
 
 class AdventController extends RenderViewService
 {
-  public function showAll(AdventRepository $repository): Response
+  public function showAll(AdventRepository $repository, int $page): Response
   {
     $pagination = $this->paginationRender($repository);
     $navigation = $this->navigationRender();
-    $rows = $repository->getAllRows();
+    $rows = $repository->getAllRows($page);
     return $this->contentRender("show", $rows, $pagination, $navigation);
   }
   public function showById(AdventRepository $repository, int $id): Response
@@ -24,5 +24,10 @@ class AdventController extends RenderViewService
   public function create(): Response
   {
    return $this->contentRender('create');
+  }
+
+  public function update(): Response
+  {
+   return $this->contentRender('update');
   }
 }

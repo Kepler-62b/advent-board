@@ -4,6 +4,25 @@ namespace App;
 
 require 'vendor/autoload.php';
 
+use Symfony\Component\HttpFoundation\Request;
+
+use App\Service\RouteService;
+
+use App\Controllers\AdventController;
+use App\Controllers\RouteController;
+
+use App\Database\DatabasePDO;
+
+use App\Repository\AdventRepository;
+
+$request = Request::createFromGlobals();
+$db = new DatabasePDO();
+$repository = new AdventRepository($db);
+
+$controller = new AdventController();
+
+$route = new RouteService($request->getPathInfo());
+$route->routing();
 
 // if ($request->server->get('REQUEST_METHOD') === 'GET' && $request->server->get('QUERY_STRING') === '') {
 //   $rows = $show->showRows(1);

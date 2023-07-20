@@ -19,7 +19,7 @@
         <th>
           <a href="index.php?sort=max&filter=price">Price</a>
         </th>
-      <? } elseif (isset($_GET['page']) && $_GET['sort'] === "def") { ?>
+      <? } elseif (isset($_GET['page'])) { ?>
         <th>
           <a href="index.php?sort=max&filter=price">Price</a>
         </th>
@@ -47,7 +47,7 @@
         <th>
           <a href="index.php?sort=max&filter=created_date">Date</a>
         </th>
-      <? } elseif (isset($_GET['page']) && isset($_GET['sort']) === "def") { ?>
+      <? } elseif (isset($_GET['page'])) { ?>
         <th>
           <a href="index.php?sort=max&filter=created_date">Date</a>
         </th>

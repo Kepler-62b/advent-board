@@ -1,0 +1,14 @@
+{
+  "/show": {
+    "action": "showAll",
+    "controller": "App\\Controllers\\AdventController"
+  },
+  "/create": {
+    "action": "create",
+    "controller": "App\\Controllers\\AdventController"
+  },
+  "/update": {
+    "action": "update",
+    "controller": "App\\Controllers\\AdventController"
+  }
+}
