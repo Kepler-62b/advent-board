@@ -2,17 +2,18 @@
 
 namespace App\Controllers;
 
+use Symfony\Component\HttpFoundation\Response;
 use App\Repository\AdventRepository;
 use App\Service\RenderViewService;
-use Symfony\Component\HttpFoundation\Response;
 
 class AdventController extends RenderViewService
 {
   public function showAll(AdventRepository $repository): Response
   {
+    $pagination = $this->paginationRender($repository);
+    $navigation = $this->navigationRender();
     $rows = $repository->getAllRows();
-    return $this->contentRender("show", $rows);
-   
+    return $this->contentRender("show", $rows, $pagination, $navigation);
   }
   public function showById(AdventRepository $repository, int $id): Response
   {

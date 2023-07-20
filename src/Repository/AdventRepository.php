@@ -14,7 +14,7 @@ class AdventRepository
    * property for SQL statement
    */
   private $table = 'advents_prod';
-  private $limit = 5;
+  public const LIMIT = 5;
 
 
   public function __construct(
@@ -27,7 +27,7 @@ class AdventRepository
   {
     $connection = $this->pdo;
     $table = $this->table;
-    $limit = $this->limit;
+    $limit = self::LIMIT;
 
     $offset = ($page - 1) * $limit;
 
@@ -154,14 +154,15 @@ class AdventRepository
 
     $pdo_statment = $connection->query($sql);
     $result = $pdo_statment->fetch(\PDO::FETCH_NUM);
-    return $result[0];
+    $count = ceil($result[0] / self::LIMIT);
+    return $count;
   }
 
   public function sortRows(string $sort = null, string $page = null, string $filter = null): array
   {
     $connection = $this->pdo;
     $table = $this->table;
-    $limit = $this->limit;
+    $limit = self::LIMIT;
 
     $offset = ($page - 1) * $limit;
 

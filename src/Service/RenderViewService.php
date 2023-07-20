@@ -2,6 +2,8 @@
 
 namespace App\Service;
 
+use App\Database\DatabasePDO;
+use App\Repository\AdventRepository;
 use Symfony\Component\HttpFoundation\Response;
 
 class RenderViewService
@@ -15,16 +17,23 @@ class RenderViewService
   //   return $template;
   // }
 
-  public function contentRender(string $templait, mixed $rows = null): Response
+  public function contentRender(string $templait, mixed $rows = null, $pagination = null, $navigation = null): Response
   {
     require_once "../src/View/content/$templait.php";
-    // require_once "../src/View/panels/pagination.php";
-    require_once "../src/View/panels/navigation.php";
+    if ($pagination) {}
     require_once "../src/View/layout/main.php";
-
-    // var_dump($out);
-    // return $out;
     return new Response($layout);
   }
 
+  public function paginationRender(AdventRepository $repository): string
+  {
+    require_once "../src/View/panels/pagination.php";
+    return $pagination;
+  }
+
+  public function navigationRender(): string
+  {
+    require_once "../src/View/panels/navigation.php";
+    return $navigation;
+  }
 }

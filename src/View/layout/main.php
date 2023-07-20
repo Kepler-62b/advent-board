@@ -29,6 +29,7 @@
 <body>
 
   <?php print $content; ?>
+  <?php print $pagination; ?>
   <?php print $navigation; ?>
 
 
