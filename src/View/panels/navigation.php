@@ -1,3 +1,5 @@
+<?php ob_start() ?>
+
 <h3>Navigation</h3>
 <hr>
 
@@ -16,3 +18,6 @@
     <input type="submit" value="show" />
   </form>
 <? }; ?>
+
+<?php $navigation = ob_get_clean();
+ob_end_clean(); ?>

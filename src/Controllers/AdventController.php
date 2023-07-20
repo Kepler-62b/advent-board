@@ -3,10 +3,10 @@
 namespace App\Controllers;
 
 use App\Repository\AdventRepository;
-use App\Service\RenderService;
+use App\Service\RenderViewService;
 use Symfony\Component\HttpFoundation\Response;
 
-class AdventController extends RenderService
+class AdventController extends RenderViewService
 {
   public function showAll(AdventRepository $repository): Response
   {
