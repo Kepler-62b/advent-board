@@ -1,7 +1,6 @@
 RewriteEngine On
 RewriteRule ^show$ index.php [NC]
+RewriteRule ^find$ index.php [NC]
 RewriteRule ^create$ index.php [NC]
 RewriteRule ^update$ index.php [NC]
 RewriteRule ^test$ .TestClass.php [NC]
-
-

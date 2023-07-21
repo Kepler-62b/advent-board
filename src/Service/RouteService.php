@@ -2,11 +2,6 @@
 
 namespace App\Service;
 
-use App\Controllers\AdventController;
-use App\Repository\AdventRepository;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-
 class RouteService
 {
 
@@ -17,17 +12,17 @@ class RouteService
 
   public function routing($param = null)
   {
+    if (!isset($param)) {
+    }
+
     $map = $this->getRouteMap();
-    var_dump($map);
     foreach ($map as $path => $value) {
       if ($path === $this->path) {
-        var_dump($value);
-        $classname = $value['controller'];
+        $className = $value['controller'];
         $action = $value['action'];
-        $controller = (new $classname())->$action($param);
+        return (new ControllerContainer())->get($className)->$action($param);
       }
     }
-    print $controller->getContent();
   }
 
   public function getRouteMap(): array

@@ -6,7 +6,7 @@
 
   <? $count = $repository->getCountRows(); ?>
   <? for ($i = 1; $i <= $count; $i++) { ?>
-    <a href="index.php?&page=<?= $i; ?>" class="btn"><?= $i; ?></a>
+    <a href="show?&page=<?= $i; ?>" class="btn"><?= $i; ?></a>
   <? }
   ; ?>
 <!-- пагинация -->

@@ -8,26 +8,34 @@ use App\Service\RenderViewService;
 
 class AdventController extends RenderViewService
 {
-  public function showAll(AdventRepository $repository, int $page): Response
+
+  private AdventRepository $repository;
+  public function __construct(AdventRepository $repository)
   {
+    $this->repository = $repository;
+  }
+  public function showAll(int $page = 1): Response
+  {
+    $repository = $this->repository;
     $pagination = $this->paginationRender($repository);
     $navigation = $this->navigationRender();
     $rows = $repository->getAllRows($page);
     return $this->contentRender("show", $rows, $pagination, $navigation);
   }
-  public function showById(AdventRepository $repository, int $id): Response
+  public function showById(int $id): Response
   {
+    $repository = $this->repository;
     $row = $repository->findById($id);
     return $this->contentRender("get", $row);
   }
 
   public function create(): Response
   {
-   return $this->contentRender('create');
+    return $this->contentRender('create');
   }
 
   public function update(): Response
   {
-   return $this->contentRender('update');
+    return $this->contentRender('update');
   }
 }

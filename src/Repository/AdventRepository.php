@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Database\DatabasePDO;
+use App\Service\DatabasePDO;
 use App\Models\Advent;
 
 class AdventRepository
