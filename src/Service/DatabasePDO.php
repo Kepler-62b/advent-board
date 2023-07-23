@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Database;
+namespace App\Service;
 
 class DatabasePDO extends \PDO
 {
