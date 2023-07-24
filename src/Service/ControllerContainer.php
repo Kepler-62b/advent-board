@@ -8,7 +8,10 @@ use App\Controllers\AdventController;
 class ControllerContainer
 {
 
+  
+  
   private array $objects = [];
+
 
   public function __construct()
   {
@@ -23,6 +26,7 @@ class ControllerContainer
   {
     return $this->objects[$id]();
   }
+
 
 
 

@@ -2,6 +2,8 @@
 
 namespace App\Service;
 
+use Symfony\Component\HttpFoundation\Request;
+
 class RouteService
 {
 
@@ -10,17 +12,19 @@ class RouteService
   ) {
   }
 
-  public function routing($param = null)
+  public function routing(Request $request)
   {
-    if (!isset($param)) {
-    }
-
+    $param = $request->query->all();
     $map = $this->getRouteMap();
     foreach ($map as $path => $value) {
       if ($path === $this->path) {
-        $className = $value['controller'];
+        $controller = $value['controller'];
         $action = $value['action'];
-        return (new ControllerContainer())->get($className)->$action($param);
+        if (empty($param)) {
+          return (new ControllerContainer())->get($controller)->$action();
+        } else {
+          return (new ControllerContainer())->get($controller)->$action($param);
+        }
       }
     }
   }

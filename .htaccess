@@ -1,5 +1,9 @@
 RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
 RewriteRule ^show$ index.php [NC]
+RewriteRule ^get$ index.php [NC]
 RewriteRule ^find$ index.php [NC]
 RewriteRule ^create$ index.php [NC]
 RewriteRule ^update$ index.php [NC]

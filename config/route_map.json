@@ -3,6 +3,10 @@
     "action": "showAll",
     "controller": "App\\Controllers\\AdventController"
   },
+  "/get": {
+    "action": "showById",
+    "controller": "App\\Controllers\\AdventController"
+  },
   "/find": {
     "action": "showById",
     "controller": "App\\Controllers\\AdventController"

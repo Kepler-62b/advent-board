@@ -14,19 +14,22 @@ class AdventController extends RenderViewService
   {
     $this->repository = $repository;
   }
-  public function showAll(int $page = 1): Response
+  public function showAll(array $page): Response
   {
+    extract($page, EXTR_OVERWRITE);
     $repository = $this->repository;
     $pagination = $this->paginationRender($repository);
     $navigation = $this->navigationRender();
     $rows = $repository->getAllRows($page);
     return $this->contentRender("show", $rows, $pagination, $navigation);
   }
-  public function showById(int $id): Response
+  public function showById(array $id): Response
   {
+    extract($id, EXTR_OVERWRITE);
     $repository = $this->repository;
     $row = $repository->findById($id);
-    return $this->contentRender("get", $row);
+    $navigation = $this->navigationRender();
+    return $this->contentRender("get", $row, $navigation);
   }
 
   public function create(): Response
