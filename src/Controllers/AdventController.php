@@ -19,7 +19,7 @@ class AdventController extends RenderViewService
     $this->repository = $repository;
   }
 
-  public function showAll(array $param): Response
+  public function showAll(mixed $param): Response
   {
     $request = Request::createFromGlobals();
     // не инициализировать объект LinkManager, а передать зависимостью
@@ -33,11 +33,13 @@ class AdventController extends RenderViewService
   }
   public function showById(array $param): Response
   {
+    $request = Request::createFromGlobals();
+    $linkManager = new LinkManager($request);
     extract($param, EXTR_OVERWRITE);
     $repository = $this->repository;
     $row = $repository->findById($id);
-    $navigation = $this->navigationRender();
-    return $this->contentRender("get", $row, $navigation);
+    $navigation = $this->navigationRender($linkManager);
+    return $this->contentRender($linkManager, "get", $row, $navigation);
   }
 
   public function showByMin(array $param): Response

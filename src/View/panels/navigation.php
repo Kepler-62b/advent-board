@@ -3,7 +3,7 @@
 <h3>Navigation</h3>
 <hr>
 
-<form action="get" id="get">
+<form action="<?php $linkManager->getBasePath("/get"); ?>" id="get">
   <label for="id">id</label>
   <input type="text" name="id" required>
 </form>
