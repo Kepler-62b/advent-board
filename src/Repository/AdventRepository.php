@@ -158,6 +158,39 @@ class AdventRepository
     return $count;
   }
 
+  public function getMax(int $page, string $filter): array
+  {
+    $connection = $this->pdo;
+    $table = $this->table;
+    $limit = self::LIMIT;
+
+    $offset = ($page - 1) * $limit;
+
+    $sql = "SELECT * FROM $table ORDER BY $filter DESC LIMIT $limit OFFSET :offset";
+    $pdo_statment = $connection->prepare($sql);
+    $pdo_statment->bindValue(":offset", $offset, \PDO::PARAM_INT);
+    $pdo_statment->execute();
+    $result = $pdo_statment->fetchAll(\PDO::FETCH_ASSOC);
+    return $result;
+
+  }
+
+  public function getMin(int $page, string $filter): array
+  {
+    $connection = $this->pdo;
+    $table = $this->table;
+    $limit = self::LIMIT;
+
+    $offset = ($page - 1) * $limit;
+
+    $sql = "SELECT * FROM $table ORDER BY $filter ASC LIMIT $limit OFFSET :offset";
+    $pdo_statment = $connection->prepare($sql);
+    $pdo_statment->bindValue(":offset", $offset, \PDO::PARAM_INT);
+    $pdo_statment->execute();
+    $result = $pdo_statment->fetchAll(\PDO::FETCH_ASSOC);
+    return $result;
+  }
+
   public function sortRows(string $sort = null, string $page = null, string $filter = null): array
   {
     $connection = $this->pdo;

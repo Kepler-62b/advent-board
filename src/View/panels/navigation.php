@@ -10,10 +10,9 @@
 <button type="submit" form="get">get</button>
 
 <ul>
- <li><a href="create">Create</a></li>
- <li><a href="update">Update</a></li>
+ <li><a href="<?php $linkManager->getBasePath("/create"); ?>">Create</a></li>
+ <li><a href="<?php $linkManager->getBasePath("/update"); ?>">Update</a></li>
 </ul>
-
 
 <?php $navigation = ob_get_clean();
 ob_end_clean(); ?>
