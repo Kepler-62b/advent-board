@@ -8,16 +8,16 @@
       <th>Item</th>
       <th>Description</th>
       <th>Price
-        <a href="<?php $linkManager->getBasePath('/show/price/min/?page=1&filter=price'); ?>">▲</a>
-        <a href="<?php $linkManager->getBasePath('/show/price/max/?page=1&filter=price'); ?>">▼</a>
-        <a href="<?php $linkManager->getBasePath('/show?page=1'); ?>">✘</a>
+        <a href="<?php $linkRender->getBasePath('/show/price/min/?page=1&filter=price'); ?>">▲</a>
+        <a href="<?php $linkRender->getBasePath('/show/price/max/?page=1&filter=price'); ?>">▼</a>
+        <a href="<?php $linkRender->getBasePath('/show?page=1'); ?>">✘</a>
       </th>
 
       <th>Image</th>
       <th>Date
-        <a href="<?php $linkManager->getBasePath('/show/date/min/?page=1&filter=created_date'); ?>">▲</a>
-        <a href="<?php $linkManager->getBasePath('/show/date/max/?page=1&filter=created_date'); ?>">▼</a>
-        <a href="<?php $linkManager->getBasePath('/show?page=1'); ?>">✘</a>
+        <a href="<?php $linkRender->getBasePath('/show/date/min/?page=1&filter=created_date'); ?>">▲</a>
+        <a href="<?php $linkRender->getBasePath('/show/date/max/?page=1&filter=created_date'); ?>">▼</a>
+        <a href="<?php $linkRender->getBasePath('/show?page=1'); ?>">✘</a>
       </th>
     </tr>
     <?php foreach ($rows as $row) { ?>
@@ -35,7 +35,7 @@
           <?= $row['price']; ?>
         </td>
         <td>
-          <img src=" <?php $linkManager->getBasePath('/public/img/user/', $row['image']); ?>"></a>
+          <img src=" <?php $linkRender->getBasePath('/public/img/user/', $row['image']); ?>"></a>
         </td>
         <td>
           <?= $row['created_date']; ?>

@@ -10,7 +10,7 @@ use App\Service\RenderViewService;
 
 use App\Service\LinkManager;
 
-class AdventController extends RenderViewService
+class AdventController
 {
 
   private AdventRepository $repository;
@@ -21,66 +21,57 @@ class AdventController extends RenderViewService
 
   public function showAll(mixed $param): Response
   {
-    $request = Request::createFromGlobals();
-    // не инициализировать объект LinkManager, а передать зависимостью
-    $linkManager = new LinkManager($request);
     extract($param, EXTR_OVERWRITE);
     $repository = $this->repository;
-    $pagination = $this->paginationRender($repository, $linkManager);
-    $navigation = $this->navigationRender($linkManager);
+    $renderView = new RenderViewService();
     $rows = $repository->getAllRows($page);
-    return $this->contentRender($linkManager, "show", $rows, $pagination, $navigation);
+    $pagination = $renderView->paginationRender($repository);
+    $navigation = $renderView->navigationRender();
+    return $renderView->contentRender("show", $rows, $pagination, $navigation);
   }
   public function showById(array $param): Response
   {
-    $request = Request::createFromGlobals();
-    $linkManager = new LinkManager($request);
     extract($param, EXTR_OVERWRITE);
     $repository = $this->repository;
+    $renderView = new RenderViewService();
     $row = $repository->findById($id);
-    $navigation = $this->navigationRender($linkManager);
-    return $this->contentRender($linkManager, "get", $row, $navigation);
+    $navigation = $renderView->navigationRender();
+    return $renderView->contentRender("get", $row, $navigation);
   }
 
   public function showByMin(array $param): Response
   {
-    $request = Request::createFromGlobals();
-    $linkManager = new LinkManager($request);
     extract($param, EXTR_OVERWRITE);
     $repository = $this->repository;
+    $renderView = new RenderViewService();
     $rows = $repository->getMin($page, $filter);
-    $pagination = $this->paginationRender($repository, $linkManager);
-    $navigation = $this->navigationRender($linkManager);
+    $pagination = $renderView->paginationRender($repository);
+    $navigation = $renderView->navigationRender();
 
-    return $this->contentRender($linkManager, "show", $rows, $pagination, $navigation);
+    return $renderView->contentRender("show", $rows, $pagination, $navigation);
   }
 
   public function showByMax(array $param): Response
   {
-    $request = Request::createFromGlobals();
-    $linkManager = new LinkManager($request);
     extract($param, EXTR_OVERWRITE);
     $repository = $this->repository;
+    $renderView = new RenderViewService();
     $rows = $repository->getMax($page, $filter);
-    $pagination = $this->paginationRender($repository, $linkManager);
-    $navigation = $this->navigationRender($linkManager);
+    $pagination = $renderView->paginationRender($repository);
+    $navigation = $renderView->navigationRender();
 
-    return $this->contentRender($linkManager, "show", $rows, $pagination, $navigation);
+    return $renderView->contentRender("show", $rows, $pagination, $navigation);
   }
 
   public function create(): Response
   {
-    $request = Request::createFromGlobals();
-    $linkManager = new LinkManager($request);
-
-    return $this->contentRender($linkManager, 'create');
+    $renderView = new RenderViewService();
+    return $renderView->contentRender('create');
   }
 
   public function update(): Response
   {
-    $request = Request::createFromGlobals();
-    $linkManager = new LinkManager($request);
-
-    return $this->contentRender($linkManager, 'update');
+    $renderView = new RenderViewService();
+    return $renderView->contentRender('update');
   }
 }

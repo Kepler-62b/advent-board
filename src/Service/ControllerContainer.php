@@ -8,8 +8,6 @@ use App\Controllers\AdventController;
 class ControllerContainer
 {
 
-  
-  
   private array $objects = [];
 
 
@@ -20,6 +18,10 @@ class ControllerContainer
       'App\Repository\AdventRepository' => fn() => new AdventRepository($this->get('App\Service\DatabasePDO')),
       'App\Controllers\AdventController' => fn() => new AdventController($this->get('App\Repository\AdventRepository')),
     ];
+  }
+  public function has(string $id): bool
+  {
+    return isset($this->objects[$id]);
   }
 
   public function get(string $id): mixed

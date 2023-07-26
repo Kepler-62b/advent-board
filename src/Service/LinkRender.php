@@ -4,10 +4,10 @@ namespace App\Service;
 
 use Symfony\Component\HttpFoundation\Request;
 
-class LinkManager
+class LinkRender
 {
 
-  private Request $request;
+  private $request;
 
   public function __construct()
   {
@@ -41,4 +41,5 @@ class LinkManager
     $link = $this->request->getBasePath() . $path . $var;
     print $link;
   }
+
 }

@@ -4,7 +4,7 @@
 <hr>
   <? $count = $repository->getCountRows(); ?>
   <? for ($i = 1; $i <= $count; $i++) { ?>
-    <a href="<?= $linkManager->getPath(); ?>?page=<?= $i; ?><?= $linkManager->getQuery(); ?>" class="btn"><?= $i; ?></a>
+    <a href="<?= $linkRender->getPath(); ?>?page=<?= $i; ?><?= $linkRender->getQuery(); ?>" class="btn"><?= $i; ?></a>
   <? }
   ; ?>
 
