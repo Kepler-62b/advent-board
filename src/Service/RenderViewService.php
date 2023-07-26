@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Repository\AdventRepository;
 use App\Service\ServiceContainer;
+use App\Service\WidgetRender;
 use Symfony\Component\HttpFoundation\Response;
 
 class RenderViewService
@@ -43,6 +44,7 @@ class RenderViewService
 
   public function navigationRender(): string
   {
+
     $linkRender = $this->linkRender;
     require_once 'src/View/panels/navigation.php';
     return $navigation;

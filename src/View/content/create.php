@@ -1,4 +1,6 @@
-<?php ob_start() ?>
+<?php ob_start(); ?>
+<?php use App\Service\WidgetRender; ?>
+
 
 <body>
   <h1>Create</h1>
@@ -16,11 +18,7 @@
     <button>create</button>
   </form>
 
-  <ul>
-    <li><a href="update">Update</a></li>
-    <li><a href="show?page=1">Show</a></li>
-  </ul>
-
+  <?php WidgetRender::navigationWidget(); ?>
 </body>
 
 <?php $content = ob_get_clean();

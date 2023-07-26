@@ -1,4 +1,4 @@
-<?php ob_start() ?>
+<?php ob_start();?>
 
 <!DOCTYPE html>
 <html>
@@ -27,12 +27,11 @@
 </head>
 
 <body>
-
-  <?php print $content; ?>
-  <?php print $pagination; ?>
-  <?php print $navigation; ?>
-
-
+  
+  <?php echo $content; ?>
+  <?php echo $pagination; ?>
+  <?php echo $navigation; ?>
+  
 </body>
 
 </html>
