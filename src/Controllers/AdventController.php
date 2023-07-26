@@ -2,11 +2,15 @@
 
 namespace App\Controllers;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+
 use App\Repository\AdventRepository;
 use App\Service\RenderViewService;
 
-class AdventController extends RenderViewService
+use App\Service\LinkManager;
+
+class AdventController
 {
 
   private AdventRepository $repository;
@@ -14,28 +18,60 @@ class AdventController extends RenderViewService
   {
     $this->repository = $repository;
   }
-  public function showAll(int $page = 1): Response
+
+  public function showAll(mixed $param): Response
   {
+    extract($param, EXTR_OVERWRITE);
     $repository = $this->repository;
-    $pagination = $this->paginationRender($repository);
-    $navigation = $this->navigationRender();
+    $renderView = new RenderViewService();
     $rows = $repository->getAllRows($page);
-    return $this->contentRender("show", $rows, $pagination, $navigation);
+    $pagination = $renderView->paginationRender($repository);
+    $navigation = $renderView->navigationRender();
+    return $renderView->contentRender("show", $rows, $pagination, $navigation);
   }
-  public function showById(int $id): Response
+  public function showById(array $param): Response
   {
+    extract($param, EXTR_OVERWRITE);
     $repository = $this->repository;
+    $renderView = new RenderViewService();
     $row = $repository->findById($id);
-    return $this->contentRender("get", $row);
+    $navigation = $renderView->navigationRender();
+    return $renderView->contentRender("get", $row, $navigation);
+  }
+
+  public function showByMin(array $param): Response
+  {
+    extract($param, EXTR_OVERWRITE);
+    $repository = $this->repository;
+    $renderView = new RenderViewService();
+    $rows = $repository->getMin($page, $filter);
+    $pagination = $renderView->paginationRender($repository);
+    $navigation = $renderView->navigationRender();
+
+    return $renderView->contentRender("show", $rows, $pagination, $navigation);
+  }
+
+  public function showByMax(array $param): Response
+  {
+    extract($param, EXTR_OVERWRITE);
+    $repository = $this->repository;
+    $renderView = new RenderViewService();
+    $rows = $repository->getMax($page, $filter);
+    $pagination = $renderView->paginationRender($repository);
+    $navigation = $renderView->navigationRender();
+
+    return $renderView->contentRender("show", $rows, $pagination, $navigation);
   }
 
   public function create(): Response
   {
-    return $this->contentRender('create');
+    $renderView = new RenderViewService();
+    return $renderView->contentRender('create');
   }
 
   public function update(): Response
   {
-    return $this->contentRender('update');
+    $renderView = new RenderViewService();
+    return $renderView->contentRender('update');
   }
 }

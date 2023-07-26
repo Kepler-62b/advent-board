@@ -10,6 +10,7 @@ class ControllerContainer
 
   private array $objects = [];
 
+
   public function __construct()
   {
     $this->objects = [
@@ -18,11 +19,16 @@ class ControllerContainer
       'App\Controllers\AdventController' => fn() => new AdventController($this->get('App\Repository\AdventRepository')),
     ];
   }
+  public function has(string $id): bool
+  {
+    return isset($this->objects[$id]);
+  }
 
   public function get(string $id): mixed
   {
     return $this->objects[$id]();
   }
+
 
 
 

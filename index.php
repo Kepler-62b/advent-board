@@ -4,78 +4,62 @@ namespace App;
 
 require 'vendor/autoload.php';
 
-use App\Service\ControllerContainer;
-
-use Symfony\Component\HttpFoundation\Request;
-
-use App\Service\RouteService;
-
 use App\Controllers\AdventController;
-use App\Controllers\RouteController;
+use App\Service\LinkManager;
+use App\Service\LinkRender;
+use App\Service\RenderViewService;
+use App\Service\ServiceContainer;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 use App\Service\DatabasePDO;
-
 use App\Repository\AdventRepository;
+use App\Service\RouteService;
 
 $request = Request::createFromGlobals();
 $db = new DatabasePDO();
 $repository = new AdventRepository($db);
+$linkManager = new LinkManager();
+$linkRender = new LinkRender();
 
-var_dump($request->query->get('page'));
-// var_dump($request->getPathInfo());
-
+// тест работы всего приложения
 $route = new RouteService($request->getPathInfo());
-print $route->routing($request->query->get('page'))->getContent();
+print $route->routing($request)->getContent();
+// тест работы всего приложения
 
-// if ($request->server->get('REQUEST_METHOD') === 'GET' && $request->server->get('QUERY_STRING') === '') {
-//   $rows = $show->showRows(1);
+//  тест контроллера
+// $controller = new AdventController($repository);
+// var_dump(get_class_methods($controller));
+// var_dump($controller->create());
+// print($controller->create()->getContent());
+// var_dump($controller->navigationRender());
+//  тест контроллера
 
-//   require_once __DIR__ . "\src\View\show.php";
-//   require_once __DIR__ . "\src\View\layout\pagination.php";
-//   require_once __DIR__ . "\src\View\layout\\navigation.php";
-// } elseif ($request->query->get('id') || $request->query->get("fields")) {
-//   $rows = $show->showRow($_GET['id']);
-//   $row = $rows[0];
-//   $images = $show->showImages($_GET['id']);
+// тест панели навигации
+// $navigation = new RenderViewService($linkRender);
+// var_dump($navigation);
+// $content = $navigation->navigationRender();
+// print (new Response($content))->getContent();
+// тест панели навигации
 
-//   require_once __DIR__ . "\src\View\get.php";
-//   require_once __DIR__ . "\src\View\layout\\navigation.php";
-// } elseif (isset($_GET['sort'])) {
-//   $sort = ((new SortController())->createSort($_GET['sort']));
-//   $rows = ((new ShowController())->showEmptyRows($sort, $_GET));
-//   require_once __DIR__ . "\src\View\show.php";
-//   require_once __DIR__ . "\src\View\layout\pagination.php";
-//   require_once __DIR__ . "\src\View\layout\\navigation.php";
-// } elseif (isset($_GET['page'])) {
-//   echo 'hello';
-//   $sort = ((new SortController())->getSort());
-//   $rows = ((new ShowController())->showEmptyRows($sort, $_GET));
+// тест панели пагинации
+// $pagination = new RenderViewService();
+// $content = $pagination->paginationRender($repository);
+// print (new Response($content))->getContent();
+// тест панели пагинации
 
-//   require_once __DIR__ . "\src\View\show.php";
-//   require_once __DIR__ . "\src\View\layout\pagination.php";
-//   require_once __DIR__ . "\src\View\layout\\navigation.php";
-// } elseif (isset($_FILES['userfile']) && isset($_POST['id'])) {
-//   $file = ((new AddController())->addFile());
-//   $update = ((new AddController()))->updateImage($_POST['id'], $_FILES['userfile']['name']);
-//   $rows = $show->showRow($_POST['id']);
-//   $row = $rows[0];
-//   $images = $show->showImages($_POST['id']);
+// тестирование контейнера
+// $container = new ServiceContainer();
+// var_dump($container->get(LinkRender::class));
+// $linkRender = $container->get(LinkRender::class);
+// var_dump($linkRender->getPath());
+// тестирование контейнера
 
-//   require_once __DIR__ . "\src\View\get.php";
-//   require_once __DIR__ . "\src\View\layout\\navigation.php";
-// } elseif (isset($_FILES['userfile'])) {
-//   // сделать класс валидации, который обрабатывает массив POST параметров
-//   $file = ((new AddController())->addFile());
-//   $item = ((new ValidationController())->lessValidation($_POST['item'], 200));
-//   $description = ((new ValidationController())->lessValidation($_POST['description'], 3000));
-//   $create_row = (new AddController())->addRow($item, $description, $_POST['price'], $file);
-//   $rows = $show->showRows(1);
-//   require_once __DIR__ . "\src\View\show.php";
-//   require_once __DIR__ . "\src\View\layout\\navigation.php";
-// }
+// тест разного
+// var_dump(AdventController::class);
 
+// var_dump($request->getBasePath());
 // var_dump($_SERVER);
-
-// var_dump($_GET);
-// var_dump($_POST);
-// var_dump($_FILES);
+// var_dump(implode('&', $request->query->all()));
+// var_dump($request->query->all());
+// var_dump(http_build_query($request->query->all()));

@@ -16,7 +16,11 @@
     <button>create</button>
   </form>
 
-  <a href="../../index.php">Show</a>
+  <ul>
+    <li><a href="create">Create</a></li>
+    <li><a href="show?page=1">Show</a></li>
+  </ul>
+  
 </body>
 
 <?php $content = ob_get_clean();

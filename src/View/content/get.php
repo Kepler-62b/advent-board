@@ -31,7 +31,8 @@
         <?= $row['created_date']; ?>
       </td>
     </tr>
-  <?php }; ?>
+  <?php }
+  ; ?>
 </table>
 
 <?php $content = ob_get_clean();
