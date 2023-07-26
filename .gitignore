@@ -1,0 +1,8 @@
+
+###> symfony ###
+/vendor/
+###< symfony ###
+
+###> tests ###
+/test/
+###< tests ###
