@@ -22,10 +22,6 @@ class LinkManager
         echo $link;
       }
     }
-    // if($this->request->query->has('filter')) {
-    //   var_dump($this->request->query->keys());
-    //   var_dump($this->request->query->get('filter'));
-    // }
   }
 
   public static function getBasePath(string $path = null, string $var = null): void

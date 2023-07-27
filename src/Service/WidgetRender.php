@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Service;
-// use App\Repository\AdventRepository;
 
 class WidgetRender
 {
