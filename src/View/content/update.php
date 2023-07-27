@@ -1,3 +1,4 @@
+<?php use App\Service\WidgetRender; ?>
 <?php ob_start() ?>
 
 <body>
@@ -16,10 +17,7 @@
     <button>create</button>
   </form>
 
-  <ul>
-    <li><a href="create">Create</a></li>
-    <li><a href="show?page=1">Show</a></li>
-  </ul>
+  <?php WidgetRender::renderWidget('navigation'); ?>
   
 </body>
 

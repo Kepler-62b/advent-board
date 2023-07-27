@@ -7,27 +7,19 @@ use Symfony\Component\HttpFoundation\Request;
 class LinkManager
 {
 
-  private Request $request;
-
-  public function __construct()
-  {
-    $this->request = Request::createFromGlobals();
-  }
-
-  public function getPath()
+  public static function getPath()
   {
     $path = parse_url($_SERVER['REQUEST_URI']);
-    return $path['path'];
+    echo $path['path'];
   }
-  public function getQuery()
+  public static function getQuery()
   {
-    $params = $this->request->query;
-    // var_dump($params);
+    $request = Request::createFromGlobals();
+    $params = $request->query;
     foreach ($params as $key => $value) {
       if ($key === 'filter') {
         $link = "&" . $key . "=" . $value;
-        // var_dump($link);
-        print $link;
+        echo $link;
       }
     }
     // if($this->request->query->has('filter')) {
@@ -36,9 +28,10 @@ class LinkManager
     // }
   }
 
-  public function getBasePath(string $path = null, string $var = null): void
+  public static function getBasePath(string $path = null, string $var = null): void
   {
-    $link = $this->request->getBasePath() . $path . $var;
-    print $link;
+    $request = Request::createFromGlobals();
+    $link = $request->getBasePath() . $path . $var;
+    echo $link;
   }
 }
