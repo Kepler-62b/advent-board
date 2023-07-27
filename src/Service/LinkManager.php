@@ -28,7 +28,7 @@ class LinkManager
     // }
   }
 
-  public static function getLink(string $path = null, string $var = null): void
+  public static function getBasePath(string $path = null, string $var = null): void
   {
     $request = Request::createFromGlobals();
     $link = $request->getBasePath() . $path . $var;

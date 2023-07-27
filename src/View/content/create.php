@@ -1,5 +1,5 @@
-<?php ob_start(); ?>
 <?php use App\Service\WidgetRender; ?>
+<?php ob_start(); ?>
 
 
 <body>

@@ -1,5 +1,5 @@
-<?php ob_start() ?>
 <?php use App\Service\WidgetRender; ?>
+<?php ob_start() ?>
 
 <h1>Show</h1>
 <table>
@@ -8,16 +8,16 @@
     <th>Item</th>
     <th>Description</th>
     <th>Price
-      <a href="<?php $linkRender->getBasePath('/show/price/min/?page=1&filter=price'); ?>">▲</a>
-      <a href="<?php $linkRender->getBasePath('/show/price/max/?page=1&filter=price'); ?>">▼</a>
-      <a href="<?php $linkRender->getBasePath('/show?page=1'); ?>">✘</a>
+      <a href="<?php $linkRender->getBasePath('/show/price/min/', '?page=1&filter=price'); ?>">▲</a>
+      <a href="<?php $linkRender->getBasePath('/show/price/max/', '?page=1&filter=price'); ?>">▼</a>
+      <a href="<?php $linkRender->getBasePath('/show', '?page=1'); ?>">✘</a>
     </th>
 
     <th>Image</th>
     <th>Date
-      <a href="<?php $linkRender->getBasePath('/show/date/min/?page=1&filter=created_date'); ?>">▲</a>
-      <a href="<?php $linkRender->getBasePath('/show/date/max/?page=1&filter=created_date'); ?>">▼</a>
-      <a href="<?php $linkRender->getBasePath('/show?page=1'); ?>">✘</a>
+      <a href="<?php $linkRender->getBasePath('/show/date/min/', '?page=1&filter=created_date'); ?>">▲</a>
+      <a href="<?php $linkRender->getBasePath('/show/date/max/', '?page=1&filter=created_date'); ?>">▼</a>
+      <a href="<?php $linkRender->getBasePath('/show', '?page=1'); ?>">✘</a>
     </th>
   </tr>
   <?php foreach ($rows as $row) { ?>
@@ -45,7 +45,9 @@
   ; ?>
 </table>
 
+<?php WidgetRender::renderWidget('pagination'); ?>
 <?php WidgetRender::renderWidget('navigation'); ?>
+<?php WidgetRender::renderWidget('form_get_item'); ?>
 
 <?php $content = ob_get_clean();
 ob_end_clean(); ?>

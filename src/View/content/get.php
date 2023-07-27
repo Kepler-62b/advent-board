@@ -1,3 +1,4 @@
+<?php use App\Service\WidgetRender; ?>
 <?php ob_start() ?>
 
 <table>
@@ -34,6 +35,9 @@
   <?php }
   ; ?>
 </table>
+
+<?php WidgetRender::renderWidget('form_get_item'); ?>
+<?php WidgetRender::renderWidget('navigation'); ?>
 
 <?php $content = ob_get_clean();
 ob_end_clean(); ?>

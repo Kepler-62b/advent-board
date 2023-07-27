@@ -25,30 +25,12 @@ class RenderViewService
   //   return $template;
   // }
 
-  public function contentRender(string $template, mixed $rows = null, $pagination = null, $navigation = null): Response
+  public function contentRender(string $content, mixed $rows = null): Response
   {
     $linkRender = $this->linkRender;
-    require_once "src/View/content/$template.php";
-    if ($pagination) {
-    }
+    require_once "src/View/content/$content.php";
     require_once 'src/View/layout/main.php';
     return new Response($layout);
   }
-
-  public function paginationRender(AdventRepository $repository): string
-  {
-    $linkRender = $this->linkRender;
-    require_once 'src/View/panels/pagination.php';
-    return $pagination;
-  }
-
-  public function navigationRender(): string
-  {
-
-    $linkRender = $this->linkRender;
-    require_once 'src/View/panels/navigation.php';
-    return $navigation;
-  }
-
 
 }

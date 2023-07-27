@@ -29,8 +29,6 @@
 <body>
   
   <?php echo $content; ?>
-  <?php echo $pagination; ?>
-  <?php echo $navigation; ?>
   
 </body>
 

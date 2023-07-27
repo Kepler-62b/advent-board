@@ -2,13 +2,10 @@
 
 namespace App\Controllers;
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 use App\Repository\AdventRepository;
 use App\Service\RenderViewService;
-
-use App\Service\LinkManager;
 
 class AdventController
 {
@@ -25,9 +22,7 @@ class AdventController
     $repository = $this->repository;
     $renderView = new RenderViewService();
     $rows = $repository->getAllRows($page);
-    $pagination = $renderView->paginationRender($repository);
-    $navigation = $renderView->navigationRender();
-    return $renderView->contentRender("show", $rows, $pagination, $navigation);
+    return $renderView->contentRender("show", $rows);
   }
   public function showById(array $param): Response
   {
@@ -35,8 +30,7 @@ class AdventController
     $repository = $this->repository;
     $renderView = new RenderViewService();
     $row = $repository->findById($id);
-    $navigation = $renderView->navigationRender();
-    return $renderView->contentRender("get", $row, $navigation);
+    return $renderView->contentRender("get", $row);
   }
 
   public function showByMin(array $param): Response
@@ -45,10 +39,7 @@ class AdventController
     $repository = $this->repository;
     $renderView = new RenderViewService();
     $rows = $repository->getMin($page, $filter);
-    $pagination = $renderView->paginationRender($repository);
-    $navigation = $renderView->navigationRender();
-
-    return $renderView->contentRender("show", $rows, $pagination, $navigation);
+    return $renderView->contentRender("show", $rows);
   }
 
   public function showByMax(array $param): Response
@@ -57,10 +48,7 @@ class AdventController
     $repository = $this->repository;
     $renderView = new RenderViewService();
     $rows = $repository->getMax($page, $filter);
-    $pagination = $renderView->paginationRender($repository);
-    $navigation = $renderView->navigationRender();
-
-    return $renderView->contentRender("show", $rows, $pagination, $navigation);
+    return $renderView->contentRender("show", $rows);
   }
 
   public function create(): Response
