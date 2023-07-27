@@ -8,8 +8,6 @@ use App\Models\Advent;
 class AdventRepository
 {
 
-  // public $insert_id;
-
   /**
    * property for SQL statement
    */
@@ -18,7 +16,6 @@ class AdventRepository
 
 
   public function __construct(
-    // private Advent $advent,
     private DatabasePDO $pdo
   ) {
   }
