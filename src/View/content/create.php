@@ -18,7 +18,8 @@
     <button>create</button>
   </form>
 
-  <?php WidgetRender::navigationWidget(); ?>
+  <?php WidgetRender::renderWidget('navigation'); ?>
+  
 </body>
 
 <?php $content = ob_get_clean();

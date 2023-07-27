@@ -10,4 +10,4 @@
   <li><a href='<?php LinkManager::getLink('/show', '?page=1'); ?>'>Show</a></li>
 </ul>
 
-<?php $navigationWidget = ob_get_clean(); ?>
+<?php $widget = ob_get_clean(); ?>

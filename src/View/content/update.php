@@ -1,5 +1,5 @@
-<?php ob_start() ?>
 <?php use App\Service\WidgetRender; ?>
+<?php ob_start() ?>
 
 <body>
   <h1>Update</h1>
@@ -17,7 +17,7 @@
     <button>create</button>
   </form>
 
-  <?php WidgetRender::navigationWidget(); ?>
+  <?php WidgetRender::renderWidget('navigation'); ?>
   
 </body>
 

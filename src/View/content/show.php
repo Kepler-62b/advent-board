@@ -45,7 +45,7 @@
   ; ?>
 </table>
 
-<?php WidgetRender::navigationWidget(); ?>
+<?php WidgetRender::renderWidget('navigation'); ?>
 
 <?php $content = ob_get_clean();
 ob_end_clean(); ?>
