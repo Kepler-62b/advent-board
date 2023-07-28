@@ -1,6 +1,4 @@
 <?php use App\Service\WidgetRender; ?>
-<?php ob_start() ?>
-
 <h1>Show</h1>
 <table>
   <tr>
@@ -48,6 +46,3 @@
 <?php WidgetRender::renderWidget('pagination'); ?>
 <?php WidgetRender::renderWidget('navigation'); ?>
 <?php WidgetRender::renderWidget('form_get_item'); ?>
-
-<?php $content = ob_get_clean();
-ob_end_clean(); ?>

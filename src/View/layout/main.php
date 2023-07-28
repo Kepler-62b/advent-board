@@ -1,5 +1,3 @@
-<?php ob_start();?>
-
 <!DOCTYPE html>
 <html>
 
@@ -27,12 +25,9 @@
 </head>
 
 <body>
-  
+
   <?php echo $content; ?>
-  
+
 </body>
 
 </html>
-
-<?php $layout = ob_get_clean();
-ob_end_clean(); ?>
