@@ -1,4 +1,3 @@
-<?php ob_start() ?>
 <?php use App\Service\LinkManager; ?>
 <?php use App\Service\ControllerContainer; ?>
 <?php use App\Repository\AdventRepository; ?>
@@ -13,5 +12,3 @@ for ($i = 1; $i <= $count; $i++) { ?>
   <a href="<?php LinkManager::getPath(); ?>?page=<?= $i; ?><?php LinkManager::getQuery(); ?>" class="btn"><?= $i; ?></a>
 <? }
 ; ?>
-
-<?php $widget = ob_get_clean(); ?>
