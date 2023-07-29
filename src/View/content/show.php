@@ -1,4 +1,6 @@
 <?php use App\Service\WidgetRender; ?>
+<?php use App\Service\TableWidget; ?>
+
 <h1>Show</h1>
 <table>
   <tr>
@@ -33,7 +35,7 @@
         <?= $row['price']; ?>
       </td>
       <td>
-        <img src=" <?php $linkRender->getBasePath('/public/img/user/', $row['image']); ?>"></a>
+        <img src=" <?php $linkRender->getBasePath('/public/img/user/', $row['image']); ?>">
       </td>
       <td>
         <?= $row['created_date']; ?>
@@ -46,3 +48,5 @@
 <?php WidgetRender::renderWidget('pagination'); ?>
 <?php WidgetRender::renderWidget('navigation'); ?>
 <?php WidgetRender::renderWidget('form_get_item'); ?>
+
+<?php TableWidget::renderWidget($table); ?>

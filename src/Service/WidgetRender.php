@@ -12,4 +12,5 @@ class WidgetRender
     $widget = ob_get_clean();
     echo $widget;
   }
+
 }

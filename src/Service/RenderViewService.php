@@ -13,7 +13,7 @@ class RenderViewService
     $this->linkRender = new LinkRender();
   }
 
-  public function contentRender(string $content, mixed $rows = null): Response
+  public function contentRender(string $content, $table, mixed $rows = null): Response
   {
     $linkRender = $this->linkRender;
     ob_start();

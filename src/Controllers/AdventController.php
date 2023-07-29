@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Service\TableWidget;
 use Symfony\Component\HttpFoundation\Response;
 
 use App\Repository\AdventRepository;
@@ -20,16 +21,20 @@ class AdventController
   {
     extract($param, EXTR_OVERWRITE);
     $repository = $this->repository;
-    $renderView = new RenderViewService();
     $rows = $repository->getAllRows($page);
-    return $renderView->contentRender("show", $rows);
+    $table = new TableWidget($rows);
+    $table = $table->setColumns(['id', 'item', 'description', 'price', 'image', 'created_date'])->render();
+
+    $renderView = new RenderViewService();
+    return $renderView->contentRender("show", $table, $rows);
   }
   public function showById(array $param): Response
   {
     extract($param, EXTR_OVERWRITE);
     $repository = $this->repository;
-    $renderView = new RenderViewService();
     $row = $repository->findById($id);
+    var_dump($row);
+    $renderView = new RenderViewService();
     return $renderView->contentRender("get", $row);
   }
 
