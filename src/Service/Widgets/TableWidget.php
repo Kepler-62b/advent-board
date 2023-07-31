@@ -1,11 +1,8 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Widgets;
 
-use App\Models\Advent;
-use App\Repository\AdventRepository;
-
-class TableWidget extends WidgetRender
+class TableWidget implements WidgetInterface
 {
   private $columns = [];
   private $rows;
@@ -15,13 +12,21 @@ class TableWidget extends WidgetRender
     $this->rows = $rows;
   }
 
+  public function __toString()
+  {
+    ob_start();
+    require "src/View/widgets/table.php";
+    $widget = ob_get_clean();
+    return $widget;
+  }
+
   public function setColumns($columns)
   {
     $this->columns = $columns;
     return $this;
   }
 
-  public function render()
+  public function render(): string
   {
     ob_start();
     require "src/View/widgets/table.php";
@@ -34,10 +39,9 @@ class TableWidget extends WidgetRender
 
   }
 
-  public static function renderWidget($table): void
-  {
-    echo $table;
-  }
+
+
+
 
 
 

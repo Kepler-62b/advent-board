@@ -14,7 +14,7 @@ class LinkRender
     $this->request = Request::createFromGlobals();
   }
 
-  public function getPath()
+  public function getPath(): string
   {
     $path = parse_url($_SERVER['REQUEST_URI']);
     return $path['path'];
@@ -25,15 +25,26 @@ class LinkRender
     foreach ($params as $key => $value) {
       if ($key === 'filter') {
         $link = "&" . $key . "=" . $value;
-        echo $link;
+        return $link;
       }
     }
   }
 
-  public function getBasePath(string $path = null, string $var = null): void
+  public function sort(string $filter)
+  {
+    $params = $this->request->query;
+    foreach ($params as $key => $value) {
+      if ($value === $filter) {
+        $link = "&" . $key . "=" . $value;
+        return $link;
+      }
+    }
+  }
+
+  public function getBasePath(string $path = null, string $var = null): string
   {
     $link = $this->request->getBasePath() . $path . $var;
-    echo $link;
+    return $link;
   }
 
 }

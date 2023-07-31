@@ -1,10 +1,13 @@
 <?php
+declare(strict_types=1);
 
 namespace App;
 
 require 'vendor/autoload.php';
 
-use App\Service\TableWidget;
+use App\Service\Widgets\TableWidget;
+use App\Service\Widgets\NavigationWidget;
+use App\Service\Widgets\PaginationWidget;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,19 +36,33 @@ $route = new RouteService($request->getPathInfo());
 print $route->routing($request)->getContent();
 // тест работы всего приложения
 
-// тест таблицы
-
+// тест виджета-таблица
 // $table = new TableWidget($repository->getAllRows(2));
-// $table = $table->setColumns(['id', 'item', 'description', 'price', 'image'])->render();
-// TableWidget::renderWidget($table);
+// $table->setColumns(['id', 'item', 'description', 'price', 'image']);
+// $tableWidget = $table->setColumns(['id', 'item', 'description', 'price', 'image']);
+// echo($table);
+// тест виджета-таблица
 
-// тест таблицы
+// тест отрисовки ссылок с помощью сервиса RenderViewContent
+// $table = new TableWidget($repository->getAllRows(2));
+// $table->setColumns(['id', 'item', 'description', 'price', 'image']);
+// $tableWidget = $table->setColumns(['id', 'item', 'description', 'price', 'image']);
+// $navigationWidget = new NavigationWidget($linkRender);
+// $paginationWidget = new PaginationWidget($linkRender);
+
+// $render = new RenderViewService();
+// print $render->contentRender('create', [
+//   'table' => $tableWidget, 
+//   'link' => $linkRender,
+//   'navigation' => $navigationWidget,
+//   'pagination' => $paginationWidget
+// ]);
+// тест отрисовки ссылок с помощью сервиса RenderViewContent
 
 //  тест контроллера
 // $controller = new AdventController($repository);
 // var_dump(get_class_methods($controller));
 // echo $controller->showById(['id' => '1']);
-
 //  тест контроллера
 
 // тест панели навигации
