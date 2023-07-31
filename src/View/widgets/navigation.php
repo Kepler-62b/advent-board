@@ -2,8 +2,8 @@
 <hr>
 
 <ul>
-  <li><a href='<?php echo $linkRender->getBasePath('/create'); ?>'>Create</a></li>
-  <li><a href='<?php echo $linkRender->getBasePath('/update'); ?>'>Update</a></li>
-  <li><a href='<?php echo $linkRender->getBasePath('/show', '?page=1'); ?>'>Show</a></li>
+  <li><a href='<?php echo $linkRender->getRootPath('/create'); ?>'>Create</a></li>
+  <li><a href='<?php echo $linkRender->getRootPath('/update'); ?>'>Update</a></li>
+  <li><a href='<?php echo $linkRender->getRootPath('/show', '?page=1'); ?>'>Show</a></li>
 
 </ul>

@@ -14,20 +14,20 @@ class LinkRender
     $this->request = Request::createFromGlobals();
   }
 
+  /**
+   * return the path to the root directory of the project (without arguments)
+   */
+  public function getRootPath(string $route = null, string $var = null): string
+  {
+    return $this->request->getBasePath() . $route . $var;
+  }
+
+  /**
+   * return the path to the root directory of the project AND current route
+   */
   public function getPath(): string
   {
-    $path = parse_url($_SERVER['REQUEST_URI']);
-    return $path['path'];
-  }
-  public function getQuery()
-  {
-    $params = $this->request->query;
-    foreach ($params as $key => $value) {
-      if ($key === 'filter') {
-        $link = "&" . $key . "=" . $value;
-        return $link;
-      }
-    }
+    return $this->request->getBasePath() . $this->request->getPathInfo();
   }
 
   public function sort(string $filter)
@@ -41,10 +41,13 @@ class LinkRender
     }
   }
 
-  public function getBasePath(string $path = null, string $var = null): string
-  {
-    $link = $this->request->getBasePath() . $path . $var;
-    return $link;
-  }
+  // public function render()
+  // {
+  //   if (str_contains($this->getPath(), "min")) {
+  //     return "▲";
+  //   } elseif (str_contains($this->getPath(), "max")) {
+  //     return "▼";
+  //   }
+  // }
 
 }

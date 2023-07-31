@@ -109,7 +109,7 @@ class AdventController
     $link = new LinkRender();
     $navigation = new NavigationWidget($link);
     $renderView = new RenderViewService();
-    return $renderView->contentRender('create', ['navigation' => $navigation]);
+    return $renderView->contentRender('create', null, ['navigation' => $navigation]);
   }
 
   public function update(): Response
@@ -118,6 +118,6 @@ class AdventController
     $navigation = new NavigationWidget($link);
 
     $renderView = new RenderViewService();
-    return $renderView->contentRender('update', ['navigation' => $navigation]);
+    return $renderView->contentRender('update', null,['navigation' => $navigation]);
   }
 }

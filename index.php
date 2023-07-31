@@ -30,6 +30,7 @@ $db = new DatabasePDO();
 $repository = new AdventRepository($db);
 $linkManager = new LinkManager();
 $linkRender = new LinkRender();
+// var_dump($linkRender);
 
 // тест работы всего приложения
 $route = new RouteService($request->getPathInfo());
@@ -47,15 +48,16 @@ print $route->routing($request)->getContent();
 // $table = new TableWidget($repository->getAllRows(2));
 // $table->setColumns(['id', 'item', 'description', 'price', 'image']);
 // $tableWidget = $table->setColumns(['id', 'item', 'description', 'price', 'image']);
-// $navigationWidget = new NavigationWidget($linkRender);
-// $paginationWidget = new PaginationWidget($linkRender);
+// $navigation = new NavigationWidget($linkRender);
+// $pagination = new PaginationWidget($linkRender);
+
 
 // $render = new RenderViewService();
 // print $render->contentRender('create', [
-//   'table' => $tableWidget, 
+//   'table' => $table, 
 //   'link' => $linkRender,
-//   'navigation' => $navigationWidget,
-//   'pagination' => $paginationWidget
+//   'navigation' => $navigation,
+//   'pagination' => $pagination
 // ]);
 // тест отрисовки ссылок с помощью сервиса RenderViewContent
 

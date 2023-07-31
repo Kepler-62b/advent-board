@@ -15,7 +15,6 @@ class RenderViewService
 
   public function contentRender(string $template, array $rows = null, array $widgets = null): Response
   {
-    // var_dump($widgets);
     $linkRender = $this->linkRender;
     ob_start();
     require_once "src/View/templates/$template.php";
