@@ -5,6 +5,7 @@ namespace App;
 
 require 'vendor/autoload.php';
 
+use App\Service\Widgets\SortWidget;
 use App\Service\Widgets\TableWidget;
 use App\Service\Widgets\NavigationWidget;
 use App\Service\Widgets\PaginationWidget;
@@ -30,35 +31,105 @@ $db = new DatabasePDO();
 $repository = new AdventRepository($db);
 $linkManager = new LinkManager();
 $linkRender = new LinkRender();
-// var_dump($linkRender);
 
 // тест работы всего приложения
 $route = new RouteService($request->getPathInfo());
 print $route->routing($request)->getContent();
 // тест работы всего приложения
 
-// тест виджета-таблица
-// $table = new TableWidget($repository->getAllRows(2));
-// $table->setColumns(['id', 'item', 'description', 'price', 'image']);
-// $tableWidget = $table->setColumns(['id', 'item', 'description', 'price', 'image']);
-// echo($table);
-// тест виджета-таблица
+function testWidgets(DatabasePDO $db, AdventRepository $repository, LinkRender $linkRender)
+{
+  $sort = new SortWidget($linkRender);
+  $sortPrice = $sort
+    ->setParams(
+      [
+        'columnName' => 'Price',
+        'filter' => 'price'
+      ]
+    );
+  $sortDate = $sort
+    ->setParams(
+      [
+        'columnName' => 'Date',
+        'filter' => 'create_date'
+      ]
+    );
+
+  $table = new TableWidget($linkRender);
+  $table->setParams([
+    'rows' => $repository->getAllRows(2),
+    'columns' => [
+      'id' => 'Id',
+      'item' => 'Item',
+      'description' => 'Description',
+      'price' => $sortPrice,
+      'image' => 'Image',
+      'created_date' => $sortDate
+    ]
+  ]);
+
+  // return $table->render();
+  return $table;
+}
+
+function testSortWidget(LinkRender $linkRender)
+{
+  $sort = new SortWidget($linkRender);
+  $sortPrice = $sort
+    ->setParams(
+      [
+        'columnName' => 'Price',
+        'filter' => 'price'
+      ]
+    )->render();
+  return $sortPrice;
+}
+
+// echo ((testWidgets($db, $repository, $linkRender)));
+
+// тест виджета-сортировки
+// $sort = new SortWidget($linkRender);
+// $sort->setFilter('price');
+// $sort->setParams('Price', 'price');
+// var_dump($sort->render());
+// тест виджета-сортировки
 
 // тест отрисовки ссылок с помощью сервиса RenderViewContent
-// $table = new TableWidget($repository->getAllRows(2));
-// $table->setColumns(['id', 'item', 'description', 'price', 'image']);
-// $tableWidget = $table->setColumns(['id', 'item', 'description', 'price', 'image']);
+
 // $navigation = new NavigationWidget($linkRender);
 // $pagination = new PaginationWidget($linkRender);
-
+// $sort = new SortWidget($linkRender);
+// $sortPrice = $sort
+//   ->setParams([
+//     'columnName' => 'Price',
+//     'filter' => 'price'
+//   ])->render();
+// $sortDate = $sort
+//   ->setParams([
+//     'columnName' => 'Date',
+//     'filter' => 'create_date'
+//   ])->render();
+// $table = new TableWidget($linkRender);
+// $table->setParams([
+//   'rows' => $repository->getAllRows(2),
+//   'columns' => [
+//     'id' => 'Id',
+//     'item' => 'Item',
+//     'description' => 'Description',
+//     'price' => $sortPrice,
+//     'image' => 'Image',
+//     'created_date' => $sortDate
+//   ]
+// ]);
 
 // $render = new RenderViewService();
-// print $render->contentRender('create', [
-//   'table' => $table, 
+// print $render->contentRender('show_widgets', null, [
+//   'table' => $table,
 //   'link' => $linkRender,
 //   'navigation' => $navigation,
 //   'pagination' => $pagination
 // ]);
+
 // тест отрисовки ссылок с помощью сервиса RenderViewContent
 
 //  тест контроллера

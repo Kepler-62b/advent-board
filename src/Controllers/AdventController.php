@@ -3,10 +3,13 @@
 namespace App\Controllers;
 
 use App\Service\LinkRender;
+
 use App\Service\Widgets\GetFormWidget;
 use App\Service\Widgets\PaginationWidget;
 use App\Service\Widgets\TableWidget;
 use App\Service\Widgets\NavigationWidget;
+use App\Service\Widgets\SortWidget;
+
 use Symfony\Component\HttpFoundation\Response;
 
 use App\Repository\AdventRepository;
@@ -21,31 +24,62 @@ class AdventController
     $this->repository = $repository;
   }
 
-  public function showAll(mixed $param): Response
+  public function showAll(mixed $queryParam): Response
   {
-    extract($param, EXTR_OVERWRITE);
+    extract($queryParam, EXTR_OVERWRITE);
     $repository = $this->repository;
     $rows = $repository->getAllRows($page);
 
-    $link = new LinkRender();
-    $navigation = new NavigationWidget($link);
-    $pagination = new PaginationWidget($link);
-    $getForm = new GetFormWidget($link);
-    $table = (new TableWidget($rows))
-      ->setColumns(['id', 'item', 'description', 'price', 'image', 'created_date']);
+    $linkRender = new LinkRender();
+
+    $navigation = new NavigationWidget($linkRender);
+    $pagination = new PaginationWidget($linkRender);
+    $getForm = new GetFormWidget($linkRender);
+    
+    $sort = new SortWidget($linkRender);
+    $sortPrice = $sort
+      ->setParams(
+        [
+          'columnName' => 'Price',
+          'filter' => 'price'
+        ]
+      );
+    $sortDate = $sort
+      ->setParams(
+        [
+          'columnName' => 'Date',
+          'filter' => 'create_date'
+        ]
+      );
+      
+    $table = new TableWidget($linkRender);
+    $table->setParams(
+      [
+        'rows' => $rows,
+        'columns' => [
+          'id' => 'Id',
+          'item' => 'Item',
+          'description' => 'Description',
+          'price' => $sortPrice,
+          'image' => 'Image',
+          'created_date' => $sortDate
+        ]
+      ]
+    );
 
     $renderView = new RenderViewService();
     return $renderView->contentRender(
-      "show",
+      "show_widgets",
       $rows,
       [
+        'table' => $table,
         'pagination' => $pagination,
         'navigation' => $navigation,
-        'table' => $table,
         'getForm' => $getForm
       ]
     );
   }
+
   public function showById(array $param): Response
   {
     extract($param, EXTR_OVERWRITE);
@@ -118,6 +152,6 @@ class AdventController
     $navigation = new NavigationWidget($link);
 
     $renderView = new RenderViewService();
-    return $renderView->contentRender('update', null,['navigation' => $navigation]);
+    return $renderView->contentRender('update', null, ['navigation' => $navigation]);
   }
 }

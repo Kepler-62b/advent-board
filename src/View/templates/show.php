@@ -44,5 +44,6 @@
 
 
 <?php echo ($widgets['pagination']->render()); ?>
+<?php echo ($widgets['table']->render()); ?>
 <?php echo ($widgets['navigation']->render()); ?>
 <?php echo ($widgets['getForm']->render()); ?>

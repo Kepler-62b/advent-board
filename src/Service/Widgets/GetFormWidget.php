@@ -12,14 +12,26 @@ class GetFormWidget implements WidgetInterface
   {
    $this->linkRender = $linkRender;
   }
+  public function __toString()
+  {
+    $linkRender = $this->linkRender;
+    ob_start();
+    require "src/View/widgets/form_get.php";
+    $formGet = ob_get_clean();
+    return $formGet;
+  }
+  public function setParams(array $params): static
+  {
+   return $this;
+  }
 
   public function render(): string
   {
     $linkRender = $this->linkRender;
     ob_start();
     require "src/View/widgets/form_get.php";
-    $navigation = ob_get_clean();
-    return $navigation;
+    $formGet = ob_get_clean();
+    return $formGet;
   }
 
 }

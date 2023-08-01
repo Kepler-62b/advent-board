@@ -41,13 +41,4 @@ class LinkRender
     }
   }
 
-  // public function render()
-  // {
-  //   if (str_contains($this->getPath(), "min")) {
-  //     return "▲";
-  //   } elseif (str_contains($this->getPath(), "max")) {
-  //     return "▼";
-  //   }
-  // }
-
 }

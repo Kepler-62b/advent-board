@@ -1,26 +1,26 @@
 <table>
   <tr>
-    <?php foreach ($this->columns as $column) { ?>
+    <?php foreach ($columns as $keyColumn => $column) { ?>
       <th>
-        <?= $column; ?>
-      </th>
-    <?php }; ?>
+        <?php echo $column; } ?>
+    </th>
   </tr>
-
-  <?php for ($i = 0; $i < count($this->rows); $i++) { ?>
+  <?php for ($i = 0; $i < count($rows); $i++) { ?>
     <tr>
-      <?php foreach ($this->rows[$i] as $key => $row) {
-        if (in_array($key, $this->columns)) { ?>
+      <?php foreach ($rows[$i] as $key => $row) { ?>
+        <?php if (array_key_exists($key, $columns)) { ?>
           <td>
-            <?php if($key === 'image') { ?>
-              <img src="/02-PROJECTS/php-projects/advent-board/public/img/user/<?= $row; ?>">
-              <?php } else { ?>
-                <?= $row; ?>
-              <?php }; ?>
+            <?php if ($key === 'image') { ?>
+              <img src="<?php echo $linkRender->getRootPath('/public/img/user/', $row); ?>">
+            <?php } else { ?>
+              <?php echo $row; ?>
+            <?php }
+            ; ?>
           </td>
         <?php }
       } ?>
     </tr>
-  <?php }; ?>
+  <?php }
+  ; ?>
 
 </table>

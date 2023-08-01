@@ -13,6 +13,20 @@ class NavigationWidget implements WidgetInterface
    $this->linkRender = $linkRender;
   }
 
+  public function __toString()
+  {
+    $linkRender = $this->linkRender;
+    ob_start();
+    require "src/View/widgets/navigation.php";
+    $navigation = ob_get_clean();
+    return $navigation;
+  }
+
+  public function setParams(array $params): static
+  {
+   return $this;
+  }
+
   public function render(): string
   {
     $linkRender = $this->linkRender;

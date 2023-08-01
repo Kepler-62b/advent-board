@@ -14,6 +14,21 @@ class PaginationWidget implements WidgetInterface
     $this->linkRender = $linkRender;
   }
 
+  public function __toString()
+  {
+    $linkRender = $this->linkRender;
+    $count = $this->countRow();
+    ob_start();
+    require "src/View/widgets/pagination.php";
+    $navigation = ob_get_clean();
+    return $navigation;
+  }
+
+  public function setParams(array $params): static
+  {
+   return $this;
+  }
+
   public function countRow()
   {
     $repository = (new ControllerContainer())->get('App\Repository\AdventRepository');
