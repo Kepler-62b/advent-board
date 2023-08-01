@@ -4,5 +4,5 @@
 ###< symfony ###
 
 ###> tests ###
-/test/
+/tests/
 ###< tests ###
