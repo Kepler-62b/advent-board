@@ -27,12 +27,6 @@ class TableWidget implements WidgetInterface
     return $table;
   }
 
-  // public function setParams(array $rows, array $columns): static
-  // {
-  //   $this->rows = $rows;
-  //   $this->columns = $columns;
-  //   return $this;
-  // }
   public function setParams(array $params): static
   {
     $this->rows = $params['rows'];
@@ -50,23 +44,5 @@ class TableWidget implements WidgetInterface
     $table = ob_get_clean();
     return $table;
   }
-
-  public function setSort($filter)
-  {
-    foreach ($this->columns as $column) {
-      if ($column === $filter) {
-        var_dump($column);
-        $sortLink = "<a href='/show/price/min/?page=1&filter=$filter'>$column</a>";
-        // return $sortLink;
-      }
-    }
-  }
-
-
-
-
-
-
-
 
 }

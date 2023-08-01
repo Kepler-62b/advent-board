@@ -35,7 +35,7 @@ class AdventController
     $navigation = new NavigationWidget($linkRender);
     $pagination = new PaginationWidget($linkRender);
     $getForm = new GetFormWidget($linkRender);
-    
+
     $sort = new SortWidget($linkRender);
     $sortPrice = $sort
       ->setParams(
@@ -43,15 +43,15 @@ class AdventController
           'columnName' => 'Price',
           'filter' => 'price'
         ]
-      );
+      )->render();
     $sortDate = $sort
       ->setParams(
         [
           'columnName' => 'Date',
-          'filter' => 'create_date'
+          'filter' => 'created_date'
         ]
-      );
-      
+      )->render();
+
     $table = new TableWidget($linkRender);
     $table->setParams(
       [
@@ -85,9 +85,37 @@ class AdventController
     extract($param, EXTR_OVERWRITE);
     $repository = $this->repository;
     $row = $repository->findById($id);
-    var_dump($row);
+
+    $linkRender = new LinkRender();
+    $navigation = new NavigationWidget($linkRender);
+    $getForm = new GetFormWidget($linkRender);
+
+
+    $table = new TableWidget($linkRender);
+    $table->setParams(
+      [
+        'rows' => $row,
+        'columns' => [
+          'id' => 'Id',
+          'item' => 'Item',
+          'description' => 'Description',
+          'price' => 'Price',
+          'image' => 'Image',
+          'created_date' => 'Date'
+        ]
+      ]
+    );
+
     $renderView = new RenderViewService();
-    return $renderView->contentRender("get", $row);
+    return $renderView->contentRender(
+      "get_widgets",
+      $row,
+      [
+        'table' => $table,
+        'navigation' => $navigation,
+        'getForm' => $getForm
+      ]
+    );
   }
 
   public function showByMin(array $param): Response
@@ -97,16 +125,49 @@ class AdventController
     $renderView = new RenderViewService();
     $rows = $repository->getMin($page, $filter);
 
-    $link = new LinkRender();
-    $navigation = new NavigationWidget($link);
-    $pagination = new PaginationWidget($link);
-    $getForm = new GetFormWidget($link);
+    $linkRender = new LinkRender();
+
+    $navigation = new NavigationWidget($linkRender);
+    $pagination = new PaginationWidget($linkRender);
+    $getForm = new GetFormWidget($linkRender);
+
+    $sort = new SortWidget($linkRender);
+    $sortPrice = $sort
+      ->setParams(
+        [
+          'columnName' => 'Price',
+          'filter' => 'price'
+        ]
+      )->render();
+    $sortDate = $sort
+      ->setParams(
+        [
+          'columnName' => 'Date',
+          'filter' => 'created_date'
+        ]
+      )->render();
+
+    $table = new TableWidget($linkRender);
+    $table->setParams(
+      [
+        'rows' => $rows,
+        'columns' => [
+          'id' => 'Id',
+          'item' => 'Item',
+          'description' => 'Description',
+          'price' => $sortPrice,
+          'image' => 'Image',
+          'created_date' => $sortDate
+        ]
+      ]
+    );
 
     $renderView = new RenderViewService();
     return $renderView->contentRender(
-      "show",
+      "show_widgets",
       $rows,
       [
+        'table' => $table,
         'pagination' => $pagination,
         'navigation' => $navigation,
         'getForm' => $getForm
@@ -121,16 +182,49 @@ class AdventController
     $renderView = new RenderViewService();
     $rows = $repository->getMax($page, $filter);
 
-    $link = new LinkRender();
-    $navigation = new NavigationWidget($link);
-    $pagination = new PaginationWidget($link);
-    $getForm = new GetFormWidget($link);
+    $linkRender = new LinkRender();
+
+    $navigation = new NavigationWidget($linkRender);
+    $pagination = new PaginationWidget($linkRender);
+    $getForm = new GetFormWidget($linkRender);
+
+    $sort = new SortWidget($linkRender);
+    $sortPrice = $sort
+      ->setParams(
+        [
+          'columnName' => 'Price',
+          'filter' => 'price'
+        ]
+      )->render();
+    $sortDate = $sort
+      ->setParams(
+        [
+          'columnName' => 'Date',
+          'filter' => 'created_date'
+        ]
+      )->render();
+
+    $table = new TableWidget($linkRender);
+    $table->setParams(
+      [
+        'rows' => $rows,
+        'columns' => [
+          'id' => 'Id',
+          'item' => 'Item',
+          'description' => 'Description',
+          'price' => $sortPrice,
+          'image' => 'Image',
+          'created_date' => $sortDate
+        ]
+      ]
+    );
 
     $renderView = new RenderViewService();
     return $renderView->contentRender(
-      "show",
+      "show_widgets",
       $rows,
       [
+        'table' => $table,
         'pagination' => $pagination,
         'navigation' => $navigation,
         'getForm' => $getForm

@@ -24,27 +24,12 @@ class SortWidget implements WidgetInterface
     return $sort;
   }
 
-  // public function setParams(string $column, string $filter): static
-  // {
-  //   $this->columnName = $column;
-  //   $this->filter = "&filter=" . $filter;
-  //   return $this;
-  // }
   public function setParams(array $params): static
   {
     $this->columnName = $params['columnName'];
-    $this->filter = $params['filter'];
+    $this->filter = '&filter=' . $params['filter'];
     return $this;
   }
-
-  // public function render()
-  // {
-  //   if (str_contains($this->getPath(), "min")) {
-  //     return "▲";
-  //   } elseif (str_contains($this->getPath(), "max")) {
-  //     return "▼";
-  //   }
-  // }
 
   public function render(): string
   {

@@ -33,8 +33,8 @@ $linkManager = new LinkManager();
 $linkRender = new LinkRender();
 
 // тест работы всего приложения
-$route = new RouteService($request->getPathInfo());
-print $route->routing($request)->getContent();
+// $route = new RouteService($request->getPathInfo());
+// print $route->routing($request)->getContent();
 // тест работы всего приложения
 
 function testWidgets(DatabasePDO $db, AdventRepository $repository, LinkRender $linkRender)
@@ -46,14 +46,19 @@ function testWidgets(DatabasePDO $db, AdventRepository $repository, LinkRender $
         'columnName' => 'Price',
         'filter' => 'price'
       ]
-    );
+    )->render();
+  var_dump($sortPrice);
+
   $sortDate = $sort
     ->setParams(
       [
         'columnName' => 'Date',
         'filter' => 'create_date'
       ]
-    );
+    )->render();
+
+  var_dump($sortDate);
+
 
   $table = new TableWidget($linkRender);
   $table->setParams([
@@ -68,9 +73,12 @@ function testWidgets(DatabasePDO $db, AdventRepository $repository, LinkRender $
     ]
   ]);
 
-  // return $table->render();
   return $table;
 }
+
+// var_dump((testWidgets($db, $repository, $linkRender)));
+// print((testWidgets($db, $repository, $linkRender)));
+
 
 function testSortWidget(LinkRender $linkRender)
 {
@@ -86,6 +94,15 @@ function testSortWidget(LinkRender $linkRender)
 }
 
 // echo ((testWidgets($db, $repository, $linkRender)));
+
+function testNavigation(LinkRender $linkRender) {
+  $navigation = new NavigationWidget($linkRender);
+
+  return $navigation;
+}
+
+// var_dump(testNavigation($linkRender)->render());
+// var_dump(testNavigation($linkRender)->__toString());
 
 // тест виджета-сортировки
 // $sort = new SortWidget($linkRender);
@@ -143,6 +160,8 @@ function testSortWidget(LinkRender $linkRender)
 // тест панели навигации
 
 // тест панели пагинации
+
+
 // WidgetRender::renderWidget('pagination');
 // тест панели пагинации
 
