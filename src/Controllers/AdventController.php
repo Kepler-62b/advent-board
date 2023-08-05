@@ -24,9 +24,9 @@ class AdventController
     $this->repository = $repository;
   }
 
-  public function showAll(mixed $queryParam): Response
+  public function showAll(mixed $queryString): Response
   {
-    extract($queryParam, EXTR_OVERWRITE);
+    $page = filter_input(INPUT_GET, 'page');
     $repository = $this->repository;
     $rows = $repository->getAllRows($page);
 
@@ -90,7 +90,6 @@ class AdventController
     $navigation = new NavigationWidget($linkRender);
     $getForm = new GetFormWidget($linkRender);
 
-
     $table = new TableWidget($linkRender);
     $table->setParams(
       [
@@ -107,6 +106,7 @@ class AdventController
     );
 
     $renderView = new RenderViewService();
+
     return $renderView->contentRender(
       "get_widgets",
       $row,

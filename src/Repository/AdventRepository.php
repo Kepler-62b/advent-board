@@ -5,6 +5,9 @@ namespace App\Repository;
 use App\Service\DatabasePDO;
 use App\Models\Advent;
 
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
 class AdventRepository
 {
 
@@ -22,6 +25,9 @@ class AdventRepository
 
   public function getAllRows(int $page = 1): array
   {
+    $monologLogger = new Logger(AdventRepository::class);
+    $monologLogger->pushHandler(new StreamHandler('dev/Logger/log/dev.log', Logger::DEBUG));
+    
     $connection = $this->pdo;
     $table = $this->table;
     $limit = self::LIMIT;
@@ -34,13 +40,15 @@ class AdventRepository
 
     try {
       $pdo_statment->bindValue(":offset", $offset, \PDO::PARAM_INT);
-
       $pdo_statment->execute();
-
       $result = $pdo_statment->fetchAll(\PDO::FETCH_ASSOC);
       return $result;
     } catch (\PDOException $exception) {
-      die('Ошибка: ' . $exception->getMessage());
+      $monologLogger->critical('Error:', [
+        'exception' => $exception,
+      ]);
+      // return [1,2,3];
+      die;
     }
   }
 
@@ -113,18 +121,8 @@ class AdventRepository
 
   public function updateAttribute(Advent $advent, string $property, int $value)
   {
-    $connection = $this->pdo;
-    $table = $this->table;
-    var_dump($advent);
-
-    var_dump(property_exists($advent, $property));
-
-    // var_dump($value);
-
-
-
-    // var_dump($advent->setPrice(3000));
-
+    // $connection = $this->pdo;
+    // $table = $this->table;
     // $sql = "UPDATE $table 
     //         SET image = :image WHERE id = :id";
 
