@@ -50,12 +50,7 @@ $test = new TestService();
 $container = new ControllerContainer();
 
 
-// $route = new RouteService($request->getPathInfo());
-// print $route->routing($request)->getContent();
+$route = new RouteService($request->getPathInfo());
+print $route->routing($request)->getContent();
 
-
-$test->testController($request, $controller, 'showAll');
-// $test->testConnectionDB($db);
-
-// $error->getErrors('nonFatal', 'E_DEPRECATED');
 
