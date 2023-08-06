@@ -14,26 +14,31 @@ class LinkRender
     $this->request = Request::createFromGlobals();
   }
 
-  public function getPath()
+  /**
+   * return the path to the root directory of the project (without arguments)
+   */
+  public function getRootPath(string $route = null, string $var = null): string
   {
-    $path = parse_url($_SERVER['REQUEST_URI']);
-    return $path['path'];
+    return $this->request->getBasePath() . $route . $var;
   }
-  public function getQuery()
+
+  /**
+   * return the path to the root directory of the project AND current route
+   */
+  public function getPath(): string
+  {
+    return $this->request->getBasePath() . $this->request->getPathInfo();
+  }
+
+  public function sort(string $filter)
   {
     $params = $this->request->query;
     foreach ($params as $key => $value) {
-      if ($key === 'filter') {
+      if ($value === $filter) {
         $link = "&" . $key . "=" . $value;
-        echo $link;
+        return $link;
       }
     }
-  }
-
-  public function getBasePath(string $path = null, string $var = null): void
-  {
-    $link = $this->request->getBasePath() . $path . $var;
-    echo $link;
   }
 
 }

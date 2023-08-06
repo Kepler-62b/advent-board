@@ -1,7 +1,7 @@
 <?php use App\Service\WidgetRender; ?>
 
 <body>
-  <h1>Create</h1>
+  <h1>Update</h1>
 
   <form action="index.php" method="post" enctype="multipart/form-data">
     <label for="item">item</label>
@@ -16,6 +16,6 @@
     <button>create</button>
   </form>
 
-  <?php WidgetRender::renderWidget('navigation'); ?>
+  <?php echo($widgets['navigation']->render()); ?>
 
 </body>
