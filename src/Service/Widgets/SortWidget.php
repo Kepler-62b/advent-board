@@ -10,13 +10,16 @@ class SortWidget implements WidgetInterface
   private string $columnName;
   private string $filter;
 
-  public function __construct(LinkRender $linkRender)
+  public function __construct(LinkRender $linkRender, string $columnName, string $filter)
   {
     $this->linkRender = $linkRender;
+    $this->columnName = $columnName;
+    $this->filter = $filter;
   }
 
   public function __toString()
   {
+    // @TODO избавиться от метода
     $linkRender = $this->linkRender;
     ob_start();
     require "src/View/widgets/sort.php";

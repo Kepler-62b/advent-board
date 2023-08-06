@@ -5,7 +5,7 @@ namespace App\Service\Widgets;
 interface WidgetInterface
 {
   /**
-   *
+   * @deprecated не использовать, удалить
    * @return static
    */
   public function setParams(array $params);

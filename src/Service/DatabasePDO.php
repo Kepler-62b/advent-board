@@ -17,24 +17,7 @@ class DatabasePDO extends \PDO
 
   public function __construct()
   {
-    $monologLogger = new Logger(DatabasePDO::class);
-    $monologLogger->pushHandler(new StreamHandler('dev/Logger/log/dev.log', Logger::DEBUG));
-
-    try {
-      parent::__construct("mysql:host=localhost;dbname=$this->dbname", $this->user, $this->pass);
-      $monologLogger->debug(
-        'Connecting with parameters:',
-        [
-          'dbname' => $this->dbname,
-          'user' => $this->user,
-          'pass' => $this->pass,
-        ]
-      );
-    } catch (\PDOException $exception) {
-      $monologLogger->critical('Error:', [
-        'exception' => $exception,
-      ]);
-    }
+    parent::__construct("mysql:host=localhost;dbname=$this->dbname", $this->user, $this->pass);
   }
 
 }

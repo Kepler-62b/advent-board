@@ -49,8 +49,12 @@ $error = new ErrorsGenerator();
 $test = new TestService();
 $container = new ControllerContainer();
 
+// try {
+//   $route = new RouteService($request->getPathInfo());
+//   print $route->routing($request)->getContent();
+// } catch (\Exception $exception) {
+//   throw $exception;
+// }
 
-$route = new RouteService($request->getPathInfo());
-print $route->routing($request)->getContent();
-
+print $test->testSortWidget($linkRender);
 
