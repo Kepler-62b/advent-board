@@ -7,22 +7,24 @@ use App\Service\LinkRender;
 class TableWidget implements WidgetInterface, \Stringable
 {
   private LinkRender $linkRender;
-  private array $rows = [];
-  private array $columns = [];
+  private ?array $rows = [];
+  private array $columnName = [];
+  private ?array $linkImages = [];
   public string $widget;
 
-  public function __construct(LinkRender $linkRender, array $rows, array $columns)
+  public function __construct(LinkRender $linkRender, ?array $rows, array $columnName, ?array $linkImages)
   {
     $this->linkRender = $linkRender;
     $this->rows = $rows;
-    $this->columns = $columns;
+    $this->columnName = $columnName;
+    $this->linkImages = $linkImages;
     $this->widget = self::renderWidget();
   }
 
   public function __toString(): string
   {
     $linkRender = $this->linkRender;
-    $columns = $this->columns;
+    $columnName = $this->columnName;
     $rows = $this->rows;
     ob_start();
     require "src/View/widgets/table.php";
@@ -33,7 +35,7 @@ class TableWidget implements WidgetInterface, \Stringable
   public function renderWidget(): string
   {
     $linkRender = $this->linkRender;
-    $columns = $this->columns;
+    $columnName = $this->columnName;
     $rows = $this->rows;
     ob_start();
     require "src/View/widgets/table.php";

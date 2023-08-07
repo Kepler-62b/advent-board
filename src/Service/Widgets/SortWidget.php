@@ -28,4 +28,5 @@ class SortWidget implements WidgetInterface
     return $sort;
   }
 
+
 }

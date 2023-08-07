@@ -49,14 +49,14 @@ $error = new ErrorsGenerator();
 $test = new TestService();
 $container = new ControllerContainer();
 
-try {
-  $route = new RouteService($request->getPathInfo());
-  print $route->routing($request)->getContent();
-} catch (\Exception $exception) {
-  throw $exception;
-}
+// try {
+//   $route = new RouteService($request->getPathInfo());
+//   print $route->routing($request)->getContent();
+// } catch (\Exception $exception) {
+//   throw $exception;
+// }
 
-// $test->testSortWidget($linkRender);
-// print $test->testTableWithSortWidget($db, $repository, $linkRender);
+// print $test->testSortWidget($linkRender);
+print $test->testTableWithSortWidget($db, $repository, $linkRender);
 
 
