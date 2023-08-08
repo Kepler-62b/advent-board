@@ -1,6 +1,6 @@
 <table>
   <tr>
-    <?php foreach ($columnName as $tableHeaders): ?>
+    <?php foreach ($columnNames as $tableHeaders): ?>
       <th>
         <?= $tableHeaders ?>
       </th>
@@ -8,17 +8,17 @@
   </tr>
   <?php for ($i = 0; $i < count($rows); $i++): ?>
     <tr>
-      <?php foreach ($rows[$i] as $rowHeaders => $row) { ?>
-        <?php if (array_key_exists($rowHeaders, $columnName)) { ?>
+      <?php foreach ($rows[$i] as $rowHeaders => $row): ?>
+        <?php if (array_key_exists($rowHeaders, $columnNames)): ?>
           <td>
-            <?php if (in_array($rowHeaders, $this->linkImages)) { ?>
+            <?php if (in_array($rowHeaders, $this->linkImages)): ?>
               <img src="<?= $linkRender->getRootPath('/public/img/user/', $row) ?>">
-            <?php } else { ?>
+            <?php else: ?>
               <?= $row; ?>
-            <?php } ?>
+            <?php endif ?>
           </td>
-        <?php }
-      } ?>
+        <?php endif ?>
+      <?php endforeach ?>
     </tr>
   <?php endfor ?>
 

@@ -8,15 +8,15 @@ class TableWidget implements WidgetInterface, \Stringable
 {
   private LinkRender $linkRender;
   private ?array $rows = [];
-  private array $columnName = [];
+  private array $columnNames = [];
   private ?array $linkImages = [];
   public string $widget;
 
-  public function __construct(LinkRender $linkRender, ?array $rows, array $columnName, ?array $linkImages)
+  public function __construct(LinkRender $linkRender, ?array $rows, array $columnNames, ?array $linkImages)
   {
     $this->linkRender = $linkRender;
     $this->rows = $rows;
-    $this->columnName = $columnName;
+    $this->columnNames = $columnNames;
     $this->linkImages = $linkImages;
     $this->widget = self::renderWidget();
   }
@@ -24,7 +24,7 @@ class TableWidget implements WidgetInterface, \Stringable
   public function __toString(): string
   {
     $linkRender = $this->linkRender;
-    $columnName = $this->columnName;
+    $columnNames = $this->columnNames;
     $rows = $this->rows;
     ob_start();
     require "src/View/widgets/table.php";
@@ -35,7 +35,7 @@ class TableWidget implements WidgetInterface, \Stringable
   public function renderWidget(): string
   {
     $linkRender = $this->linkRender;
-    $columnName = $this->columnName;
+    $columnNames = $this->columnNames;
     $rows = $this->rows;
     ob_start();
     require "src/View/widgets/table.php";

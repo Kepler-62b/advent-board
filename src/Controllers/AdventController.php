@@ -49,7 +49,8 @@ class AdventController
         'price' => $sortPriceWidget,
         'image' => 'Image',
         'created_date' => $sortDateWidget
-      ]
+      ],
+      ['image']
     );
 
     $renderView = new RenderViewService();
@@ -85,7 +86,8 @@ class AdventController
         'price' => 'Price',
         'image' => 'Image',
         'created_date' => 'Date'
-      ]
+      ],
+      ['image']
     );
 
     $renderView = new RenderViewService();
@@ -126,7 +128,8 @@ class AdventController
         'price' => $sortPriceWidget,
         'image' => 'Image',
         'created_date' => $sortDateWidget
-      ]
+      ],
+      ['image']
     );
 
     $renderView = new RenderViewService();
@@ -168,7 +171,8 @@ class AdventController
         'price' => $sortPriceWidget,
         'image' => 'Image',
         'created_date' => $sortDateWidget
-      ]
+      ],
+      ['image']
     );
 
     $renderView = new RenderViewService();
