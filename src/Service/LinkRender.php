@@ -15,11 +15,12 @@ class LinkRender
   }
 
   /**
-   * return the path to the root directory of the project (without arguments)
+   * return the path to the root directory of the project with arguments: slug and query string (optional)
    */
-  public function getRootPath(string $route = null, string $var = null): string
+  public function getRootPath(string $slug = null, string $queryParam = null): string
   {
-    return $this->request->getBasePath() . $route . $var;
+    // $slug = $slug . '?';
+    return $this->request->getBasePath() . $slug . $queryParam;
   }
 
   /**
@@ -30,15 +31,20 @@ class LinkRender
     return $this->request->getBasePath() . $this->request->getPathInfo();
   }
 
-  public function sort(string $filter)
+  public function getFilter(string $filter)
   {
-    $params = $this->request->query;
-    foreach ($params as $key => $value) {
+    $queryString = $this->request->query;
+    foreach ($queryString as $param => $value) {
       if ($value === $filter) {
-        $link = "&" . $key . "=" . $value;
-        return $link;
+        $filterLink = "&" . $param . "=" . $value;
+        return $filterLink;
       }
     }
+  }
+
+  public function renderImageLink(string $slug = null, string $imageName = null): string
+  {
+    return $this->request->getBasePath() . $slug . $imageName;
   }
 
 }

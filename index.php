@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 namespace App;
+use App\Controllers\DefaultController;
 
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
@@ -49,14 +50,13 @@ $error = new ErrorsGenerator();
 $test = new TestService();
 $container = new ControllerContainer();
 
-try {
-  $route = new RouteService($request->getPathInfo());
-  print $route->routing($request)->getContent();
-} catch (\Exception $exception) {
-  throw $exception;
-}
+var_dump($test->testRouteService($request, 'getProp'));
+var_dump($test->testRouteService($request, 'parseRoute', '/show/sort/{min}/'));
+// print $test->testApp($request);
+
+
+// print $test->testTableWithSortWidget($db, $repository, $linkRender);
 
 // print $test->testSortWidget($linkRender);
-// print $test->testTableWithSortWidget($db, $repository, $linkRender);
 
 

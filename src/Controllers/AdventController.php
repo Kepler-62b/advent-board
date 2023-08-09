@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Repository\AdventRepository;
 use App\Service\RenderViewService;
 
-class AdventController
+class AdventController extends DefaultController
 {
 
   private AdventRepository $repository;
@@ -24,7 +24,12 @@ class AdventController
     $this->repository = $repository;
   }
 
-  public function showAll(array $queryString): Response
+  /**
+   * @todo обрабатывать пустую строку query (без параметра page)
+   * 
+   * @return Response
+   */
+  public function showAll(): Response
   {
     $page = filter_input(INPUT_GET, 'page');
     $repository = $this->repository;
@@ -53,10 +58,10 @@ class AdventController
       ['image']
     );
 
-    $renderView = new RenderViewService();
-    return $renderView->contentRender(
+    $renderView = new RenderViewService($linkRender);
+    $content = $renderView->contentRender(
       "show_widgets",
-      $rows,
+      null,
       [
         'table' => $tableWidget,
         'pagination' => $paginationWidget,
@@ -64,9 +69,11 @@ class AdventController
         'getForm' => $getFormWidget
       ]
     );
+
+    return (new Response($content))->send();
   }
 
-  public function showById(array $queryString): Response
+  public function showById(): Response
   {
     $id = filter_input(INPUT_GET, 'id');
     $repository = $this->repository;

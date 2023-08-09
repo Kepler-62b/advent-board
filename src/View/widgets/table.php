@@ -12,7 +12,7 @@
         <?php if (array_key_exists($rowHeaders, $columnNames)): ?>
           <td>
             <?php if (in_array($rowHeaders, $this->linkImages)): ?>
-              <img src="<?= $linkRender->getRootPath('/public/img/user/', $row) ?>">
+              <img src="<?= $linkRender->renderImageLink('/public/img/user/', $row) ?>" alt="<?= $row ?>">
             <?php else: ?>
               <?= $row; ?>
             <?php endif ?>

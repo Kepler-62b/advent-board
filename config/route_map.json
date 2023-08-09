@@ -1,18 +1,9 @@
 {
-  "/show/date/min/": {
+  "/show/sort/min/": {
     "action": "showByMin",
     "controller": "App\\Controllers\\AdventController"
   },
-  "/show/date/max/": {
-    "action": "showByMax",
-    "controller": "App\\Controllers\\AdventController"
-  },
-
-  "/show/price/min/": {
-    "action": "showByMin",
-    "controller": "App\\Controllers\\AdventController"
-  },
-  "/show/price/max/": {
+  "/show/sort/max/": {
     "action": "showByMax",
     "controller": "App\\Controllers\\AdventController"
   },
@@ -21,6 +12,12 @@
     "action": "showAll",
     "controller": "App\\Controllers\\AdventController"
   },
+
+  "/": {
+    "action": "homePage",
+    "controller": "App\\Controllers\\AdventController"
+  },
+
   "/get": {
     "action": "showById",
     "controller": "App\\Controllers\\AdventController"

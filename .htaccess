@@ -1,16 +1,4 @@
-RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-f
+RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} !-d
-
-RewriteRule ^show$ index.php [NC]
-
-RewriteRule ^show/price/min/$ index.php [NC]
-RewriteRule ^show/price/max/$ index.php [NC]
-
-RewriteRule ^show/date/min/$ index.php [NC]
-RewriteRule ^show/date/max/$ index.php [NC]
-
-RewriteRule ^get$ index.php [NC]
-RewriteRule ^find$ index.php [NC]
-RewriteRule ^create$ index.php [NC]
-RewriteRule ^update$ index.php [NC]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule . index.php [L]
