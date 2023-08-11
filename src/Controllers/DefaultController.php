@@ -55,4 +55,18 @@ class DefaultController
       ->send();
   }
 
+  public function apiRaw($data = null): Response
+  {
+    $data = json_encode($data);
+    // var_dump($data);
+    $response = new Response(
+      $data,
+      Response::HTTP_OK,
+      ['content-type' => 'application/json']
+    );
+    // var_dump($response);
+    return $response->send();
+
+  }
+
 }

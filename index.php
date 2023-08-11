@@ -2,15 +2,14 @@
 declare(strict_types=1);
 
 namespace App;
-use App\Controllers\DefaultController;
-use App\Service\ParseURLService;
+
+require 'vendor/autoload.php';
 
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
 
-require 'vendor/autoload.php';
 
-use App\Service\ControllerContainer;
+use Dev\Tests\PerfomanceTestService;
 use Dev\Logger\ErrorsGenerator;
 use Dev\Logger\LoggerService;
 use Dev\Tests\TestService;
@@ -22,14 +21,12 @@ use App\Service\Widgets\PaginationWidget;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Psr\Log\NullLogger;
-
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
-use Monolog\Formatter\HtmlFormatter;
 
 use App\Controllers\AdventController;
+use App\Controllers\DefaultController;
 
+use App\Service\ControllerContainer;
+use App\Service\ParseURLService;
 use App\Service\LinkManager;
 use App\Service\LinkRender;
 use App\Service\RenderViewService;
@@ -51,14 +48,14 @@ $error = new ErrorsGenerator();
 $test = new TestService();
 $container = new ControllerContainer();
 
-// print $test->testApp($request);
+$test->testApp($request);
 
 
 // print $test->testRouteService($request, 'routingApp');
-// $test->testRouteService($request, 'routingApi');
+// $test->testRouteService($request, 'routing');
 
-$parseURL = $test->testParseURLService($request);
-$parseURL->matchApiURL($request);
+// $parseURL = $test->testParseURLService($request);
+// $parseURL->matchApiURL($request);
 
 // $test->testParseURLService($request, 'parseRoute', '/api/show/{2}');
 // $test->testParseURLService($request, 'parseMap');
@@ -74,5 +71,3 @@ $parseURL->matchApiURL($request);
 // print $test->testTableWithSortWidget($db, $repository, $linkRender);
 
 // print $test->testSortWidget($linkRender);
-
-

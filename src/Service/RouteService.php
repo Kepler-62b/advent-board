@@ -18,53 +18,26 @@ class RouteService
 
   /**
    * @todo разобраться с отрисовкой ответа при использовании виджета-таблицы и без
-   * @todo подумать что помещать в requestParams, если параметров нет при Not Found
+   * @todo подумать что помещать в action_params, если параметров нет при Not Found
    */
-  public function routingApp(): void
+  public function routing(): void
   {
     $matchURL = $this->parseURLobject->matchURL;
-    
+
+    $interface = $matchURL['interface'];
     $controller = $matchURL['controller'];
     $action = $matchURL['action'];
     $actionParams = $matchURL['action_params'];
 
-    if (empty($queryString)) {
+    if (empty($actionParams)) {
       (new ControllerContainer())->get($controller)->$action();
       // $response->send();
-      // var_dump($response);
       // return $response->getContent();
     } else {
-      (new ControllerContainer())->get($controller)->$action($actionParams);
+      (new ControllerContainer())->get($controller)->$action($actionParams, $interface);
       // $response->send();
-      // var_dump($response);
       // return $response->getContent();
     }
-
-  }
-
-  public function routingApi(): void
-  {
-    $matchURL = $this->parseURLobject->matchURL;
-    $incomingURL = $matchURL['incomingURL'];
-    var_dump($incomingURL);
-    $parseURL = $this->parseURLobject->parseRoute($incomingURL);
-    // var_dump($parseURL);
-    
-    // $queryString = $matchURL['queryStringParams'];
-    // $controller = $matchURL['controller'];
-    // $action = $matchURL['action'];
-
-    // if (empty($queryString)) {
-    //   (new ControllerContainer())->get($controller)->$action();
-    //   // $response->send();
-    //   // var_dump($response);
-    //   // return $response->getContent();
-    // } else {
-    //   (new ControllerContainer())->get($controller)->$action($queryString);
-    //   // $response->send();
-    //   // var_dump($response);
-    //   // return $response->getContent();
-    // }
 
   }
 

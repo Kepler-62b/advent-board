@@ -1,5 +1,4 @@
 {
-  
   "/api/show/{id}": {
     "action": "showById",
     "action_params": "id",
@@ -10,7 +9,6 @@
     "action_params": "page",
     "controller": "App\\Controllers\\AdventController"
   },
-    
   "/api/create/{id}": {
     "action": "create",
     "action_params": "id",

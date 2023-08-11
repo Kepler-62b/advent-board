@@ -79,13 +79,18 @@ class AdventController extends DefaultController
 
   /**
    * @todo метод занимается валидацией входящих данных - подумать, куда ее убрать
+   * @todo метод занимается валидацией входящих данных - подумать, куда ее убрать
    */
-  public function showById(array $id): Response
+  public function showById(array $id, $interface = null): Response
   {
     // $id = filter_input(INPUT_GET, 'id');
     $id = $id['id'];
     $repository = $this->repository;
     $row = $repository->findById($id);
+
+    if(isset($interface)) {
+      return self::apiRaw($row);
+    }
 
     $linkRender = new LinkRender();
     $navigationWidget = (new NavigationWidget($linkRender))->widget;

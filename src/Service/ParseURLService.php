@@ -4,7 +4,6 @@ namespace App\Service;
 
 use Symfony\Component\HttpFoundation\Request;
 
-
 class ParseURLService
 {
   private const APP_MAP = 'config/app_route_map.json';
@@ -15,13 +14,25 @@ class ParseURLService
 
   public function __construct(Request $request)
   {
-    $this->matchURL = self::matchURL($request);
+    if (str_contains($request->getPathInfo(), 'api')) {
+      $this->matchURL = self::matchApiURL($request);
+    } else {
+      $this->matchURL = self::matchAppURL($request);
+    }
+  }
+
+  private function getRouteMap(string $fileMap): array
+  {
+    $resourse = fopen($fileMap, "r+");
+    $routeMap = json_decode(file_get_contents($fileMap), JSON_OBJECT_AS_ARRAY);
+    fclose($resourse);
+    return $routeMap;
   }
 
   /**
    * @todo подумать, как использовать поля slug и requestPerems при 404 Not Found
    */
-  private function matchURL(Request $request): array
+  private function matchAppURL(Request $request): array
   {
     $incomingURL = $request->getPathInfo();
     $queryString = $request->query->all();
@@ -30,37 +41,53 @@ class ParseURLService
     foreach ($routeMap as $uriMap => $routeParamsMap) {
       if ($uriMap === $incomingURL) {
         $this->matchURL = [
+          'interface' => null,
           'incomingURL' => $uriMap,
           'controller' => $routeParamsMap['controller'],
           'action' => $routeParamsMap['action'],
           'action_params' => $queryString,
         ];
+        // var_dump($this->matchURL);
         return $this->matchURL;
       }
     }
 
     $this->matchURL = [
       'incomingURL' => $incomingURL,
-      'queryStringParams' => $queryString,
       'controller' => $routeParamsMap['controller'],
       'action' => 'notFound',
+      'action_params' => $queryString,
     ];
 
     return $this->matchURL;
   }
 
-  private function getRouteMap(string $fileMap = null): array
+  /**
+   * @todo обрабатывать несуществующие роуты, приходящие c префиксом /api
+   * @todo обрабатывать несколько параметров для экшена из URL
+   */
+  public function matchApiURL(Request $request)
   {
-    // $fileMap = $this->fileMap;
-    $resourse = fopen($fileMap, "r+");
-    $routeMap = json_decode(file_get_contents($fileMap), JSON_OBJECT_AS_ARRAY);
-    fclose($resourse);
-    return $routeMap;
-  }
+    $incomingURL = $request->getPathInfo();
+    $routeMap = self::getRouteMap($this::API_MAP);
 
-  public function getProp(string $prop): mixed
-  {
-    return $this->$prop;
+    foreach ($routeMap as $urlMap => $routeParamsMap) {
+      if (preg_split("/\d+/", $incomingURL) === preg_split("/{(\w*)}/", $urlMap)) {
+        if (count(preg_split("/\/\w*/", $incomingURL)) === count(preg_split("/\/\w*/", $urlMap)))
+          $this->matchURL = [
+            'interface' => 'api',
+            'incomingURL' => $incomingURL,
+            'controller' => $routeParamsMap['controller'],
+            'action' => $routeParamsMap['action'],
+            'action_params' => [
+              $routeParamsMap['action_params'] => preg_replace("/\/\D*/", '', $incomingURL)
+            ],
+          ];
+
+          // var_dump($this->matchURL);
+        return $this->matchURL;
+      }
+    }
   }
 
   public function parseRoute(string $incomingURL)
@@ -72,34 +99,8 @@ class ParseURLService
     return $this->parseURL;
   }
 
-  /**
-   * @todo обрабатывать несуществующие роуты, приходящие на API
-   */
-  public function matchApiURL(Request $request)
-  {
-    $incomingURL = $request->getPathInfo();
-    var_dump($incomingURL);
-    $routeMap = self::getRouteMap($this::API_MAP);
-    var_dump($routeMap);
 
-    foreach ($routeMap as $urlMap => $routeParamsMap) {
-      if (preg_split("/\d+/", $incomingURL) === preg_split("/{(\w*)}/", $urlMap)) {
-        // echo 'step 1';
-        if (count(preg_split("/\/\w*/", $incomingURL)) === count(preg_split("/\/\w*/", $urlMap)))
-          // echo 'step 2';
-        $this->matchURL = [
-          'incomingURL' => $incomingURL,
-          'controller' => $routeParamsMap['controller'],
-          'action' => $routeParamsMap['action'],
-          'action_params' => preg_replace("/\/\D*/", '', $incomingURL),
-        ];
-        var_dump($this->matchURL);
-        // return $this->matchURL;
-      }
-    }
 
-    // var_dump(preg_replace("/\/\D*/", '', $incomingURL));
-  }
 
 
 }
