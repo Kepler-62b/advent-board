@@ -15,7 +15,7 @@ class SortWidget implements WidgetInterface
   {
     $this->linkRender = $linkRender;
     $this->columnName = $columnName;
-    $this->filter = '&filter=' . $filter;
+    $this->filter = 'filter=' . $filter;
     $this->widget = self::renderWidget();
   }
 

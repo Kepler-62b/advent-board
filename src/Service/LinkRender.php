@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class LinkRender
 {
-
+  const DEFAULT_PARAM = 'page=1';
   private $request;
 
   public function __construct()
@@ -17,10 +17,13 @@ class LinkRender
   /**
    * return the path to the root directory of the project with arguments: slug and query string (optional)
    */
-  public function getRootPath(string $slug = null, string $queryParam = null): string
+  public function getRootPath(string $slug = null, array $queryStringParams = null): string
   {
-    // $slug = $slug . '?';
-    return $this->request->getBasePath() . $slug . $queryParam;
+    if (isset($queryStringParams)) {
+      $slug = $slug . '?';
+      $queryStringParams = implode('&', $queryStringParams);
+    }
+    return $this->request->getBasePath() . $slug . $queryStringParams;
   }
 
   /**
@@ -36,7 +39,7 @@ class LinkRender
     $queryString = $this->request->query;
     foreach ($queryString as $param => $value) {
       if ($value === $filter) {
-        $filterLink = "&" . $param . "=" . $value;
+        $filterLink = $param . "=" . $value;
         return $filterLink;
       }
     }

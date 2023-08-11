@@ -1,4 +1,8 @@
 {
+  "/show": {
+    "action": "showAll",
+    "controller": "App\\Controllers\\AdventController"
+  },
   "/show/sort/min/": {
     "action": "showByMin",
     "controller": "App\\Controllers\\AdventController"
@@ -7,17 +11,10 @@
     "action": "showByMax",
     "controller": "App\\Controllers\\AdventController"
   },
-  
-  "/show": {
-    "action": "showAll",
-    "controller": "App\\Controllers\\AdventController"
-  },
-
   "/": {
     "action": "homePage",
     "controller": "App\\Controllers\\AdventController"
   },
-
   "/get": {
     "action": "showById",
     "controller": "App\\Controllers\\AdventController"

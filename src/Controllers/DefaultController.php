@@ -31,6 +31,10 @@ class DefaultController
       ->send();
   }
 
+  /**
+   * @todo добавить картинку в контент страницы
+   */
+
   public function notFound(): Response
   {
     $linkRender = new LinkRender();

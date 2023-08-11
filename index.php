@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App;
 use App\Controllers\DefaultController;
+use App\Service\ParseURLService;
 
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
@@ -50,10 +51,25 @@ $error = new ErrorsGenerator();
 $test = new TestService();
 $container = new ControllerContainer();
 
-var_dump($test->testRouteService($request, 'getProp'));
-var_dump($test->testRouteService($request, 'parseRoute', '/show/sort/{min}/'));
 // print $test->testApp($request);
 
+
+// print $test->testRouteService($request, 'routingApp');
+// $test->testRouteService($request, 'routingApi');
+
+$parseURL = $test->testParseURLService($request);
+$parseURL->matchApiURL($request);
+
+// $test->testParseURLService($request, 'parseRoute', '/api/show/{2}');
+// $test->testParseURLService($request, 'parseMap');
+
+// print $linkRender->getRootPath('/show/sort/min/', ['page=1',  'price'] );
+
+
+// $parseURL = new ParseURLService($request);
+
+// var_dump($parseURL);
+// var_dump($parseURL->getProp('matchURL'));
 
 // print $test->testTableWithSortWidget($db, $repository, $linkRender);
 
