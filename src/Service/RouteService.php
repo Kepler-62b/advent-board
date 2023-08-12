@@ -9,11 +9,11 @@ use App\Service\ParseURLService;
 class RouteService
 {
 
-  private ParseURLService $parseURLobject;
+  private ParseURLService $parseURL;
 
   public function __construct(Request $request)
   {
-    $this->parseURLobject = new ParseURLService($request);
+    $this->parseURL = new ParseURLService($request);
   }
 
   /**
@@ -22,7 +22,7 @@ class RouteService
    */
   public function routing(): void
   {
-    $matchURL = $this->parseURLobject->matchURL;
+    $matchURL = $this->parseURL->matchURL;
 
     $interface = $matchURL['interface'];
     $controller = $matchURL['controller'];
@@ -31,11 +31,9 @@ class RouteService
 
     if (empty($actionParams)) {
       (new ControllerContainer())->get($controller)->$action();
-      // $response->send();
       // return $response->getContent();
     } else {
       (new ControllerContainer())->get($controller)->$action($actionParams, $interface);
-      // $response->send();
       // return $response->getContent();
     }
 

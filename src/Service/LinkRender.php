@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 class LinkRender
 {
   const DEFAULT_PARAM = 'page=1';
+  const IMAGE_DIR = '/public/img/user/';
   private $request;
 
   public function __construct()
@@ -15,7 +16,7 @@ class LinkRender
   }
 
   /**
-   * return the path to the root directory of the project with arguments: slug and query string (optional)
+   * return the path to the root directory of the project with arguments (optional): slug and query string
    */
   public function getRootPath(string $slug = null, array $queryStringParams = null): string
   {
@@ -27,13 +28,16 @@ class LinkRender
   }
 
   /**
-   * return the path to the root directory of the project AND current route
+   * return the path to the root directory of the project AND incoming URL
    */
   public function getPath(): string
   {
     return $this->request->getBasePath() . $this->request->getPathInfo();
   }
 
+  /**
+   * @todo предусматреть возращаемое значение в случае не нахождения ключа
+   */
   public function getFilter(string $filter)
   {
     $queryString = $this->request->query;
@@ -45,9 +49,9 @@ class LinkRender
     }
   }
 
-  public function renderImageLink(string $slug = null, string $imageName = null): string
+  public function renderImageLink(string $imageName = null): string
   {
-    return $this->request->getBasePath() . $slug . $imageName;
+    return $this->request->getBasePath() . $this::IMAGE_DIR . $imageName;
   }
 
 }

@@ -19,6 +19,8 @@ use App\Service\Widgets\TableWidget;
 use App\Service\Widgets\NavigationWidget;
 use App\Service\Widgets\PaginationWidget;
 
+use App\Service\Helpers\LinkManager;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -27,12 +29,12 @@ use App\Controllers\DefaultController;
 
 use App\Service\ControllerContainer;
 use App\Service\ParseURLService;
-use App\Service\LinkManager;
 use App\Service\LinkRender;
 use App\Service\RenderViewService;
 use App\Service\ServiceContainer;
 use App\Service\DatabasePDO;
 use App\Service\RouteService;
+
 
 use App\Repository\AdventRepository;
 

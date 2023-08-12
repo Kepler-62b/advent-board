@@ -8,8 +8,8 @@ class ParseURLService
 {
   private const APP_MAP = 'config/app_route_map.json';
   private const API_MAP = 'config/api_route_map.json';
-  private array $parseURL = [];
   public array $matchURL;
+  private array $parseURL = [];
 
 
   public function __construct(Request $request)
@@ -47,7 +47,7 @@ class ParseURLService
           'action' => $routeParamsMap['action'],
           'action_params' => $queryString,
         ];
-        // var_dump($this->matchURL);
+        var_dump($this->matchURL);
         return $this->matchURL;
       }
     }
