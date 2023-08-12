@@ -11,9 +11,9 @@ class RouteService
 
   private ParseURLService $parseURL;
 
-  public function __construct(Request $request)
+  public function __construct(ParseURLService $parseURL)
   {
-    $this->parseURL = new ParseURLService($request);
+    $this->parseURL = $parseURL;
   }
 
   /**

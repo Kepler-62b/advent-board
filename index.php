@@ -8,7 +8,6 @@ require 'vendor/autoload.php';
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
 
-
 use Dev\Tests\PerfomanceTestService;
 use Dev\Logger\ErrorsGenerator;
 use Dev\Logger\LoggerService;
@@ -35,7 +34,6 @@ use App\Service\ServiceContainer;
 use App\Service\DatabasePDO;
 use App\Service\RouteService;
 
-
 use App\Repository\AdventRepository;
 
 $request = Request::createFromGlobals();
@@ -52,24 +50,3 @@ $container = new ControllerContainer();
 
 $test->testApp($request);
 
-
-// print $test->testRouteService($request, 'routingApp');
-// $test->testRouteService($request, 'routing');
-
-// $parseURL = $test->testParseURLService($request);
-// $parseURL->matchApiURL($request);
-
-// $test->testParseURLService($request, 'parseRoute', '/api/show/{2}');
-// $test->testParseURLService($request, 'parseMap');
-
-// print $linkRender->getRootPath('/show/sort/min/', ['page=1',  'price'] );
-
-
-// $parseURL = new ParseURLService($request);
-
-// var_dump($parseURL);
-// var_dump($parseURL->getProp('matchURL'));
-
-// print $test->testTableWithSortWidget($db, $repository, $linkRender);
-
-// print $test->testSortWidget($linkRender);

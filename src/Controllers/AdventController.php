@@ -25,8 +25,7 @@ class AdventController extends DefaultController
   }
 
   /**
-   * 
-   * @return Response
+   * @todo метод занимается валидацией входящих данных - подумать, куда ее убрать
    */
   public function showAll(): Response
   {
@@ -77,10 +76,6 @@ class AdventController extends DefaultController
     return (new Response($content))->send();
   }
 
-  /**
-   * @todo метод занимается валидацией входящих данных - подумать, куда ее убрать
-   * @todo метод занимается валидацией входящих данных - подумать, куда ее убрать
-   */
   public function showById(array $id, $interface = null): Response
   {
     // $id = filter_input(INPUT_GET, 'id');
@@ -88,7 +83,7 @@ class AdventController extends DefaultController
     $repository = $this->repository;
     $row = $repository->findById($id);
 
-    if(isset($interface)) {
+    if (isset($interface)) {
       return self::apiRaw($row);
     }
 
