@@ -14,6 +14,6 @@
     <button>create</button>
   </form>
 
-  <?php echo($widgets['navigation']->render()); ?>
+  <?= $widgets['navigation']; ?>
 
 </body>

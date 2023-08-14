@@ -4,39 +4,44 @@ namespace App\Service;
 
 use Symfony\Component\HttpFoundation\Request;
 
+use App\Service\ParseURLService;
+
 class RouteService
 {
 
-  public function __construct(
-    private string $path
-  ) {
+  private ParseURLService $parseURL;
+
+  public function __construct(ParseURLService $parseURL)
+  {
+    $this->parseURL = $parseURL;
   }
 
-  public function routing(Request $request)
+  /**
+   * @todo разобраться с отрисовкой ответа при использовании виджета-таблицы и без
+   * @todo подумать что помещать в action_params, если параметров нет при Not Found
+   */
+  public function routing(): void
   {
-    $param = $request->query->all();
-    $map = $this->getRouteMap();
-    foreach ($map as $path => $value) {
-      if ($path === $this->path) {
-        $controller = $value['controller'];
-        $action = $value['action'];
-        if (empty($param)) {
-          return (new ControllerContainer())->get($controller)->$action();
-        } else {
-          return (new ControllerContainer())->get($controller)->$action($param);
-        }
-      }
+    $matchURL = $this->parseURL->matchURL;
+
+    $interface = $matchURL['interface'];
+    $controller = $matchURL['controller'];
+    $action = $matchURL['action'];
+    $actionParams = $matchURL['action_params'];
+
+    if (empty($actionParams)) {
+      (new ControllerContainer())->get($controller)->$action();
+      // return $response->getContent();
+    } else {
+      (new ControllerContainer())->get($controller)->$action($actionParams, $interface);
+      // return $response->getContent();
     }
+
   }
 
-  public function getRouteMap(): array
-  {
-    $filename = "config/route_map.json";
-    $resourse = fopen($filename, "r+");
-    $map = json_decode(file_get_contents($filename), JSON_OBJECT_AS_ARRAY);
-    fclose($resourse);
-    return $map;
-  }
+
+
+
 
 
 }

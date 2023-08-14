@@ -26,7 +26,7 @@
 
 <body>
 
-  <?php echo $content; ?>
+  <?= $content ?>
 
 </body>
 

@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App;
 
+require 'vendor/autoload.php';
+
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
 
-require 'vendor/autoload.php';
-
-use App\Service\ControllerContainer;
+use Dev\Tests\PerfomanceTestService;
 use Dev\Logger\ErrorsGenerator;
 use Dev\Logger\LoggerService;
 use Dev\Tests\TestService;
@@ -18,17 +18,16 @@ use App\Service\Widgets\TableWidget;
 use App\Service\Widgets\NavigationWidget;
 use App\Service\Widgets\PaginationWidget;
 
+use App\Service\Helpers\LinkManager;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Psr\Log\NullLogger;
-
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
-use Monolog\Formatter\HtmlFormatter;
 
 use App\Controllers\AdventController;
+use App\Controllers\DefaultController;
 
-use App\Service\LinkManager;
+use App\Service\ControllerContainer;
+use App\Service\ParseURLService;
 use App\Service\LinkRender;
 use App\Service\RenderViewService;
 use App\Service\ServiceContainer;
@@ -49,8 +48,5 @@ $error = new ErrorsGenerator();
 $test = new TestService();
 $container = new ControllerContainer();
 
-
-$route = new RouteService($request->getPathInfo());
-print $route->routing($request)->getContent();
-
+$test->testApp($request);
 

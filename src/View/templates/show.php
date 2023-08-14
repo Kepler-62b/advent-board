@@ -43,7 +43,7 @@
 </table>
 
 
-<?php echo ($widgets['pagination']); ?>
-<?php echo ($widgets['table']); ?>
-<?php echo ($widgets['navigation']); ?>
-<?php echo ($widgets['getForm']); ?>
+<?= $widgets['pagination']; ?>
+<?= $widgets['table']; ?>
+<?= $widgets['navigation']; ?>
+<?= $widgets['getForm']; ?>

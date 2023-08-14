@@ -1,3 +1,3 @@
-<?php echo ($widgets['table']); ?>
-<?php echo ($widgets['navigation']); ?>
-<?php echo ($widgets['getForm']); ?>
+<?= $widgets['table']; ?>
+<?= $widgets['navigation']; ?>
+<?= $widgets['getForm']; ?>
