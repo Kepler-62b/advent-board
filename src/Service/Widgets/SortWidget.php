@@ -16,10 +16,10 @@ class SortWidget implements WidgetInterface
     $this->linkRender = $linkRender;
     $this->columnName = $columnName;
     $this->filter = 'filter=' . $filter;
-    $this->widget = self::renderWidget();
+    $this->widget = self::render();
   }
 
-  public function renderWidget(): string
+  public function render(): string
   {
     $linkRender = $this->linkRender;
     ob_start();

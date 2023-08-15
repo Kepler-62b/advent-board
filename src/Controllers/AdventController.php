@@ -75,13 +75,14 @@ class AdventController extends DefaultController
 
     return (new Response($content))->send();
   }
-
-  public function showById(array $id, $interface = null): Response
+  /**
+   * @todo принимать не массив, а значение
+   */
+  public function showById(int $id, $interface = null): Response
   {
     // $id = filter_input(INPUT_GET, 'id');
-    $id = $id['id'];
     $repository = $this->repository;
-    $row = $repository->findById($id);
+    $row = $repository->findById($id) ?? throw new NotFoundHttpException(); // @TODO сделать страницу 404
 
     if (isset($interface)) {
       return self::apiRaw($row);
@@ -92,17 +93,16 @@ class AdventController extends DefaultController
     $getFormWidget = (new GetFormWidget($linkRender))->widget;
 
     $tableWidget = new TableWidget(
-      $linkRender,
-      $row,
       [
-        'id' => 'Id',
+        // 'id' => 'Id',
+        'id' => fn (Advert $advert): string => $advert->getId(),
         'item' => 'Item',
         'description' => 'Description',
         'price' => 'Price',
         'image' => 'Image',
         'created_date' => 'Date'
       ],
-      ['image']
+      $rows,
     );
 
     $renderView = new RenderViewService($linkRender);

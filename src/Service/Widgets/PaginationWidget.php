@@ -14,7 +14,6 @@ class PaginationWidget implements WidgetInterface
   public function __construct(LinkRender $linkRender)
   {
     $this->linkRender = $linkRender;
-    $this->widget = self::renderWidget();
   }
 
   public function countRow()
@@ -23,10 +22,10 @@ class PaginationWidget implements WidgetInterface
     return $repository->getCountRows();
   }
 
-  public function renderWidget(): string
+  public function render(): string
   {
     $linkRender = $this->linkRender;
-    $count = self::countRow();
+    $count = $this->countRow();
     ob_start();
     require "src/View/widgets/pagination.php";
     $navigation = ob_get_clean();

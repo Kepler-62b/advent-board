@@ -40,7 +40,7 @@ $request = Request::createFromGlobals();
 $db = new DatabasePDO();
 $repository = new AdventRepository($db);
 $controller = new AdventController($repository);
-$linkManager = new LinkManager();
+$linkManager = new LinkManager($request);
 $linkRender = new LinkRender();
 $test = new TestService();
 $logger = new LoggerService();
@@ -48,5 +48,11 @@ $error = new ErrorsGenerator();
 $test = new TestService();
 $container = new ControllerContainer();
 
-$test->testApp($request);
+// $test->testApp($request);
+
+// print $test->testNavigationWidget($linkRender)->render();
+// print $test->testPaginationWidget($linkRender)->render();
+print $linkManager::link('/', ['page', 'filter']);
+// var_dump($GLOBALS);
+// var_dump($GLOBALS['_SERVER']['REQUEST_URI']);
 

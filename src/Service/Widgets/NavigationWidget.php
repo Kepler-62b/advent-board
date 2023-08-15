@@ -8,15 +8,13 @@ class NavigationWidget implements WidgetInterface
 {
   private LinkRender $linkRender;
 
-  public string $widget;
 
   public function __construct(LinkRender $linkRender)
   {
     $this->linkRender = $linkRender;
-    $this->widget = self::renderWidget();
   }
 
-  public function renderWidget(): string
+  public function render(): string
   {
     $linkRender = $this->linkRender;
     ob_start();

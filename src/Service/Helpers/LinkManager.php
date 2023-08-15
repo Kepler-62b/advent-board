@@ -4,22 +4,43 @@ namespace App\Service\Helpers;
 
 use Symfony\Component\HttpFoundation\Request;
 
-class LinkManager
+final class LinkManager
 {
-  
-  public static function link(string $slug = null, array $queryStringParams = null): string
+  private static Request $request;
+
+  public function __construct(Request $request)
   {
-    $request = Request::createFromGlobals();
-    if (isset($queryStringParams)) {
-      $slug = $slug . '?';
-      $queryStringParams = implode('&', $queryStringParams);
+    self::$request = $request;
+  }
+
+  /**
+   * @todo возможно переделать метод, используя только объект request
+   * @todo сделать выбор для входящих данных из querystring: заданные вручную или приходящие автоматом
+   * @todo подумать про вариативность использования в ссылке параметра getBasePath()
+   * @todo подумать как использовать этот метод, если нет параметров queryString, а роутинг осуществляется через ЧПУ
+   * $queryStringParams = $queryStringParams . $key . '=' . $values; вариант для вормирования URI при использовании ЧПУ
+   */
+  public static function link(string $internalURI = null, array $inputParams = null): string
+  {
+    $request = self::$request;
+    if (isset($inputParams)) {
+      $internalURI = $internalURI . '?';
+      $queryStringParams = [];
+      foreach ($inputParams as $values) {
+        if (filter_has_var(INPUT_GET, $values)) {
+          $queryStringParams[$values] = filter_input(INPUT_GET, $values);
+        }
+      }
+      $queryStringParams = http_build_query($queryStringParams);
+      return $request->getBasePath() . $internalURI . $queryStringParams;
+    } else {
+      return $request->getBasePath() . $internalURI;
     }
-    return $request->getBasePath() . $slug . $queryStringParams;
   }
 
   public static function filter(string $filter)
   {
-    $request = Request::createFromGlobals();
+    $request = self::$request;
     $params = $request->query;
     foreach ($params as $key => $value) {
       if ($key === $filter) {
@@ -29,10 +50,10 @@ class LinkManager
     }
   }
 
-  public static function getBasePath(string $path = null, string $var = null): string
+  public static function linkImage(string $storagePath = null, string $imageName = null): string
   {
-    $request = Request::createFromGlobals();
-    $link = $request->getBasePath() . $path . $var;
+    $request = self::$request;
+    $link = $request->getBasePath() . $storagePath . $imageName;
     return $link;
   }
 }
