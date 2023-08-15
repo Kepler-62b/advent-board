@@ -1,7 +1,7 @@
+<?php use App\Service\Helpers\LinkManager ?>
+
 <h3>Pagination</h3>
 <hr>
-<?
-for ($i = 1; $i <= $count; $i++) { ?>
-  <a href="<?= $linkRender->getPath(); ?>?page=<?= $i; ?><?= $linkRender->getFilter('price'); ?>" class="btn"><?= $i; ?></a>
-<? }
-; ?>
+<?php for ($i = 1; $i <= $count; $i++): ?>
+  <a href="<?= LinkManager::link('/', ['page' => $i], ['filter']) ?>" class="btn"><?= $i; ?></a>
+<?php endfor ?>

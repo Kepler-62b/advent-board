@@ -52,7 +52,11 @@ $container = new ControllerContainer();
 
 // print $test->testNavigationWidget($linkRender)->render();
 // print $test->testPaginationWidget($linkRender)->render();
-print $linkManager::link('/', ['page', 'filter']);
+
+print $linkManager::link('/', null, ['filter']);
+echo "<br>";
+
+
 // var_dump($GLOBALS);
 // var_dump($GLOBALS['_SERVER']['REQUEST_URI']);
 
