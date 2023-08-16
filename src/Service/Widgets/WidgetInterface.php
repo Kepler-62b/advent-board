@@ -5,10 +5,10 @@ namespace App\Service\Widgets;
 interface WidgetInterface
 {
   /**
-   * rendering widget via tamplates widgets
+   * return object - rendering widgets templates
    * 
    * @todo подумать над названием
    */
-  public function render(): string;
+  public function render(): object;
 
 }

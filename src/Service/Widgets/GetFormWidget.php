@@ -2,28 +2,19 @@
 
 namespace App\Service\Widgets;
 
-use App\Service\LinkRender;
+use App\Service\TemplateRenderService;
 
 class GetFormWidget implements WidgetInterface
 {
-  private LinkRender $linkRender;
 
-  public string $widget;
-
-  public function __construct(LinkRender $linkRender)
+  public function __construct()
   {
-    $this->linkRender = $linkRender;
-    $this->widget = self::renderWidget();
 
   }
 
-  public function renderWidget(): string
+  public function render(): TemplateRenderService
   {
-    $linkRender = $this->linkRender;
-    ob_start();
-    require "src/View/widgets/form_get.php";
-    $formGet = ob_get_clean();
-    return $formGet;
+    return new TemplateRenderService('form_get');
   }
 
 }

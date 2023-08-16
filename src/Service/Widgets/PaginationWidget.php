@@ -2,40 +2,44 @@
 
 namespace App\Service\Widgets;
 
+use App\Service\TemplateRenderService;
+use App\Service\ControllerContainer;
+
+
 /** 
  * @todo соеденить пагинацию с таблицей
  */
 
-use App\Service\LinkRender;
-use App\Service\ControllerContainer;
 
 class PaginationWidget implements WidgetInterface
 {
   private const REPOSITORY = 'App\Repository\AdventRepository';
-  private LinkRender $linkRender;
   private int $count;
   public string $widget;
 
-  public function __construct(LinkRender $linkRender)
+  public function __construct()
   {
-    $this->linkRender = $linkRender;
     $this->count = $this->countRow();
   }
 
-  public function countRow()
+  public function __toString()
+  {
+    $template = $this->render();
+    return $template->contentRender();
+   
+  }
+
+  private function countRow()
   {
     $repository = (new ControllerContainer())->get(self::REPOSITORY);
     return $repository->getCountRows();
   }
 
-  public function render(): string
+  public function render(): TemplateRenderService
   {
-    $linkRender = $this->linkRender;
-    $count = $this->count;
-    ob_start();
-    require "src/View/widgets/pagination.php";
-    $navigation = ob_get_clean();
-    return $navigation;
+    return new TemplateRenderService('pagination', [
+      'count' => $this->count
+    ]);
   }
 
 }

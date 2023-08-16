@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Service\Helpers\LinkManager;
 use App\Service\LinkRender;
 
 use App\Service\Widgets\GetFormWidget;
@@ -35,33 +36,26 @@ class AdventController extends DefaultController
     } else {
       $rows = $repository->getAllRows();
     }
-    // $page = filter_input(INPUT_GET, 'page');
-    // $rows = $repository->getAllRows($page);
 
-    $linkRender = new LinkRender();
+    $paginationWidget = new PaginationWidget();
+    $navigationWidget = (new NavigationWidget())->render();
 
-    $paginationWidget = (new PaginationWidget($linkRender))->widget;
-    $navigationWidget = (new NavigationWidget($linkRender))->widget;
-    $getFormWidget = (new GetFormWidget($linkRender))->widget;
-
-    // $sortPriceWidget = (new SortWidget($linkRender, 'Price', 'price'))->widget;
-    // $sortDateWidget = (new SortWidget($linkRender, 'Date', 'created_date'))->widget;
+    $getFormWidget = (new GetFormWidget())->render();
 
     $tableWidget = new TableWidget(
-      $linkRender,
-      $rows,
       [
         'id' => 'Id',
         'item' => 'Item',
         'description' => 'Description',
-        'price' => (new SortWidget($linkRender, 'Price', 'price'))->widget,
+        'price' => new SortWidget('Price', 'price'),
         'image' => 'Image',
-        'created_date' => (new SortWidget($linkRender, 'Date', 'created_date'))->widget
+        'created_date' => new SortWidget('Date', 'created_date'),
       ],
+      $rows,
       ['image']
     );
 
-    $renderView = new RenderViewService($linkRender);
+    $renderView = new RenderViewService();
     $content = $renderView->contentRender(
       "show_widgets",
       null,
@@ -73,8 +67,10 @@ class AdventController extends DefaultController
       ]
     );
 
-    return (new Response($content))->send();
+    return (new Response($content))
+      ->send();
   }
+  
   /**
    * @todo принимать не массив, а значение
    */
@@ -94,8 +90,8 @@ class AdventController extends DefaultController
 
     $tableWidget = new TableWidget(
       [
-        // 'id' => 'Id',
-        'id' => fn (Advert $advert): string => $advert->getId(),
+        'id' => 'Id',
+        // 'id' => fn(Advert $advert): string => $advert->getId(), // @todo сделать по примеру
         'item' => 'Item',
         'description' => 'Description',
         'price' => 'Price',

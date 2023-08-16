@@ -6,12 +6,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RenderViewService
 {
-  private LinkRender $linkRender;
-
-  public function __construct(LinkRender $linkRender)
-  {
-    $this->linkRender = $linkRender;
-  }
 
   /**
    * @todo разобраться, как работает метод contentRender при использовании виджета-таблицы и без использования
@@ -21,7 +15,6 @@ class RenderViewService
    */
   public function contentRender(string $template, array $rows = null, array $widgets = null): string
   {
-    $linkRender = $this->linkRender;
     ob_start();
     require_once "src/View/templates/$template.php";
     $content = ob_get_clean();

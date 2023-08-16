@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 namespace App;
+use App\Service\TemplateRenderService;
 
 require 'vendor/autoload.php';
 
@@ -50,10 +51,23 @@ $container = new ControllerContainer();
 
 // $test->testApp($request);
 
-// print $test->testNavigationWidget($linkRender)->render();
-// print $test->testPaginationWidget($linkRender)->render();
 
-print $linkManager::link('/', null, ['filter']);
+$test->testController($request, $controller, 'showAll');
+
+// var_dump($test->testSortWidget('Price')->render());
+// print $test->testSortWidget('Date');
+
+// print $test->testTableWidget($repository)->render();
+// print $test->testNavigationWidget()->render();
+// print $test->testPaginationWidget()->render();
+
+// print $linkManager::link('/', null, ['filter']);
+// print new TemplateRenderService('sort', ['columnName' => 'Price', 'filter' => 'price']);
+// print new TemplateRenderService('navigation');
+
+// var_dump((new TemplateRenderService('pagination', ['count' => 5]))->contentRender());
+// var_dump((new TemplateRenderService('pagination', ['count' => 5]))->contentRender());
+// print new TemplateRenderService('pagination', ['count' => 5]);
 echo "<br>";
 
 
