@@ -2,8 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Service\LinkRender;
-
+use App\Service\NotFoundHttpException;
 use App\Service\Widgets\GetFormWidget;
 use App\Service\Widgets\PaginationWidget;
 use App\Service\Widgets\TableWidget;
@@ -68,7 +67,6 @@ class AdventController extends DefaultController
       )
     )->contentRender('show_widgets');
 
-
     return (new Response($content))
       ->send();
   }
@@ -81,10 +79,10 @@ class AdventController extends DefaultController
     $id = $actionParams['id'];
     $repository = $this->repository;
 
-    // (empty($repository->findById($id))) ? throw new \Exception('Not found item') : $row = $repository->findById($id);
-    // $row = $repository->findById($id) ?? throw new NotFoundHttpException(); // @TODO сделать страницу 404
+    (empty($repository->findById($id))) ? throw new NotFoundHttpException('Not found item ID ', $id) : $row = $repository->findById($id);
 
-    $row = $repository->findById($id);
+    // @TODO сделать страницу 404
+    // $row = $repository->findById($id) ?? throw new NotFoundHttpException(); 
 
     if (isset($interface)) {
       return self::apiRaw($row);
@@ -182,7 +180,8 @@ class AdventController extends DefaultController
       $rows,
     );
 
-    $content = (new RenderViewService (
+    $content = (
+      new RenderViewService(
       null,
         [
         'table' => $tableWidget,
@@ -198,19 +197,15 @@ class AdventController extends DefaultController
 
   public function create(): Response
   {
-    $linkRender = new LinkRender();
     $navigationWidget = (new NavigationWidget())->render();
     $renderView = new RenderViewService(null, ['navigation' => $navigationWidget]);
     $content = $renderView->contentRender('create');
     return (new Response($content))->send();
-
   }
 
   public function update(): Response
   {
-    $linkRender = new LinkRender();
     $navigationWidget = (new NavigationWidget())->render();
-
     $renderView = new RenderViewService(null, ['navigation' => $navigationWidget]);
     $content = $renderView->contentRender('update');
     return (new Response($content))->send();

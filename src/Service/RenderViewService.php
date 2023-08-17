@@ -33,4 +33,20 @@ class RenderViewService
     return $renderPage;
   }
 
+  public function exceptionContent(string $template)
+  {
+    if(isset($this->data)) {
+      extract($this->data, EXTR_OVERWRITE);
+    }
+
+    // $widgets = $this->widgets;
+
+    ob_start();
+    require_once "src/View/exception/$template.php";
+    $content = ob_get_clean();
+    require_once 'src/View/layout/main.php';
+    $renderPage = ob_get_clean();
+    return $renderPage;
+  }
+
 }

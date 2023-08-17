@@ -7,7 +7,7 @@ class TemplateRenderService
   //@TODO подумать над названием класса и методов в нем
 
   private string $template;
-
+  
   private ?array $params = [];
 
   public function __construct(string $template, array $params = null)
@@ -24,6 +24,7 @@ class TemplateRenderService
   public function contentRender(): string
   {
     $template = $this->template;
+    
     if(isset($this->params)) {
       extract($this->params, EXTR_OVERWRITE);
     }
