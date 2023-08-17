@@ -7,7 +7,6 @@ use App\Service\TemplateRenderService;
 
 class TableWidget implements WidgetInterface, \Stringable
 {
-  private LinkRender $linkRender;
   private array $columnNames = [];
   private ?array $rows = [];
   private ?array $linkImages = [];
@@ -15,7 +14,7 @@ class TableWidget implements WidgetInterface, \Stringable
   /**
    * @todo убрать из зависимостей LinkRender
    */
-  public function __construct(array $columnNames, ?array $rows, ?array $linkImages)
+  public function __construct(array $columnNames, array $rows = null, array $linkImages = null)
   {
     $this->columnNames = $columnNames;
     $this->rows = $rows;

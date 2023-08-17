@@ -14,6 +14,8 @@ class Advent
 
   private string $image;
 
+  // @TODO добавить свойства и методы для полей с датами
+
   public function setId(int $id): static
   {
     $this->id = $id;

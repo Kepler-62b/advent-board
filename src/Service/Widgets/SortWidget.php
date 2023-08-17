@@ -12,7 +12,7 @@ class SortWidget implements WidgetInterface
   public function __construct(string $columnName, string $filter)
   {
     $this->columnName = $columnName;
-    $this->filter = 'filter=' . $filter;
+    $this->filter = $filter;
   }
 
   public function __toString()

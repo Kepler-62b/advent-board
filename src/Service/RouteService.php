@@ -23,6 +23,7 @@ class RouteService
   public function routing(): void
   {
     $matchURL = $this->parseURL->matchURL;
+    var_dump($matchURL);
 
     $interface = $matchURL['interface'];
     $controller = $matchURL['controller'];

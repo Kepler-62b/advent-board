@@ -13,17 +13,11 @@ class DefaultController
 
   public function homePage(): Response
   {
-    $linkRender = new LinkRender();
-    $navigationWidget = (new NavigationWidget($linkRender))->widget;
+    $navigationWidget = (new NavigationWidget())->render();
 
-    $renderView = new RenderViewService($linkRender);
-    $content = $renderView->contentRender(
-      "home_page",
-      null,
-      [
-        'navigation' => $navigationWidget,
-      ]
-    );
+    $content = (new RenderViewService(null, [
+    'navigation' => $navigationWidget,
+    ]))->contentRender('home_page');
 
     return (new Response())
       ->setContent($content)
@@ -37,17 +31,9 @@ class DefaultController
 
   public function notFound(): Response
   {
-    $linkRender = new LinkRender();
-    $navigationWidget = (new NavigationWidget($linkRender))->widget;
+    $navigationWidget = (new NavigationWidget())->render();
 
-    $renderView = new RenderViewService($linkRender);
-    $content = $renderView->contentRender(
-      "not_found",
-      null,
-      [
-        'navigation' => $navigationWidget,
-      ]
-    );
+    $content = (new RenderViewService(null, ['navigation' => $navigationWidget]))->contentRender('not_found');
 
     return (new Response())
       ->setContent($content)
@@ -55,16 +41,28 @@ class DefaultController
       ->send();
   }
 
+  public function empty()
+  {
+
+    $navigationWidget = (new NavigationWidget())->render();
+
+    $content = (new RenderViewService(null, ['navigation' => $navigationWidget]))->contentRender('not_found');
+
+    return (new Response())
+    ->setContent($content)
+    ->setStatusCode(Response::HTTP_OK)
+    ->getContent();
+  }
+
   public function apiRaw($data = null): Response
   {
     $data = json_encode($data);
-    // var_dump($data);
+
     $response = new Response(
       $data,
       Response::HTTP_OK,
       ['content-type' => 'application/json']
     );
-    // var_dump($response);
     return $response->send();
 
   }

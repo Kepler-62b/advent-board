@@ -14,6 +14,7 @@ final class LinkManager
   }
 
   /**
+   * @todo возможно переделать метод, составляя query string не из массива, а из строки
    * @todo возможно переделать метод, используя только объект request
    * @todo сделать фиксированные и приходящие по get параметры qery string
    * @todo сделать выбор для входящих данных из querystring: заданные вручную или приходящие автоматом
@@ -21,7 +22,7 @@ final class LinkManager
    * @todo подумать как использовать этот метод, если нет параметров queryString, а роутинг осуществляется через ЧПУ
    * $queryStringParams = $queryStringParams . $key . '=' . $values; вариант для вормирования URI при использовании ЧПУ
    */
-  public static function link(string $internalURI = null, ?array $bindingParams = null, array $filterParams = null)
+  public static function link(string $internalURI = null, array $bindingParams = null, array $filterParams = null)
   {
     $request = self::$request;
 
@@ -36,22 +37,24 @@ final class LinkManager
       $bindingParams = '';
     }
 
+
     if (isset($filterParams)) {
       if ($bindingParams === '') {
         $internalURI = $internalURI . '?';
-      } else {
-        $bindingParams = $bindingParams . '&';
       }
       $queryStringParams = [];
       foreach ($filterParams as $values) {
         if (filter_has_var(INPUT_GET, $values)) {
           $queryStringParams[$values] = filter_input(INPUT_GET, $values);
+          $filterParams = http_build_query($queryStringParams);
+          // return $request->getBasePath() . $internalURI . $bindingParams . '&' . $filterParams;
+        } else {
+          $filterParams = '';
         }
       }
-      $filterParams = http_build_query($queryStringParams);
-      return $request->getBasePath() . $internalURI . $bindingParams . $filterParams;
-    } else {
-      $filterParams = '';
+      if($filterParams !== '') {
+        $filterParams = '&' . $filterParams;
+      }
     }
 
     // возможно нужна конечная обработка аргументов и приведение к строке

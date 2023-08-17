@@ -16,7 +16,7 @@
         <?= $rows[$i]['id'] ?>
       </td>
       <td>
-        <a href="<?= LinkManager::link('/update') ?>"><?= $rows[$i]['item'] ?></a>
+        <a href="<?= LinkManager::link('/not_found') ?>"><?= $rows[$i]['item'] ?></a>
       </td>
       <td>
         <?= $rows[$i]['description'] ?>
@@ -32,8 +32,5 @@
       </td>
     </tr>
   <?php endfor ?>
-
-
-
 
 </table>

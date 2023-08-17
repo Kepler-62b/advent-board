@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 namespace App;
+use App\Models\Advent;
 use App\Service\TemplateRenderService;
 
 require 'vendor/autoload.php';
@@ -38,6 +39,7 @@ use App\Service\RouteService;
 use App\Repository\AdventRepository;
 
 $request = Request::createFromGlobals();
+$model = new Advent();
 $db = new DatabasePDO();
 $repository = new AdventRepository($db);
 $controller = new AdventController($repository);
@@ -49,10 +51,13 @@ $error = new ErrorsGenerator();
 $test = new TestService();
 $container = new ControllerContainer();
 
-// $test->testApp($request);
+$test->testApp($request);
 
+// $model->setId(1);
+// $closure = fn(Advent $advent): int => $advent->getId();
+// print $closure($model);
 
-$test->testController($request, $controller, 'showAll');
+// $test->testController($request, $controller, 'showAll');
 
 // var_dump($test->testSortWidget('Price')->render());
 // print $test->testSortWidget('Date');
