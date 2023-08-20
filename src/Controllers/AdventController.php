@@ -82,10 +82,10 @@ class AdventController extends DefaultController
     (empty($repository->findById($id))) ? throw new NotFoundHttpException('Not found item ID ', $id) : $row = $repository->findById($id);
 
     // @TODO сделать страницу 404
-    // $row = $repository->findById($id) ?? throw new NotFoundHttpException(); 
+    // $row = $repository->findById($id) ?? throw new NotFoundHttpException();
 
     if (isset($interface)) {
-      return self::apiRaw($row);
+      return $this->apiRaw($row);
     }
 
     $navigationWidget = (new NavigationWidget())->render();

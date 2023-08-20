@@ -38,7 +38,9 @@ class NotFoundHttpException extends \Exception
         'id' => $this->params,
         ]
       )
-    )->exceptionContent('not_found');
+    )->exceptionRender('not_found');
+    
+    var_dump($content);
 
     return (new Response())
       ->setContent($content)
