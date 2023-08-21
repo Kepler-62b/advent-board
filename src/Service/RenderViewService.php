@@ -3,71 +3,54 @@
 namespace App\Service;
 
 class RenderViewService
-{
+{ // @TODO сделать класс для всех путей и расширений
   private const PHP_EXTANSION = '.php';
-  private const EXCEPTION_PATH = 'src/View/exception';
-  private const LAYOUT_PATH = 'src/View/layout';
-  private const TEMPLATE_PATH = 'src/View/template';
+  private const EXCEPTIONS_TEMPLATE_PATH = 'src/View/templates/exceptions/';
+  private const LAYOUTS_TEMPLATE_PATH = 'src/View/templates/layouts/';
+  private const CONTENT_TEMPLATE_PATH = 'src/View/templates/content/';
+  private const WIDGETS_TEMPLATE_PATH = 'src/View/templates/widgets/';
+  private const VIEW_PATH_MAP = [
+    'layouts' => self::LAYOUTS_TEMPLATE_PATH,
+    'content' => self::CONTENT_TEMPLATE_PATH,
+    'exceptions' => self::EXCEPTIONS_TEMPLATE_PATH,
+    'widgets' => self::WIDGETS_TEMPLATE_PATH,
+  ];
 
-  // @TODO подумать, как объеденить с методом TempleteRenderService
-  private ?array $data = [];
-  private ?array $widgets = [];
 
-  public function __construct(array $data = null, array $widgets = null)
+  private array $template = [];
+  private ?array $params = [];
+  private ?array $templates_objects = [];
+
+  public function __construct(array $template, array $params = null)
   {
-    $this->data = $data;
-    $this->widgets = $widgets;
+    $this->template = $template;
+    $this->params = $params;
   }
 
-  /**
-   * @todo разобраться, как работает метод contentRender при использовании виджета-таблицы и без использования
-   * @todo переименовать аргумент rows - могут быть переданны любые данные, не только строки
-   * 
-   */
-  public function contentRender(string $template): string
+  public function __toString(): string
   {
-    $data = $this->data;
-    $widgets = $this->widgets;
-
-    ob_start();
-    require_once "src/View/templates/$template.php";
-    $content = ob_get_clean();
-    require_once 'src/View/layout/main.php';
-    $renderPage = ob_get_clean();
-    return $renderPage;
+    return $this->renderView();
   }
 
-  public function exceptionRender(string $template, string $layout = null)
+  private function prepareView(object $templates_objects)
   {
+    $this->templates_objects[] = $templates_objects;
+  }
 
-    if (isset($this->data)) {
-      extract($this->data, EXTR_OVERWRITE);
+  public function renderView(): string
+  {
+    if (isset($this->params)) {
+      extract($this->params, EXTR_OVERWRITE);
     }
-
-    $templatePath = self::EXCEPTION_PATH . '/' . $template . self::PHP_EXTANSION;
 
     ob_start();
 
-    require_once $templatePath;
+    require self::VIEW_PATH_MAP[key($this->template)] . current($this->template) . self::PHP_EXTANSION;
 
-    // @TODO изменить имя переменной $content и все зависимые от нее методы
     $content = ob_get_clean();
 
-    // $content = ob_get_contents();
-    // ob_end_clean();
-
-    if (isset($layout)) {
-      $layoutPath = self::LAYOUT_PATH . '/' . $layout . self::PHP_EXTANSION;
-      require_once $layoutPath;
-
-      $layoutRender = ob_get_clean();
-
-      // $layoutRender = ob_get_contents();
-      // ob_end_clean();
-
-      return $layoutRender;
-    }
     return $content;
+
   }
 
 }

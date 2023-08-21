@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Service\ViewRenderService;
 use App\Service\NotFoundHttpException;
 use App\Service\Widgets\GetFormWidget;
 use App\Service\Widgets\PaginationWidget;
@@ -104,15 +105,14 @@ class AdventController extends DefaultController
     );
 
     $content = (
-      new RenderViewService(
-      $row,
+      new ViewRenderService(['content' => 'get_widgets'],['layouts' => 'main'],
         [
         'table' => $tableWidget,
         'navigation' => $navigationWidget,
-        'getForm' => $getFormWidget
+        'getForm' => $getFormWidget,
         ]
       )
-    )->contentRender('get_widgets');
+    )->contentRender();
 
     return (new Response($content))->send();
   }

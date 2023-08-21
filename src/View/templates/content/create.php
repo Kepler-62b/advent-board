@@ -14,6 +14,6 @@
     <button>create</button>
   </form>
 
-  <?= $widgets['navigation']; ?>
+  <?= $navigation ?>
 
 </body>

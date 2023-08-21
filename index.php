@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 namespace App;
+
 use App\Models\Advent;
 use App\Service\TemplateRenderService;
 
@@ -51,7 +52,64 @@ $error = new ErrorsGenerator();
 $test = new TestService();
 $container = new ControllerContainer();
 
-$test->testApp($request);
+// $test->testApp($request);
+
+// print $test->testViewRenderService(['widget' => 'navigation'], ['layout' => 'main']);
+// $test->testRenderViewService(['widgets' => 'navigation'])->render();
+// print $test->testRenderViewService(['widgets' => 'navigation']);
+// var_dump( $test->testRenderViewService(['widgets' => 'navigation']));
+// print $test->testRenderViewService(['widgets' => 'pagination'], ['count' => 5]);
+// var_dump($test->testRenderViewService(['widgets' => 'pagination'], ['count' => 5]));
+
+// print $test->testRenderViewService(
+//   ['layouts' => 'main'],
+//   [
+//     'content' => $test->testRenderViewService(
+//       ['content' => 'create'],
+//       [
+//         'navigation' =>
+//         $test->testRenderViewService(['widgets' => 'navigation'])->render()
+//       ]
+//     )
+//   ]
+// );
+
+
+$navigation = $test->testRenderViewService(['widgets' => 'navigation'])->renderView();
+// $pagination = $test->testRenderViewService(
+//   null,
+//   [
+//     'widgets' => 'pagination',
+//     'count' => 5
+//   ]
+// )->renderView();
+// var_dump($navigation);
+// var_dump($pagination);
+$content = $test->testRenderViewService(
+  ['content' => 'create'],
+  [
+    'navigation' => $navigation,
+  ]
+)->renderView();
+// dd($content);
+// print($content);
+
+// $content = $test->testRenderViewService([
+//   'content' => 'create',
+//   'navigation' => $navigation,
+// ])->renderView();
+
+$renderView = $test->testRenderViewService(
+  ['layouts' => 'main'],
+  [
+    'content' => $content,
+    'navigation' => $navigation,
+  ]
+);
+print $renderView;
+
+
+
 
 // $model->setId(1);
 // $closure = fn(Advent $advent): int => $advent->getId();
@@ -78,4 +136,3 @@ echo "<br>";
 
 // var_dump($GLOBALS);
 // var_dump($GLOBALS['_SERVER']['REQUEST_URI']);
-

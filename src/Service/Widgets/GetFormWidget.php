@@ -2,7 +2,7 @@
 
 namespace App\Service\Widgets;
 
-use App\Service\TemplateRenderService;
+use App\Service\ViewRenderService;
 
 class GetFormWidget implements WidgetInterface
 {
@@ -12,9 +12,9 @@ class GetFormWidget implements WidgetInterface
 
   }
 
-  public function render(): TemplateRenderService
+  public function render(): ViewRenderService
   {
-    return new TemplateRenderService('form_get');
+    return new ViewRenderService(['widgets' => 'form_get']);
   }
 
 }

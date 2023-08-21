@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Service\ViewRenderService;
 use App\Service\Widgets\NavigationWidget;
 use App\Service\Widgets\GetFormWidget;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,22 +26,25 @@ class NotFoundHttpException extends \Exception
    */
   public function notFoundPage(): Response
   {
-    // @TODO подумать, куда это убрать (в отдельный класс с конфигами?)
+    // @TODO подумать, куда это убрать (в отдельный класс с конфигами?) или устанавливать константой
     ini_set('display_errors', 'Off');
 
     $navigationWidget = (new NavigationWidget())->render();
     $getFormWidget = (new GetFormWidget())->render();
 
-    $content = (new RenderViewService(
+    $content = (
+      new ViewRenderService(
+        ['exceptions' => 'not_found'],
+        ['layouts' => 'main'],
         [
         'navigation' => $navigationWidget,
         'getForm' => $getFormWidget,
         'id' => $this->params,
         ]
       )
-    )->exceptionRender('not_found');
-    
-    var_dump($content);
+    )->contentRender();
+
+    // var_dump($content);
 
     return (new Response())
       ->setContent($content)

@@ -2,7 +2,7 @@
 
 namespace App\Service\Widgets;
 
-use App\Service\TemplateRenderService;
+use App\Service\ViewRenderService;
 
 class NavigationWidget implements WidgetInterface
 {
@@ -11,9 +11,9 @@ class NavigationWidget implements WidgetInterface
   {
   }
 
-  public function render(): TemplateRenderService
+  public function render(): ViewRenderService
   {
-    return new TemplateRenderService('navigation');
+    return new ViewRenderService(['widgets' => 'navigation']);
   }
 
 }

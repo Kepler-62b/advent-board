@@ -2,8 +2,7 @@
 
 namespace App\Service\Widgets;
 
-use App\Service\LinkRender;
-use App\Service\TemplateRenderService;
+use App\Service\ViewRenderService;
 
 class TableWidget implements WidgetInterface, \Stringable
 {
@@ -27,10 +26,11 @@ class TableWidget implements WidgetInterface, \Stringable
     return $template->contentRender();
   }
 
-  public function render(): TemplateRenderService
+  public function render(): ViewRenderService
   {
-    return new TemplateRenderService(
-      'table_alt',
+    return new ViewRenderService(
+      ['widgets' => 'table_alt'],
+      null,
       [
         'columnNames' => $this->columnNames,
         'rows' => $this->rows,
