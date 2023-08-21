@@ -18,20 +18,22 @@ class RenderViewService
 
 
   private array $template = [];
-  private ?array $params = [];
+  private ?array $templateParams = [];
   private ?array $templates_objects = [];
 
-  public function __construct(array $template, array $params = null)
+  public function __construct(array $template, array $templateParams = null)
   {
     $this->template = $template;
-    $this->params = $params;
+    $this->templateParams = $templateParams;
   }
 
   public function __toString(): string
   {
     return $this->renderView();
   }
-
+  /**
+   * @TODO подумать как можно использовать 
+   */
   private function prepareView(object $templates_objects)
   {
     $this->templates_objects[] = $templates_objects;
@@ -39,8 +41,8 @@ class RenderViewService
 
   public function renderView(): string
   {
-    if (isset($this->params)) {
-      extract($this->params, EXTR_OVERWRITE);
+    if (isset($this->templateParams)) {
+      extract($this->templateParams, EXTR_OVERWRITE);
     }
 
     ob_start();

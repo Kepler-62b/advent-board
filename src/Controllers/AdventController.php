@@ -80,7 +80,7 @@ class AdventController extends DefaultController
     $id = $actionParams['id'];
     $repository = $this->repository;
 
-    (empty($repository->findById($id))) ? throw new NotFoundHttpException('Not found item ID ', $id) : $row = $repository->findById($id);
+    $row = (empty($repository->findById($id))) ? throw new NotFoundHttpException('Not found item ID ', $id) : $repository->findById($id);
 
     // @TODO сделать страницу 404
     // $row = $repository->findById($id) ?? throw new NotFoundHttpException();
@@ -104,8 +104,7 @@ class AdventController extends DefaultController
       $row,
     );
 
-    $content = (
-      new ViewRenderService(['content' => 'get_widgets'],['layouts' => 'main'],
+    $content = (new ViewRenderService(['content' => 'get_widgets'],['layouts' => 'main'],
         [
         'table' => $tableWidget,
         'navigation' => $navigationWidget,

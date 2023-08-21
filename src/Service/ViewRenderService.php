@@ -34,32 +34,7 @@ class ViewRenderService
 
   public function __toString(): string
   {
-    // return $this->templateRender();
     return $this->contentRender();
-  }
-
-  /**
-   * @deprecated не использовать
-   */
-  public function templateRender(): string
-  {
-    $template = current($this->template);
-
-    if (isset($this->params)) {
-      extract($this->params, EXTR_OVERWRITE);
-    }
-
-    ob_start();
-
-    require "src/View/widgets/$template.php";
-
-
-    $content = ob_get_clean();
-
-    // $content = ob_get_contents();
-    // ob_end_clean();
-
-    return $content;
   }
   
 
@@ -71,7 +46,6 @@ class ViewRenderService
     ob_start();
     require self::VIEW_PATH_MAP[key($this->viewTemplate)] . current($this->viewTemplate) . self::PHP_EXTANSION;
 
-    // @TODO изменить имя переменной $content и все зависимые от нее методы
     $content = ob_get_clean();
 
     if (isset($this->layout)) {
