@@ -7,13 +7,13 @@ use App\Service\ViewRenderService;
 class TableWidget implements WidgetInterface, \Stringable
 {
   private array $columnNames = [];
-  private ?array $rows = [];
+  private ?object $rows;
   private ?array $linkImages = [];
 
   /**
    * @todo убрать из зависимостей LinkRender
    */
-  public function __construct(array $columnNames, array $rows = null, array $linkImages = null)
+  public function __construct(array $columnNames, object $rows = null, array $linkImages = null)
   {
     $this->columnNames = $columnNames;
     $this->rows = $rows;
@@ -29,7 +29,7 @@ class TableWidget implements WidgetInterface, \Stringable
   public function render(): ViewRenderService
   {
     return new ViewRenderService(
-      ['widgets' => 'table_alt'],
+      ['widgets' => 'table_iterator'],
       null,
       [
         'columnNames' => $this->columnNames,

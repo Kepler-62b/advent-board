@@ -13,6 +13,8 @@ class Advent
   private int $price;
 
   private string $image;
+  private string $created_date;
+  private string $modified_date;
 
   // @TODO добавить свойства и методы для полей с датами
 
@@ -70,4 +72,5 @@ class Advent
   {
     return $this->image;
   }
+
 }

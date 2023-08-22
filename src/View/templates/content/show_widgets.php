@@ -1,4 +1,4 @@
-<?= $widgets['table']; ?>
-<?= $widgets['pagination']; ?>
-<?= $widgets['navigation']; ?>
-<?= $widgets['getForm']; ?>
+<?= $table ?>
+<?= $pagination ?>
+<?= $navigation ?>
+<?= $getForm ?>

@@ -31,34 +31,18 @@ class AdventController extends DefaultController
   {
     $repository = $this->repository;
     if ($page = filter_input(INPUT_GET, 'page')) {
-      $rows = $repository->getAllRows($page);
+      $data = $repository->getAllRows($page);
     } else {
-      $rows = $repository->getAllRows();
+      $data = $repository->getAllRows();
     }
-
-    $paginationWidget = new PaginationWidget();
+    
+    $paginationWidget = (new PaginationWidget())->render();
     $navigationWidget = (new NavigationWidget())->render();
-
     $getFormWidget = (new GetFormWidget())->render();
-
-    $tableWidget = new TableWidget(
-      [
-        'id' => 'Id',
-        // @TODO сделать по примеру
-        // 'id' => fn(Advent $advent): int => $advent->getId(),
-        'item' => 'Item',
-        'description' => 'Description',
-        'price' => new SortWidget('Price', 'price'),
-        'image' => 'Image',
-        'created_date' => new SortWidget('Date', 'created_date'),
-      ],
-      $rows,
-      ['image']
-    );
+    $tableWidget = new TableWidget(['Id', 'Item', 'Description', 'Price', 'Image', 'Date'], $data);
 
     $content = (
-      new RenderViewService(
-      null,
+      new ViewRenderService(['content' => 'show_widgets'], ['layouts' => 'main'],
         [
         'table' => $tableWidget,
         'pagination' => $paginationWidget,
@@ -66,7 +50,7 @@ class AdventController extends DefaultController
         'getForm' => $getFormWidget
         ]
       )
-    )->contentRender('show_widgets');
+    )->contentRender();
 
     return (new Response($content))
       ->send();
@@ -79,11 +63,8 @@ class AdventController extends DefaultController
   {
     $id = $actionParams['id'];
     $repository = $this->repository;
-
-    $row = (empty($repository->findById($id))) ? throw new NotFoundHttpException('Not found item ID ', $id) : $repository->findById($id);
-
     // @TODO сделать страницу 404
-    // $row = $repository->findById($id) ?? throw new NotFoundHttpException();
+    $row = $repository->findById($id) ?? throw new NotFoundHttpException('Not found item ID ', $id);
 
     if (isset($interface)) {
       return $this->apiRaw($row);
@@ -104,7 +85,10 @@ class AdventController extends DefaultController
       $row,
     );
 
-    $content = (new ViewRenderService(['content' => 'get_widgets'],['layouts' => 'main'],
+    $content = (
+      new ViewRenderService(
+        ['content' => 'get_widgets'],
+        ['layouts' => 'main'],
         [
         'table' => $tableWidget,
         'navigation' => $navigationWidget,

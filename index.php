@@ -54,5 +54,8 @@ $container = new ControllerContainer();
 
 $test->testApp($request);
 
+
+// var_dump($test->testRenderViewService(['widgets' => 'navigation'])->{'template'});
+
 echo "<br>";
 

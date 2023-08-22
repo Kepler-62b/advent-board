@@ -2,7 +2,7 @@
 
 namespace App\Service\Widgets;
 
-use App\Service\TemplateRenderService;
+use App\Service\RenderViewService;
 use App\Service\ControllerContainer;
 
 
@@ -25,8 +25,8 @@ class PaginationWidget implements WidgetInterface
   public function __toString()
   {
     $template = $this->render();
-    return $template->contentRender();
-   
+    return $template->renderView();
+
   }
 
   private function countRow()
@@ -35,11 +35,9 @@ class PaginationWidget implements WidgetInterface
     return $repository->getCountRows();
   }
 
-  public function render(): TemplateRenderService
+  public function render(): RenderViewService
   {
-    return new TemplateRenderService('pagination', [
-      'count' => $this->count
-    ]);
+    return new RenderViewService(['widgets' => 'pagination'], ['count' => $this->count]);
   }
 
 }

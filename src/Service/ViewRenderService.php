@@ -19,15 +19,15 @@ class ViewRenderService
     'widgets' => self::WIDGETS_TEMPLATE_PATH,
   ];
 
-  private array $viewTemplate;
+  private array $template;
 
   private ?array $layout = [];
 
   private ?array $params = [];
 
-  public function __construct(array $viewTemplate, array $layout = null, array $params = null)
+  public function __construct(array $template, array $layout = null, array $params = null)
   {
-    $this->viewTemplate = $viewTemplate;
+    $this->template = $template;
     $this->params = $params;
     $this->layout = $layout;
   }
@@ -44,7 +44,7 @@ class ViewRenderService
       extract($this->params, EXTR_OVERWRITE);
     }
     ob_start();
-    require self::VIEW_PATH_MAP[key($this->viewTemplate)] . current($this->viewTemplate) . self::PHP_EXTANSION;
+    require self::VIEW_PATH_MAP[key($this->template)] . current($this->template) . self::PHP_EXTANSION;
 
     $content = ob_get_clean();
 
