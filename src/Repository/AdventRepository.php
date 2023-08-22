@@ -24,7 +24,7 @@ class AdventRepository
     $this->pdo = $pdo;
   }
 
-  public function getAllRows(int $page = 1): \Traversable
+  public function getAllRows(int $page = 1)
   {
     // $monologLogger = new Logger(AdventRepository::class);
     // $monologLogger->pushHandler(new StreamHandler('dev/Logger/log/dev.log', Logger::DEBUG));
@@ -42,13 +42,15 @@ class AdventRepository
     try {
       $pdo_statement->bindValue(":offset", $offset, \PDO::PARAM_INT);
       $pdo_statement->execute();
-      $result = $pdo_statement->fetchAll(\PDO::FETCH_CLASS, DefaultClass::class);
 
-      $storage = new DefaultClass();
 
-      $storage->set($result);
+      // $result = $pdo_statement->fetchAll(\PDO::FETCH_CLASS, DefaultClass::class);
+      // $storage = new DefaultClass();
+      // $storage->set($result);
+      // return $storage->getIterator();
+      // --------------------------------------
 
-      return $storage->getIterator();
+      return $pdo_statement->fetchAll(\PDO::FETCH_CLASS, Advent::class);
 
     } catch (\PDOException $exception) {
       // $monologLogger->critical('Error:', ['exception' => $exception]);

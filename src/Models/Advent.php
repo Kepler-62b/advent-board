@@ -5,18 +5,12 @@ namespace App\Models;
 class Advent
 {
   private int $id;
-
   private string $item;
-
   private string $description;
-
   private int $price;
-
   private string $image;
   private string $created_date;
   private string $modified_date;
-
-  // @TODO добавить свойства и методы для полей с датами
 
   public function setId(int $id): static
   {
@@ -71,6 +65,16 @@ class Advent
   public function getImage(): string
   {
     return $this->image;
+  }
+
+  public function getCreatedDate(): string
+  {
+    return $this->created_date;
+  }
+
+  public function getModifiedDate(): string
+  {
+    return $this->modified_date;
   }
 
 }

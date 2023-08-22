@@ -35,14 +35,25 @@ class AdventController extends DefaultController
     } else {
       $data = $repository->getAllRows();
     }
-    
+
+    // START test code block  --------------------------------------
+    var_dump($data);
+    $tableWidget = new TableWidget(['Id', 'Item', 'Description', 'Price', 'Image', 'Date'], $data);
+    print($tableWidget);
+
+
+    die;
+    // END test code block    --------------------------------------
+
     $paginationWidget = (new PaginationWidget())->render();
     $navigationWidget = (new NavigationWidget())->render();
     $getFormWidget = (new GetFormWidget())->render();
     $tableWidget = new TableWidget(['Id', 'Item', 'Description', 'Price', 'Image', 'Date'], $data);
 
     $content = (
-      new ViewRenderService(['content' => 'show_widgets'], ['layouts' => 'main'],
+      new ViewRenderService(
+        ['content' => 'show_widgets'],
+        ['layouts' => 'main'],
         [
         'table' => $tableWidget,
         'pagination' => $paginationWidget,
