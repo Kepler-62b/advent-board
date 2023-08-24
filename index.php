@@ -56,12 +56,14 @@ $container = new ControllerContainer();
 // $test->testApp($request);
 
 // $pagination = new Pagination(['totalCount' => 22], ['sampleLimit' => 5]);
-// $iterator = $pagination->createLink();
+// $iterator = $pagination->create();
 // var_dump($iterator);
 // print($pagination);
 
 
-$pagination = (new Pagination(['totalCount' => 22], ['sampleLimit' => 5]))->createLink();
+$pagination = (new Pagination(['totalCount' => 22], ['sampleLimit' => 3]));
+// $pagination = $pagination->setIterator();
+$pagination = $pagination->create();
 // var_dump($pagination);
 
 print $test->testViewRenderService(

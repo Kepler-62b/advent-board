@@ -2,6 +2,7 @@
 
 namespace App\Service\Helpers;
 
+use App\Service\Widgets\WidgetInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Service\Widgets\Pagination;
 
@@ -23,7 +24,7 @@ final class LinkManager
    * @todo подумать как использовать этот метод, если нет параметров queryString, а роутинг осуществляется через ЧПУ
    * $queryStringParams = $queryStringParams . $key . '=' . $values; вариант для вормирования URI при использовании ЧПУ
    */
-  public static function link(string $internalURI = null, array $bindingParams = null, array $filterParams = null)
+  public static function link(string $internalURI = null, array $bindingParams = null, array $externalParams = null)
   {
     $request = self::$request;
 
@@ -39,31 +40,31 @@ final class LinkManager
     }
 
 
-    if (isset($filterParams)) {
+    if (isset($externalParams)) {
       if ($bindingParams === '') {
         $internalURI = $internalURI . '?';
       }
       $queryStringParams = [];
-      foreach ($filterParams as $values) {
+      foreach ($externalParams as $values) {
         if (filter_has_var(INPUT_GET, $values)) {
           $queryStringParams[$values] = filter_input(INPUT_GET, $values);
-          $filterParams = http_build_query($queryStringParams);
-          // return $request->getBasePath() . $internalURI . $bindingParams . '&' . $filterParams;
+          $externalParams = http_build_query($queryStringParams);
+          // return $request->getBasePath() . $internalURI . $bindingParams . '&' . $externalParams;
         } else {
-          $filterParams = '';
+          $externalParams = '';
         }
       }
-      if($filterParams !== '') {
-        $filterParams = '&' . $filterParams;
+      if ($externalParams !== '') {
+        $externalParams = '&' . $externalParams;
       }
     }
 
     // возможно нужна конечная обработка аргументов и приведение к строке
-    return $request->getBasePath() . $internalURI . $bindingParams . $filterParams;
+    return $request->getBasePath() . $internalURI . $bindingParams . $externalParams;
   }
 
   /**
-   * @deprecated объеденен с методом link
+   * @deprecated не использовать (объеденен с методом link)
    */
   public static function filter(string $filter)
   {
@@ -87,8 +88,24 @@ final class LinkManager
     return $link;
   }
 
-  public static function linkPagination()
+  public static function widget(WidgetInterface $widget)
   {
-    return '<a href="'. self::link();
+    $reflection = new \ReflectionClass($widget);
+    $propsStorage = [];
+    foreach ($reflection->getProperties() as $prop) {
+      $propsStorage[$prop->getName()] = $prop->getValue($widget);
+    }
+
+    for ($i = 1; $i <= $propsStorage['sampleLimit']; $i++) {
+      $link = self::link('/show', [$propsStorage['divider'] => $i], $propsStorage['filter']);
+      $storageLinks[] = "<a href=\"${link}\">${i}</a>";
+    }
+
+    for ($i = 1; $i <= count($storageLinks); $i++) {
+      $codeBlock = "<div>{pagination}</div>";
+      $replace['{pagination}'] = implode(' ', $storageLinks);
+      $codeBlock = strtr($codeBlock, $replace);
+    }
+    return $codeBlock;
   }
 }

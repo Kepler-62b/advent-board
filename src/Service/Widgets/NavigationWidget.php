@@ -18,11 +18,6 @@ class NavigationWidget implements WidgetInterface
     return $template->renderView();
   }
 
-  // public function render(): ViewRenderService
-  // {
-  //   return new ViewRenderService(['widgets' => 'navigation']);
-  // }
-
   public function render(): RenderViewService
   {
     return new RenderViewService(['widgets' => 'navigation']);

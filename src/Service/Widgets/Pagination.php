@@ -15,13 +15,12 @@ use App\Service\Helpers\LinkManager;
 class Pagination implements WidgetInterface
 {
   // private array $paginationParams;
-  private string $pageParam = 'page';
-  private string $filterParam = '';
+  private string $divider = 'page';
+
+  // @TODO подумать как пробрасывать пустой массив в LinkManager
+  private array $filter = ['pagination'];
   private int $totalCount;
   private int $sampleLimit;
-  public array $storage = [];
-  public \ArrayIterator $iterator;
-
 
   public function __construct(array $totalCount, array $sampleLimit = ['sampleLimit' => 2])
   {
@@ -35,30 +34,41 @@ class Pagination implements WidgetInterface
     return $template->renderView();
   }
 
-  private function count(): int
+  public function setDivider(string $divider): self
+  {
+    $this->divider = $divider;
+    return $this;
+  }
+
+  public function setFilter(array $filter): self
+  {
+    $this->filter = $filter;
+    return $this;
+  }
+
+  private function count(): float
   {
     return ceil($this->totalCount / $this->sampleLimit);
   }
 
-  public function createLink(): \Traversable
+  public function create(): \Traversable
   {
 
-    for ($i = 1; $i <= $this->count(); $i++) {
-      $link = "<a href=\"{link}\" class=\"{class}\">{number}</a>";
-      $replace['{link}'] = LinkManager::link('/show', [$this->pageParam => $i], [$this->filterParam]);
-      $replace['{number}'] = $i;
-      $replace['{class}'] = 'btn';
-      $link = strtr($link, $replace);
-      $storageLinks[] = $link;
-    }
-
     // for ($i = 1; $i <= $this->count(); $i++) {
-    //   $link = LinkManager::link('/show', [$this->pageParam => $i], [$this->filterParam]);
-    //   $storageLinks[] = "<a href=\"${link}\">${i}</a>";
+    //   $link = "<a href=\"{link}\" class=\"{class}\">{number}</a>";
+    //   $replace['{link}'] = LinkManager::link('/show', [$this->divider => $i], [$this->filter]);
+    //   $replace['{number}'] = $i;
+    //   $replace['{class}'] = 'btn';
+    //   $link = strtr($link, $replace);
+    //   $storageLinks[] = $link;
     // }
 
-    return new \ArrayIterator($storageLinks);
+    for ($i = 1; $i <= $this->count(); $i++) {
+      $link = LinkManager::link('/show', [$this->divider => $i], $this->filter);
+      $storageLinks[] = "<a href=\"${link}\">${i}</a>";
+    }
 
+    return new \ArrayIterator($storageLinks);
   }
 
   public function render(): RenderViewService
@@ -68,7 +78,7 @@ class Pagination implements WidgetInterface
     // var_dump(get_defined_vars());
 
     return new RenderViewService(['widgets' => 'pagination_object'], [
-      'storage' => $this->createLink(),
+      'storage' => $this->create(),
     ]);
   }
 
