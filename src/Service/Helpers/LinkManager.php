@@ -3,6 +3,7 @@
 namespace App\Service\Helpers;
 
 use Symfony\Component\HttpFoundation\Request;
+use App\Service\Widgets\Pagination;
 
 final class LinkManager
 {
@@ -84,5 +85,10 @@ final class LinkManager
     $request = self::$request;
     $link = $request->getBasePath() . $storagePath . $imageName;
     return $link;
+  }
+
+  public static function linkPagination()
+  {
+    return '<a href="'. self::link();
   }
 }

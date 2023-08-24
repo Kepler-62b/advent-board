@@ -163,6 +163,18 @@ class AdventRepository
     return $count;
   }
 
+  public function getCount(): int
+  {
+    $connection = $this->pdo;
+    $table = $this->table;
+
+    $sql = "SELECT COUNT(*) FROM $table";
+
+    $pdo_statment = $connection->query($sql);
+    $count = $pdo_statment->fetch(\PDO::FETCH_NUM);
+    return $count[0];
+  }
+
   public function getMax(int $page, string $filter): array
   {
     $connection = $this->pdo;

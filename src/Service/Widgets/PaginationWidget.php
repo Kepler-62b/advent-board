@@ -15,7 +15,6 @@ class PaginationWidget implements WidgetInterface
 {
   private const REPOSITORY = 'App\Repository\AdventRepository';
   private int $count;
-  public string $widget;
 
   public function __construct()
   {
@@ -26,7 +25,6 @@ class PaginationWidget implements WidgetInterface
   {
     $template = $this->render();
     return $template->renderView();
-
   }
 
   private function countRow()
@@ -39,5 +37,8 @@ class PaginationWidget implements WidgetInterface
   {
     return new RenderViewService(['widgets' => 'pagination'], ['count' => $this->count]);
   }
+
+
+  
 
 }

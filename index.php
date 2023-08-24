@@ -5,6 +5,7 @@ namespace App;
 
 use App\Models\Advent;
 use App\Service\TemplateRenderService;
+use App\Service\Widgets\Pagination;
 
 require 'vendor/autoload.php';
 
@@ -52,10 +53,25 @@ $error = new ErrorsGenerator();
 $test = new TestService();
 $container = new ControllerContainer();
 
-$test->testApp($request);
+// $test->testApp($request);
+
+// $pagination = new Pagination(['totalCount' => 22], ['sampleLimit' => 5]);
+// $iterator = $pagination->createLink();
+// var_dump($iterator);
+// print($pagination);
 
 
-// var_dump($test->testRenderViewService(['widgets' => 'navigation'])->{'template'});
+$pagination = (new Pagination(['totalCount' => 22], ['sampleLimit' => 5]))->createLink();
+// var_dump($pagination);
+
+print $test->testViewRenderService(
+  ['widgets' => 'pagination_object'],
+  ['layouts' => 'main'],
+  [
+    'pagination' => $pagination,
+  ]
+);
+
+
 
 echo "<br>";
-

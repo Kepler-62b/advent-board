@@ -31,6 +31,7 @@ class RenderViewService
   {
     return $this->renderView();
   }
+  
   /**
    * @TODO подумать как можно использовать 
    */

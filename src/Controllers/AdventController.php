@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Service\ViewRenderService;
 use App\Service\NotFoundHttpException;
 use App\Service\Widgets\GetFormWidget;
+use App\Service\Widgets\Pagination;
 use App\Service\Widgets\PaginationWidget;
 use App\Service\Widgets\TableWidget;
 use App\Service\Widgets\NavigationWidget;
@@ -37,9 +38,14 @@ class AdventController extends DefaultController
     }
 
     // START test code block  --------------------------------------
-    var_dump($data);
-    $tableWidget = new TableWidget(['Id', 'Item', 'Description', 'Price', 'Image', 'Date'], $data);
-    print($tableWidget);
+    var_dump($repository->getCount());
+    $pagination = new Pagination(['totalCount' => $repository->getCount()], ['sampleLimit' => 5]);
+    // var_dump($pagination->storage);
+    // $pagination = $pagination->createLink();
+    var_dump($pagination);
+    // var_dump($pagination->render());
+    print($pagination);
+
 
 
     die;
