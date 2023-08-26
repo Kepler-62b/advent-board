@@ -1,0 +1,4 @@
+<?= $table ?>
+<?= $pagination ?>
+<?= $navigation ?>
+<?= $getForm ?>

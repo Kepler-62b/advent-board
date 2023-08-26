@@ -15,9 +15,9 @@ class ParseURLService
   public function __construct(Request $request)
   {
     if (str_contains($request->getPathInfo(), 'api')) {
-      $this->matchURL = self::matchApiURL($request);
+      $this->matchURL = $this->matchApiURL($request);
     } else {
-      $this->matchURL = self::matchAppURL($request);
+      $this->matchURL = $this->matchAppURL($request);
     }
   }
 
@@ -36,7 +36,7 @@ class ParseURLService
   {
     $incomingURL = $request->getPathInfo();
     $queryString = $request->query->all();
-    $routeMap = self::getRouteMap($this::APP_MAP);
+    $routeMap = $this->getRouteMap(self::APP_MAP);
 
     foreach ($routeMap as $uriMap => $routeParamsMap) {
       if ($uriMap === $incomingURL) {
@@ -47,12 +47,12 @@ class ParseURLService
           'action' => $routeParamsMap['action'],
           'action_params' => $queryString,
         ];
-        var_dump($this->matchURL);
         return $this->matchURL;
       }
     }
 
     $this->matchURL = [
+      'interface' => null,
       'incomingURL' => $incomingURL,
       'controller' => $routeParamsMap['controller'],
       'action' => 'notFound',
@@ -69,7 +69,7 @@ class ParseURLService
   public function matchApiURL(Request $request)
   {
     $incomingURL = $request->getPathInfo();
-    $routeMap = self::getRouteMap($this::API_MAP);
+    $routeMap = $this->getRouteMap(self::API_MAP);
 
     foreach ($routeMap as $urlMap => $routeParamsMap) {
       if (preg_split("/\d+/", $incomingURL) === preg_split("/{(\w*)}/", $urlMap)) {

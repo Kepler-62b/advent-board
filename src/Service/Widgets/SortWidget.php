@@ -2,30 +2,31 @@
 
 namespace App\Service\Widgets;
 
-use App\Service\LinkRender;
+use App\Service\RenderViewService;
 
 class SortWidget implements WidgetInterface
 {
-  private LinkRender $linkRender;
   private string $columnName;
   private string $filter;
-  public string $widget;
 
-  public function __construct(LinkRender $linkRender, string $columnName, string $filter)
+  public function __construct(string $columnName, string $filter)
   {
-    $this->linkRender = $linkRender;
     $this->columnName = $columnName;
-    $this->filter = 'filter=' . $filter;
-    $this->widget = self::renderWidget();
+    $this->filter = $filter;
   }
 
-  public function renderWidget(): string
+  public function __toString()
   {
-    $linkRender = $this->linkRender;
-    ob_start();
-    require "src/View/widgets/sort.php";
-    $sort = ob_get_clean();
-    return $sort;
+    $template = $this->render();
+    return $template->renderView();
+  }
+
+  public function render(): RenderViewService
+  {
+    return new RenderViewService(['widgets' => 'sort'], [
+      'columnName' => $this->columnName,
+      'filter' => $this->filter
+    ]);
   }
 
 

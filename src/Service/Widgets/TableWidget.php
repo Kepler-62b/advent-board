@@ -2,45 +2,42 @@
 
 namespace App\Service\Widgets;
 
-use App\Service\LinkRender;
+use App\Service\ViewRenderService;
 
 class TableWidget implements WidgetInterface, \Stringable
 {
-  private LinkRender $linkRender;
-  private ?array $rows = [];
   private array $columnNames = [];
+  private $rows;
   private ?array $linkImages = [];
-  public string $widget;
 
-  public function __construct(LinkRender $linkRender, ?array $rows, array $columnNames, ?array $linkImages)
+  /**
+   * @todo убрать из зависимостей LinkRender
+   */
+  public function __construct(array $columnNames, object|array $rows = null, array $linkImages = null)
   {
-    $this->linkRender = $linkRender;
-    $this->rows = $rows;
     $this->columnNames = $columnNames;
+    $this->rows = $rows;
     $this->linkImages = $linkImages;
-    $this->widget = self::renderWidget();
   }
 
   public function __toString(): string
   {
-    $linkRender = $this->linkRender;
-    $columnNames = $this->columnNames;
-    $rows = $this->rows;
-    ob_start();
-    require "src/View/widgets/table.php";
-    $table = ob_get_clean();
-    return $table;
+    $template = $this->render();
+    return $template->contentRender();
   }
 
-  public function renderWidget(): string
+  public function render(): ViewRenderService
   {
-    $linkRender = $this->linkRender;
-    $columnNames = $this->columnNames;
-    $rows = $this->rows;
-    ob_start();
-    require "src/View/widgets/table.php";
-    $table = ob_get_clean();
-    return $table;
+    return new ViewRenderService(
+      ['widgets' => 'table_array'],
+      null,
+      [
+        'columnNames' => $this->columnNames,
+        'rows' => $this->rows,
+        'linkImages' => $this->linkImages,
+      ]
+    );
+
   }
 
 }

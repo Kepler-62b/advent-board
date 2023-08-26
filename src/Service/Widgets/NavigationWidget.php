@@ -2,27 +2,25 @@
 
 namespace App\Service\Widgets;
 
-use App\Service\LinkRender;
+use App\Service\ViewRenderService;
+use App\Service\RenderViewService;
 
 class NavigationWidget implements WidgetInterface
 {
-  private LinkRender $linkRender;
 
-  public string $widget;
-
-  public function __construct(LinkRender $linkRender)
+  public function __construct()
   {
-    $this->linkRender = $linkRender;
-    $this->widget = self::renderWidget();
   }
 
-  public function renderWidget(): string
+  public function __toString(): string
   {
-    $linkRender = $this->linkRender;
-    ob_start();
-    require "src/View/widgets/navigation.php";
-    $navigation = ob_get_clean();
-    return $navigation;
+    $template = $this->render();
+    return $template->renderView();
+  }
+
+  public function render(): RenderViewService
+  {
+    return new RenderViewService(['widgets' => 'navigation']);
   }
 
 }

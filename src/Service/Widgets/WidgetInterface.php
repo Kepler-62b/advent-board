@@ -4,17 +4,11 @@ namespace App\Service\Widgets;
 
 interface WidgetInterface
 {
-  // /**
-  //  * @TODO подумать, как убрать
-  //  * @return string
-  //  */
-  // public function __toString();
-
   /**
-   * rendering widget via tamplates widgets
+   * return object - rendering widgets templates
    * 
-   * @return string
+   * @todo подумать над названием
    */
-  public function renderWidget();
+  public function render(): object;
 
 }

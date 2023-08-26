@@ -5,54 +5,60 @@ namespace App\Repository;
 use App\Service\DatabasePDO;
 use App\Models\Advent;
 
+use Dev\Tests\DefaultClass;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
 class AdventRepository
 {
-
+  private DatabasePDO $pdo;
   /**
    * property for SQL statement
    */
   private $table = 'advents_prod';
-  public const LIMIT = 5;
+  public const SELECT_LIMIT = 5;
 
 
-  public function __construct(
-    private DatabasePDO $pdo
-  ) {
+  public function __construct(DatabasePDO $pdo)
+  {
+    $this->pdo = $pdo;
   }
 
-  public function getAllRows(int $page = 1): array
+  public function getAllRows(int $page = 1)
   {
-    $monologLogger = new Logger(AdventRepository::class);
-    $monologLogger->pushHandler(new StreamHandler('dev/Logger/log/dev.log', Logger::DEBUG));
-    
+    // $monologLogger = new Logger(AdventRepository::class);
+    // $monologLogger->pushHandler(new StreamHandler('dev/Logger/log/dev.log', Logger::DEBUG));
+
     $connection = $this->pdo;
     $table = $this->table;
-    $limit = self::LIMIT;
+    $limit = self::SELECT_LIMIT;
 
     $offset = ($page - 1) * $limit;
 
     $sql = "SELECT * FROM $table LIMIT $limit OFFSET :offset";
 
-    $pdo_statment = $connection->prepare($sql);
+    $pdo_statement = $connection->prepare($sql);
 
     try {
-      $pdo_statment->bindValue(":offset", $offset, \PDO::PARAM_INT);
-      $pdo_statment->execute();
-      $result = $pdo_statment->fetchAll(\PDO::FETCH_ASSOC);
-      return $result;
+      $pdo_statement->bindValue(":offset", $offset, \PDO::PARAM_INT);
+      $pdo_statement->execute();
+
+
+      // $result = $pdo_statement->fetchAll(\PDO::FETCH_CLASS, DefaultClass::class);
+      // $storage = new DefaultClass();
+      // $storage->set($result);
+      // return $storage->getIterator();
+      // --------------------------------------
+
+      return $pdo_statement->fetchAll(\PDO::FETCH_CLASS, Advent::class);
+
     } catch (\PDOException $exception) {
-      $monologLogger->critical('Error:', [
-        'exception' => $exception,
-      ]);
-      // return [1,2,3];
-      die;
+      // $monologLogger->critical('Error:', ['exception' => $exception]);
+      throw new \PDOException($exception);
     }
   }
 
-  public function findById(int $id): array
+  public function findById(int $id): null|object
   {
     $connection = $this->pdo;
     $table = $this->table;
@@ -64,8 +70,12 @@ class AdventRepository
     try {
       $pdo_statement->bindValue("id", $id, \PDO::PARAM_INT);
       $pdo_statement->execute();
-      $result = $pdo_statement->fetchAll(\PDO::FETCH_ASSOC);
-      return $result;
+
+      if ($result = $pdo_statement->fetchObject(Advent::class)) {
+        return $result;
+      } else {
+        return NULL;
+      }
     } catch (\PDOException $exception) {
       die('Ошибка: ' . $exception->getMessage());
     }
@@ -149,15 +159,27 @@ class AdventRepository
 
     $pdo_statment = $connection->query($sql);
     $result = $pdo_statment->fetch(\PDO::FETCH_NUM);
-    $count = ceil($result[0] / self::LIMIT);
+    $count = ceil($result[0] / self::SELECT_LIMIT);
     return $count;
+  }
+
+  public function getCount(): int
+  {
+    $connection = $this->pdo;
+    $table = $this->table;
+
+    $sql = "SELECT COUNT(*) FROM $table";
+
+    $pdo_statment = $connection->query($sql);
+    $count = $pdo_statment->fetch(\PDO::FETCH_NUM);
+    return $count[0];
   }
 
   public function getMax(int $page, string $filter): array
   {
     $connection = $this->pdo;
     $table = $this->table;
-    $limit = self::LIMIT;
+    $limit = self::SELECT_LIMIT;
 
     $offset = ($page - 1) * $limit;
 
@@ -174,7 +196,7 @@ class AdventRepository
   {
     $connection = $this->pdo;
     $table = $this->table;
-    $limit = self::LIMIT;
+    $limit = self::SELECT_LIMIT;
 
     $offset = ($page - 1) * $limit;
 
@@ -190,7 +212,7 @@ class AdventRepository
   {
     $connection = $this->pdo;
     $table = $this->table;
-    $limit = self::LIMIT;
+    $limit = self::SELECT_LIMIT;
 
     $offset = ($page - 1) * $limit;
 

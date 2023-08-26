@@ -3,6 +3,11 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Models\Advent;
+use App\Service\TemplateRenderService;
+use App\Service\Widgets\Pagination;
+use Dev\Tests\ExtractVarsService;
+
 require 'vendor/autoload.php';
 
 error_reporting(E_ALL);
@@ -37,10 +42,11 @@ use App\Service\RouteService;
 use App\Repository\AdventRepository;
 
 $request = Request::createFromGlobals();
+$model = new Advent();
 $db = new DatabasePDO();
 $repository = new AdventRepository($db);
 $controller = new AdventController($repository);
-$linkManager = new LinkManager();
+$linkManager = new LinkManager($request);
 $linkRender = new LinkRender();
 $test = new TestService();
 $logger = new LoggerService();
@@ -49,4 +55,3 @@ $test = new TestService();
 $container = new ControllerContainer();
 
 $test->testApp($request);
-

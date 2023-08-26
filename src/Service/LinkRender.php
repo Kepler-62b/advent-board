@@ -43,7 +43,7 @@ class LinkRender
     $queryString = $this->request->query;
     foreach ($queryString as $param => $value) {
       if ($value === $filter) {
-        $filterLink = $param . "=" . $value;
+        $filterLink = '&' . $param . "=" . $value;
         return $filterLink;
       }
     }

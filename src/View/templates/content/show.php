@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var LinkeRender $linkRender
+*/
+?>
 <h1>Show</h1>
 <table>
   <tr>
