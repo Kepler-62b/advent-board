@@ -14,7 +14,6 @@ use App\Service\Helpers\LinkManager;
 
 class Pagination implements WidgetInterface
 {
-  // private array $paginationParams;
   private string $divider = 'page';
 
   // @TODO подумать как пробрасывать пустой массив в LinkManager
@@ -51,35 +50,34 @@ class Pagination implements WidgetInterface
     return ceil($this->totalCount / $this->sampleLimit);
   }
 
-  public function create(): \Traversable
+  private function create(): \Traversable
   {
 
-    // for ($i = 1; $i <= $this->count(); $i++) {
-    //   $link = "<a href=\"{link}\" class=\"{class}\">{number}</a>";
-    //   $replace['{link}'] = LinkManager::link('/show', [$this->divider => $i], [$this->filter]);
-    //   $replace['{number}'] = $i;
-    //   $replace['{class}'] = 'btn';
-    //   $link = strtr($link, $replace);
-    //   $storageLinks[] = $link;
-    // }
-
     for ($i = 1; $i <= $this->count(); $i++) {
-      $link = LinkManager::link('/show', [$this->divider => $i], $this->filter);
-      $storageLinks[] = "<a href=\"${link}\">${i}</a>";
+      $link = "<a href=\"{link}\" class=\"{class}\">{number}</a>";
+      $replace['{link}'] = LinkManager::link('/show', [$this->divider => $i], $this->filter);
+      $replace['{number}'] = $i;
+      $replace['{class}'] = 'btn';
+      $link = strtr($link, $replace);
+      $pagination[] = $link;
     }
 
-    return new \ArrayIterator($storageLinks);
+    // for ($i = 1; $i <= $this->count(); $i++) {
+    //   $link = LinkManager::link('/show', [$this->divider => $i], $this->filter);
+    //   $storageLinks[] = "<a href=\"${link}\">${i}</a>";
+    // }
+
+    return new \ArrayIterator($pagination);
   }
 
   public function render(): RenderViewService
   {
-    // @TODO подумать как можно использовать
-    // extract($this->paginationParams);
-    // var_dump(get_defined_vars());
-
-    return new RenderViewService(['widgets' => 'pagination_object'], [
-      'storage' => $this->create(),
-    ]);
+    return new RenderViewService(
+      ['widgets' => 'pagination_object'],
+      [
+        'pagination' => $this->create(),
+      ]
+    );
   }
 
 

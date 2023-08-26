@@ -31,7 +31,7 @@ class RenderViewService
   {
     return $this->renderView();
   }
-  
+
   /**
    * @TODO подумать как можно использовать 
    */
@@ -42,7 +42,7 @@ class RenderViewService
 
   public function renderView(): string
   {
-    if (isset($this->templateParams)) {
+    if (!is_null($this->templateParams) && !array_is_list($this->templateParams)) {
       extract($this->templateParams, EXTR_OVERWRITE);
     }
 

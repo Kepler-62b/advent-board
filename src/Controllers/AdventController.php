@@ -37,24 +37,16 @@ class AdventController extends DefaultController
       $data = $repository->getAllRows();
     }
 
-    // START test code block  --------------------------------------
-    var_dump($repository->getCount());
-    $pagination = new Pagination(['totalCount' => $repository->getCount()], ['sampleLimit' => 5]);
-    // var_dump($pagination->storage);
-    // $pagination = $pagination->createLink();
-    var_dump($pagination);
-    // var_dump($pagination->render());
-    print($pagination);
+    // $paginationWidget = (new PaginationWidget())->render();
+    $pagination = (new Pagination(['totalCount' => $repository->getCount()], ['sampleLimit' => 5]))->render();
+    // $pagination = (new Pagination(['totalCount' => $repository->getCount()], ['sampleLimit' => 5]));
 
-
-
-    die;
-    // END test code block    --------------------------------------
-
-    $paginationWidget = (new PaginationWidget())->render();
     $navigationWidget = (new NavigationWidget())->render();
     $getFormWidget = (new GetFormWidget())->render();
-    $tableWidget = new TableWidget(['Id', 'Item', 'Description', 'Price', 'Image', 'Date'], $data);
+    $tableWidget = new TableWidget(
+      ['Id', 'Item', 'Description', (new SortWidget('Price', 'price')), 'Image', (new SortWidget('Date', 'created_date'))],
+      $data
+    );
 
     $content = (
       new ViewRenderService(
@@ -62,7 +54,7 @@ class AdventController extends DefaultController
         ['layouts' => 'main'],
         [
         'table' => $tableWidget,
-        'pagination' => $paginationWidget,
+        'pagination' => $pagination,
         'navigation' => $navigationWidget,
         'getForm' => $getFormWidget
         ]
@@ -80,6 +72,7 @@ class AdventController extends DefaultController
   {
     $id = $actionParams['id'];
     $repository = $this->repository;
+
     // @TODO сделать страницу 404
     $row = $repository->findById($id) ?? throw new NotFoundHttpException('Not found item ID ', $id);
 

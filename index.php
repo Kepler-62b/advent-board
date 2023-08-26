@@ -6,6 +6,7 @@ namespace App;
 use App\Models\Advent;
 use App\Service\TemplateRenderService;
 use App\Service\Widgets\Pagination;
+use Dev\Tests\ExtractVarsService;
 
 require 'vendor/autoload.php';
 
@@ -53,27 +54,4 @@ $error = new ErrorsGenerator();
 $test = new TestService();
 $container = new ControllerContainer();
 
-// $test->testApp($request);
-
-// $pagination = new Pagination(['totalCount' => 22], ['sampleLimit' => 5]);
-// $iterator = $pagination->create();
-// var_dump($iterator);
-// print($pagination);
-
-
-$pagination = (new Pagination(['totalCount' => 22], ['sampleLimit' => 3]));
-// $pagination = $pagination->setIterator();
-$pagination = $pagination->create();
-// var_dump($pagination);
-
-print $test->testViewRenderService(
-  ['widgets' => 'pagination_object'],
-  ['layouts' => 'main'],
-  [
-    'pagination' => $pagination,
-  ]
-);
-
-
-
-echo "<br>";
+$test->testApp($request);
