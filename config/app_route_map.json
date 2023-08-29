@@ -19,12 +19,14 @@
     "action": "showById",
     "controller": "App\\Controllers\\AdventController"
   },
-  "/find": {
-    "action": "showById",
+
+  "/create_form": {
+    "action": "create_form",
     "controller": "App\\Controllers\\AdventController"
   },
-  "/create": {
-    "action": "create",
+  "/create_action": {
+    "action": "create_action",
+    "action_params": "id",
     "controller": "App\\Controllers\\AdventController"
   },
   "/update": {

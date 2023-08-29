@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-class Advent
+class AdventHydrate
 {
   // @TODO убрать неиспользуесые сеттеры
 
@@ -13,16 +13,17 @@ class Advent
   private string $image;
 
   // @TODO сожержит \DateTimeInterface
-  private string $createDate;
+  private \DateTimeImmutable $createDate;
 
   // @TODO сожержит \DateTimeInterface
   private string $modifiedDate;
 
-
-  public function setId(int $id): static
+  public function __construct(string $item, string $description, int $price, string $image)
   {
-    $this->id = $id;
-    return $this;
+   $this->item = $item;
+   $this->description = $description;
+   $this->price = (int) $price;
+   $this->image = $image;
   }
 
   public function getId(): int
@@ -75,7 +76,7 @@ class Advent
     return $this->image;
   }
 
-  public function getCreatedDate(): string
+  public function getCreatedDate(): \DateTimeImmutable
   {
     return $this->createDate;
   }

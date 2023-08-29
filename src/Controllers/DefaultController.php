@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Service\RenderViewService;
+use App\Service\ViewRenderService;
 use App\Service\Widgets\NavigationWidget;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -14,9 +15,10 @@ class DefaultController
   {
     $navigationWidget = (new NavigationWidget())->render();
 
-    $content = (new RenderViewService(null, [
-    'navigation' => $navigationWidget,
-    ]))->contentRender('home_page');
+    $content = (new ViewRenderService(
+      ['content' => 'home_page'],
+      ['navigation' => $navigationWidget]
+      ))->contentRender();
 
     return (new Response())
       ->setContent($content)

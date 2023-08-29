@@ -42,7 +42,7 @@ use App\Service\RouteService;
 use App\Repository\AdventRepository;
 
 $request = Request::createFromGlobals();
-$model = new Advent();
+// $model = new Advent();
 $db = new DatabasePDO();
 $repository = new AdventRepository($db);
 $controller = new AdventController($repository);
@@ -55,3 +55,16 @@ $test = new TestService();
 $container = new ControllerContainer();
 
 $test->testApp($request);
+
+// var_dump(str_replace('/', '', $request->getPathInfo()));
+// $test->testController($request, $controller, str_replace('/', '', $request->getPathInfo()));
+
+
+// print($test->testControllerCreateMethod($controller, 'create_action'));
+// var_dump($request);
+// var_dump($request->request);
+// var_dump($request->getPathInfo());
+// var_dump(str_replace('/', '', $request->getPathInfo()));
+
+
+// var_dump($test->testRepository($db, 'save'));

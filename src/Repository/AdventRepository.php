@@ -2,9 +2,11 @@
 
 namespace App\Repository;
 
+use App\Models\AdventHydrate;
 use App\Service\DatabasePDO;
 use App\Models\Advent;
 
+use App\Service\HydratorService;
 use Dev\Tests\DefaultClass;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
@@ -24,7 +26,11 @@ class AdventRepository
     $this->pdo = $pdo;
   }
 
-  public function getAllRows(int $page = 1)
+  /**
+   * @return array<object[]> 
+   */
+
+  public function fetchAll(int $page = 1): array
   {
     // $monologLogger = new Logger(AdventRepository::class);
     // $monologLogger->pushHandler(new StreamHandler('dev/Logger/log/dev.log', Logger::DEBUG));
@@ -37,28 +43,19 @@ class AdventRepository
 
     $sql = "SELECT * FROM $table LIMIT $limit OFFSET :offset";
 
-    $pdo_statement = $connection->prepare($sql);
-
     try {
+      $pdo_statement = $connection->prepare($sql);
       $pdo_statement->bindValue(":offset", $offset, \PDO::PARAM_INT);
       $pdo_statement->execute();
 
-
-      // $result = $pdo_statement->fetchAll(\PDO::FETCH_CLASS, DefaultClass::class);
-      // $storage = new DefaultClass();
-      // $storage->set($result);
-      // return $storage->getIterator();
-      // --------------------------------------
-
       return $pdo_statement->fetchAll(\PDO::FETCH_CLASS, Advent::class);
-
     } catch (\PDOException $exception) {
       // $monologLogger->critical('Error:', ['exception' => $exception]);
       throw new \PDOException($exception);
     }
   }
 
-  public function findById(int $id): null|object
+  public function findById(int $id): ?Advent
   {
     $connection = $this->pdo;
     $table = $this->table;
@@ -71,7 +68,18 @@ class AdventRepository
       $pdo_statement->bindValue("id", $id, \PDO::PARAM_INT);
       $pdo_statement->execute();
 
-      if ($result = $pdo_statement->fetchObject(Advent::class)) {
+      // if ($result = $pdo_statement->fetchObject(Advent::class)) {
+
+      // START test code block  --------------------------------------
+      if ($result = $pdo_statement->fetchAll(\PDO::FETCH_ASSOC)) {
+        $hydrator = new HydratorService(new Advent());
+        $model = $hydrator->hydrate($result[0]);
+        var_dump($model);
+
+
+        die;
+        // END test code block    --------------------------------------
+
         return $result;
       } else {
         return NULL;
@@ -81,7 +89,7 @@ class AdventRepository
     }
   }
 
-  public function saveRow(Advent $advent): bool
+  public function save(Advent $advent): bool
   {
     $connection = $this->pdo;
     $table = $this->table;

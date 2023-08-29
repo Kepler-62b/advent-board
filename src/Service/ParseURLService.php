@@ -37,6 +37,7 @@ class ParseURLService
     $incomingURL = $request->getPathInfo();
     $queryString = $request->query->all();
     $routeMap = $this->getRouteMap(self::APP_MAP);
+    // var_dump($routeMap);
 
     foreach ($routeMap as $uriMap => $routeParamsMap) {
       if ($uriMap === $incomingURL) {

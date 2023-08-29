@@ -2,6 +2,10 @@
 
 namespace App\Controllers;
 
+use Advents;
+use App\Models\Advent;
+use App\Models\AdventHydrate;
+use App\Service\HydratorService;
 use App\Service\ViewRenderService;
 use App\Service\NotFoundHttpException;
 use App\Service\Widgets\GetFormWidget;
@@ -11,6 +15,7 @@ use App\Service\Widgets\TableWidget;
 use App\Service\Widgets\NavigationWidget;
 use App\Service\Widgets\SortWidget;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 use App\Repository\AdventRepository;
@@ -32,14 +37,13 @@ class AdventController extends DefaultController
   {
     $repository = $this->repository;
     if ($page = filter_input(INPUT_GET, 'page')) {
-      $data = $repository->getAllRows($page);
+      $data = $repository->fetchAll($page);
     } else {
-      $data = $repository->getAllRows();
+      $data = $repository->fetchAll();
     }
 
-    // $paginationWidget = (new PaginationWidget())->render();
+
     $pagination = (new Pagination(['totalCount' => $repository->getCount()], ['sampleLimit' => 5]))->render();
-    // $pagination = (new Pagination(['totalCount' => $repository->getCount()], ['sampleLimit' => 5]));
 
     $navigationWidget = (new NavigationWidget())->render();
     $getFormWidget = (new GetFormWidget())->render();
@@ -70,12 +74,13 @@ class AdventController extends DefaultController
    */
   public function showById(array $actionParams = null, $interface = null): Response
   {
+    // var_dump($actionParams);
     $id = $actionParams['id'];
     $repository = $this->repository;
 
     // @TODO сделать страницу 404
     $row = $repository->findById($id) ?? throw new NotFoundHttpException('Not found item ID ', $id);
-
+    var_dump($row);
     if (isset($interface)) {
       return $this->apiRaw($row);
     }
@@ -188,19 +193,67 @@ class AdventController extends DefaultController
     return (new Response($content))->send();
   }
 
-  public function create(): Response
+  public function create_form(): Response
   {
+
     $navigationWidget = (new NavigationWidget())->render();
-    $renderView = new RenderViewService(null, ['navigation' => $navigationWidget]);
-    $content = $renderView->contentRender('create');
+
+    $content = (
+      new RenderViewService(
+        ['layouts' => 'main'],
+        [
+        'content' => (
+            new RenderViewService(
+              ['content' => 'create_text'],
+              ['navigation' => $navigationWidget]
+            )
+          )
+        ]
+      )
+    )->renderView();
+
     return (new Response($content))->send();
+  }
+
+  public function create_action()
+  {
+    // $request = Request::createFromGlobals();
+    // $files = $request->files;
+
+    $post = filter_input_array(INPUT_POST);
+    var_dump($post);
+    $model = new AdventHydrate($post['item'], $post['description'], $post['price'], 'default.jpeg');
+    var_dump($model);
+    $hydrator = new HydratorService($model);
+    
+    
+    // var_dump($hydrator->extract());
+    $hydrator->hydrate($post, $model);
+    
+
+
+    // var_dump($repository->save($model));
+
+    // return (new Response('hello'))->send();
+
   }
 
   public function update(): Response
   {
     $navigationWidget = (new NavigationWidget())->render();
-    $renderView = new RenderViewService(null, ['navigation' => $navigationWidget]);
-    $content = $renderView->contentRender('update');
+
+    $content = (
+      new RenderViewService(
+        ['layouts' => 'main'],
+        [
+        'content' => new RenderViewService(
+            ['content' => 'update'],
+            ['navigation' => $navigationWidget]
+          )
+        ]
+      )
+    )->renderView();
+
     return (new Response($content))->send();
   }
 }
