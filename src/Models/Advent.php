@@ -12,10 +12,10 @@ class Advent
   private int $price;
   private string $image;
 
-  // @TODO сожержит \DateTimeInterface
+  // @TODO сожержит объект \DateTimeImmutable
   private string $createDate;
 
-  // @TODO сожержит \DateTimeInterface
+  // @TODO сожержит объект \DateTimeImmutable
   private string $modifiedDate;
 
 

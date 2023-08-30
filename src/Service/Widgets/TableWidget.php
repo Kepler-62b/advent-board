@@ -29,7 +29,7 @@ class TableWidget implements WidgetInterface, \Stringable
   public function render(): ViewRenderService
   {
     return new ViewRenderService(
-      ['widgets' => 'table_array'],
+      ['widgets' => 'table_model_object'],
       null,
       [
         'columnNames' => $this->columnNames,

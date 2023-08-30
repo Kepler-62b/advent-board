@@ -70,17 +70,11 @@ class AdventRepository
 
       // if ($result = $pdo_statement->fetchObject(Advent::class)) {
 
-      // START test code block  --------------------------------------
       if ($result = $pdo_statement->fetchAll(\PDO::FETCH_ASSOC)) {
         $hydrator = new HydratorService(new Advent());
         $model = $hydrator->hydrate($result[0]);
-        var_dump($model);
 
-
-        die;
-        // END test code block    --------------------------------------
-
-        return $result;
+        return $model;
       } else {
         return NULL;
       }
@@ -89,7 +83,7 @@ class AdventRepository
     }
   }
 
-  public function save(Advent $advent): bool
+  public function save(array $data): bool
   {
     $connection = $this->pdo;
     $table = $this->table;
@@ -99,19 +93,36 @@ class AdventRepository
 
     $pdo_statment = $connection->prepare($sql);
 
+    $hydrator = new HydratorService(new Advent());
+
+    $model = $hydrator->hydrate($data);
+
+    // START test code block  --------------------------------------
+
+    var_dump($model);
+    die;
+    // END test code block    --------------------------------------
+
     try {
-      $pdo_statment->bindValue(1, $advent->getItem(), \PDO::PARAM_STR);
-      $pdo_statment->bindValue(2, $advent->getDescription(), \PDO::PARAM_STR);
-      $pdo_statment->bindValue(3, $advent->getPrice(), \PDO::PARAM_INT);
-      $pdo_statment->bindValue(4, $advent->getImage(), \PDO::PARAM_STR);
+      $pdo_statment->bindValue(1, $model->getItem(), \PDO::PARAM_STR);
+      $pdo_statment->bindValue(2, $model->getDescription(), \PDO::PARAM_STR);
+      $pdo_statment->bindValue(3, $model->getPrice(), \PDO::PARAM_INT);
+      $pdo_statment->bindValue(4, $model->getImage(), \PDO::PARAM_STR);
       $pdo_statment->execute();
       $insert_id = $connection->lastInsertId();
-      print "Row added " . $insert_id;
+      // print "Row added " . $insert_id;
       // $this->insert_id = $insert_id;
+
+
+
       return true;
     } catch (\PDOException $exception) {
       die('Ошибка: ' . $exception->getMessage());
     }
+
+
+
+
   }
   public function updateRow(Advent $advent): bool
   {

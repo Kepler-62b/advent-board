@@ -20,13 +20,12 @@
     "controller": "App\\Controllers\\AdventController"
   },
 
-  "/create_form": {
+  "/create": {
     "action": "create_form",
     "controller": "App\\Controllers\\AdventController"
   },
   "/create_action": {
     "action": "create_action",
-    "action_params": "id",
     "controller": "App\\Controllers\\AdventController"
   },
   "/update": {

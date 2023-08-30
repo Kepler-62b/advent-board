@@ -17,6 +17,7 @@ use App\Service\Widgets\SortWidget;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use App\Repository\AdventRepository;
 use App\Service\RenderViewService;
@@ -81,6 +82,7 @@ class AdventController extends DefaultController
     // @TODO сделать страницу 404
     $row = $repository->findById($id) ?? throw new NotFoundHttpException('Not found item ID ', $id);
     var_dump($row);
+
     if (isset($interface)) {
       return $this->apiRaw($row);
     }
@@ -220,21 +222,25 @@ class AdventController extends DefaultController
     // $request = Request::createFromGlobals();
     // $files = $request->files;
 
-    $post = filter_input_array(INPUT_POST);
-    var_dump($post);
-    $model = new AdventHydrate($post['item'], $post['description'], $post['price'], 'default.jpeg');
-    var_dump($model);
-    $hydrator = new HydratorService($model);
+    $data = filter_input_array(INPUT_POST);
+    $data['price'] = 123;
+
+    $repository = $this->repository;
+
     
+    // START test code block  --------------------------------------
+    $repository->save($data);
     
-    // var_dump($hydrator->extract());
-    $hydrator->hydrate($post, $model);
+    die;
+    // END test code block    --------------------------------------
     
 
+    // if ($repository->save($data)) {
+    //   $this->create_form();
+    // }
 
-    // var_dump($repository->save($model));
 
-    // return (new Response('hello'))->send();
+    return (new RedirectResponse('/create_form'))->send();
 
   }
 
