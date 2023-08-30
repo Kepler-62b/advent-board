@@ -43,7 +43,6 @@ class AdventController extends DefaultController
       $data = $repository->fetchAll();
     }
 
-
     $pagination = (new Pagination(['totalCount' => $repository->getCount()], ['sampleLimit' => 5]))->render();
 
     $navigationWidget = (new NavigationWidget())->render();
@@ -79,10 +78,8 @@ class AdventController extends DefaultController
     $id = $actionParams['id'];
     $repository = $this->repository;
 
-    // @TODO сделать страницу 404
     $row = $repository->findById($id) ?? throw new NotFoundHttpException('Not found item ID ', $id);
-    var_dump($row);
-
+    
     if (isset($interface)) {
       return $this->apiRaw($row);
     }

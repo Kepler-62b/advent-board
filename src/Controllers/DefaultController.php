@@ -15,10 +15,15 @@ class DefaultController
   {
     $navigationWidget = (new NavigationWidget())->render();
 
-    $content = (new ViewRenderService(
-      ['content' => 'home_page'],
-      ['navigation' => $navigationWidget]
-      ))->contentRender();
+    $content = new RenderViewService(
+      ['layouts' => 'main'],
+      [
+        'content' => (new RenderViewService(
+            ['content' => 'home_page'],
+            ['navigation' => $navigationWidget]
+          ))->renderView()
+      ]
+    );
 
     return (new Response())
       ->setContent($content)

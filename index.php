@@ -56,6 +56,10 @@ $container = new ControllerContainer();
 
 $test->testApp($request);
 
+// $date = new \DateTimeImmutable();
+// var_dump($date->setDate(2000,9,21));
+// var_dump($date);
+
 // var_dump(str_replace('/', '', $request->getPathInfo()));
 // $test->testController($request, $controller, str_replace('/', '', $request->getPathInfo()));
 

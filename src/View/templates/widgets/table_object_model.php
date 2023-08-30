@@ -27,7 +27,7 @@
         <img src="<?= LinkManager::linkImage('/public/img/user/', $rows->getImage()) ?>" alt="<?= $rows->getImage() ?>">
       </td>
       <td>
-        <?= $rows->getCreatedDate() ?>
+        <?= $rows->getCreatedDate()->format('Y-m-d') ?>
       </td>
     </tr>
 

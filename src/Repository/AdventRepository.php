@@ -47,7 +47,6 @@ class AdventRepository
       $pdo_statement = $connection->prepare($sql);
       $pdo_statement->bindValue(":offset", $offset, \PDO::PARAM_INT);
       $pdo_statement->execute();
-
       return $pdo_statement->fetchAll(\PDO::FETCH_CLASS, Advent::class);
     } catch (\PDOException $exception) {
       // $monologLogger->critical('Error:', ['exception' => $exception]);
@@ -67,13 +66,24 @@ class AdventRepository
     try {
       $pdo_statement->bindValue("id", $id, \PDO::PARAM_INT);
       $pdo_statement->execute();
+      // var_dump($pdo_statement->getColumnMeta(5));
 
-      // if ($result = $pdo_statement->fetchObject(Advent::class)) {
+      if ($result = $pdo_statement->fetch(\PDO::FETCH_ASSOC)) {
 
-      if ($result = $pdo_statement->fetchAll(\PDO::FETCH_ASSOC)) {
-        $hydrator = new HydratorService(new Advent());
-        $model = $hydrator->hydrate($result[0]);
+        $hydrator = new HydratorService(
+          new Advent(),
+          [
+            'id' => 'id',
+            'item' => 'item',
+            'description' => 'description',
+            'price' => 'price',
+            'image' => 'image',
+            'created_date' => 'createdDate',
+            'modified_date' => 'modifiedDate',
+          ]
+        );
 
+        $model = $hydrator->hydrate($result);
         return $model;
       } else {
         return NULL;
@@ -92,6 +102,7 @@ class AdventRepository
             VALUES (?, ?, ?, ?)";
 
     $pdo_statment = $connection->prepare($sql);
+
 
     $hydrator = new HydratorService(new Advent());
 
@@ -147,7 +158,6 @@ class AdventRepository
       die('Ошибка: ' . $exception->getMessage());
     }
   }
-
   public function updateAttribute(Advent $advent, string $property, int $value)
   {
     // $connection = $this->pdo;

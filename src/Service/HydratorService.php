@@ -103,31 +103,16 @@ class HydratorService
       }
       return $this->model;
     } else {
-      // var_dump($this->map);
       foreach ($data as $key => $value) {
         if (array_key_exists($key, $this->map)) {
-          $reflection->getProperty($this->map[$key])->setValue($this->model, $value);
+          if ($reflection->getProperty($this->map[$key])->getType()->isBuiltin()) {
+            $reflection->getProperty($this->map[$key])->setValue($this->model, $value);
+          } else {
+            $reflection->getMethod('set' . ucfirst($this->map[$key]))->invokeArgs($this->model, [$value]);
+          }
         }
       }
-
       return $this->model;
     }
-
-
-
-    // START test code block  --------------------------------------
-
-    foreach ($reflection->getProperties() as $property) {
-      if (key($data) === $property->getName()) {
-        $property->setValue($this->model, current($data));
-        next($data);
-      }
-    }
-
-    // END test code block    --------------------------------------
-
   }
-
-
-
 }

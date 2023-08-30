@@ -12,11 +12,9 @@ class Advent
   private int $price;
   private string $image;
 
-  // @TODO сожержит объект \DateTimeImmutable
-  private string $createDate;
+  private \DateTimeImmutable $createdDate;
 
-  // @TODO сожержит объект \DateTimeImmutable
-  private string $modifiedDate;
+  private \DateTimeImmutable $modifiedDate;
 
 
   public function setId(int $id): static
@@ -75,14 +73,24 @@ class Advent
     return $this->image;
   }
 
-  public function getCreatedDate(): string
+  public function getCreatedDate(): \DateTimeImmutable
   {
-    return $this->createDate;
+    return $this->createdDate;
+  }
+  public function setCreatedDate(string $date): static
+  {
+    $this->createdDate = new \DateTimeImmutable($date);
+    return $this;
   }
 
-  public function getModifiedDate(): string
+  public function getModifiedDate(): \DateTimeImmutable
   {
     return $this->modifiedDate;
   }
 
+  public function setModifiedDate(string $date): static
+  {
+    $this->modifiedDate = new \DateTimeImmutable($date);
+    return $this;
+  }
 }

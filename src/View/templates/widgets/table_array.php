@@ -9,6 +9,7 @@
       </th>
     <?php endforeach ?>
   </tr>
+  <?= var_dump($rows); ?>
 
   <?php foreach ($rows as $row): ?>
     <tr>
@@ -28,7 +29,7 @@
         <img src="<?= LinkManager::linkImage('/public/img/user/', $row->getImage()) ?>" alt="<?= $row->getImage() ?>">
       </td>
       <td>
-        <?= $row->getCreatedDate() ?>
+        <?= $row->getCreatedDate()->format('Y-m-d') ?>
       </td>
     </tr>
   <?php endforeach ?>
