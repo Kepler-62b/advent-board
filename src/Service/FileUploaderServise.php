@@ -1,6 +1,6 @@
 <?php
 
-use Symfony\Component\HttpFoundation\Request;
+namespace App\Service;
 
 class FileUploaderServise
 {
@@ -27,13 +27,27 @@ class FileUploaderServise
 
   }
 
-  public function addOne(Request $request)
+  public function add()
   {
-    
-    $temp_dir = $_FILES['userfile']['tmp_name'];
-    $new_dir = self::USER_IMAGE_DIR . $_FILES['userfile']['name'];
+        
 
-    if (move_uploaded_file($temp_dir, $new_dir)) {
+    $tmpDir = $_FILES['userfile']['tmp_name'];
+
+    $newDir = self::USER_IMAGE_DIR . basename($_FILES['userfile']['name']);
+    
+    // START test code block  --------------------------------------
+    var_dump($tmpDir);
+    var_dump($newDir);
+    var_dump(is_uploaded_file($tmpDir));
+
+    var_dump(getimagesize($tmpDir));
+
+    
+    die;
+    // END test code block    --------------------------------------
+
+
+    if (move_uploaded_file($tmpDir, $newDir)) {
       return $_FILES['userfile']['name'];
     } else {
       return NULL;

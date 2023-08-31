@@ -2,10 +2,8 @@
 
 namespace App\Controllers;
 
-use Advents;
-use App\Models\Advent;
-use App\Models\AdventHydrate;
-use App\Service\HydratorService;
+use App\Service\FileUploaderServise;
+use App\Service\RenderViewService;
 use App\Service\ViewRenderService;
 use App\Service\NotFoundHttpException;
 use App\Service\Widgets\GetFormWidget;
@@ -15,12 +13,11 @@ use App\Service\Widgets\TableWidget;
 use App\Service\Widgets\NavigationWidget;
 use App\Service\Widgets\SortWidget;
 
-use Symfony\Component\HttpFoundation\Request;
+use App\Repository\AdventRepository;
+
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-use App\Repository\AdventRepository;
-use App\Service\RenderViewService;
 
 class AdventController extends DefaultController
 {
@@ -203,7 +200,7 @@ class AdventController extends DefaultController
         [
         'content' => (
             new RenderViewService(
-              ['content' => 'create_text'],
+              ['content' => 'create_upload_file'],
               ['navigation' => $navigationWidget]
             )
           )
@@ -230,11 +227,19 @@ class AdventController extends DefaultController
       ]
     );
 
+    
+    // START test code block  --------------------------------------
+    return (new RedirectResponse('/create'))->send();
+    
+    
+    die;
+    // END test code block    --------------------------------------
+    
+
     if ($repository->save($data)) {
       $this->create_form();
     }
 
-    return (new RedirectResponse('/create_form'))->send();
   }
 
   public function update_form(): Response

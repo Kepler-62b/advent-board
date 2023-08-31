@@ -18,6 +18,8 @@ class AdventRepository
    * property for SQL statement
    */
   private $table = 'advents_prod';
+
+  private ?int $lastInsertId;
   public const SELECT_LIMIT = 5;
 
 
@@ -52,9 +54,10 @@ class AdventRepository
 
       $modelStorage = [];
       foreach ($result as $data) {
-        $modelStorage[] = (new HydratorService(
-          new Advent,
-          [
+        $modelStorage[] = (
+          new HydratorService(
+            new Advent,
+            [
             'id' => 'id',
             'item' => 'item',
             'description' => 'description',
@@ -62,8 +65,9 @@ class AdventRepository
             'image' => 'image',
             'created_date' => 'createdDate',
             'modified_date' => 'modifiedDate',
-          ]
-        ))->hydrate($data);
+            ]
+          )
+        )->hydrate($data);
       }
       $result = $modelStorage;
 
@@ -74,7 +78,7 @@ class AdventRepository
     }
   }
 
-   /**
+  /**
    * @return array<object[Advent]>
    */
 
@@ -122,43 +126,28 @@ class AdventRepository
     $connection = $this->pdo;
     $table = $this->table;
 
+    $hydrator = new HydratorService(new Advent());
+    $model = $hydrator->hydrate($data);
+
     $sql = "INSERT INTO $table (item, description, price, image)
             VALUES (?, ?, ?, ?)";
 
-    $pdo_statment = $connection->prepare($sql);
-
-
-    $hydrator = new HydratorService(new Advent());
-
-    $model = $hydrator->hydrate($data);
-
-    // START test code block  --------------------------------------
-
-    var_dump($model);
-    die;
-    // END test code block    --------------------------------------
-
     try {
+      $pdo_statment = $connection->prepare($sql);
       $pdo_statment->bindValue(1, $model->getItem(), \PDO::PARAM_STR);
       $pdo_statment->bindValue(2, $model->getDescription(), \PDO::PARAM_STR);
       $pdo_statment->bindValue(3, $model->getPrice(), \PDO::PARAM_INT);
       $pdo_statment->bindValue(4, $model->getImage(), \PDO::PARAM_STR);
       $pdo_statment->execute();
-      $insert_id = $connection->lastInsertId();
+      $lastInsertId = $connection->lastInsertId();
+      $this->lastInsertId = $lastInsertId;
       // print "Row added " . $insert_id;
-      // $this->insert_id = $insert_id;
-
-
-
       return true;
     } catch (\PDOException $exception) {
       die('Ошибка: ' . $exception->getMessage());
     }
-
-
-
-
   }
+
   public function update(array $data): bool
   {
     $connection = $this->pdo;
@@ -184,39 +173,6 @@ class AdventRepository
     } catch (\PDOException $exception) {
       die('Ошибка: ' . $exception->getMessage());
     }
-  }
-  public function updateAttribute(Advent $advent, string $property, int $value)
-  {
-    // $connection = $this->pdo;
-    // $table = $this->table;
-    // $sql = "UPDATE $table 
-    //         SET image = :image WHERE id = :id";
-
-    // $pdo_statment = $connection->prepare($sql);
-
-    // try {
-    //   $pdo_statment->bindValue(':id', $advent->getId(), \PDO::PARAM_INT);
-    //   $pdo_statment->bindValue(':image', $image, \PDO::PARAM_STR);
-    //   $pdo_statment->execute();
-    //   print "Image added";
-    //   // $insert_id = $connection->lastInsertId();
-    //   // $this->insert_id = $insert_id;
-    // } catch (\PDOException $exception) {
-    //   die('Ошибка: ' . $exception->getMessage());
-    // }
-  }
-
-  public function getCountRows(): int
-  {
-    $connection = $this->pdo;
-    $table = $this->table;
-
-    $sql = "SELECT COUNT(*) FROM $table";
-
-    $pdo_statment = $connection->query($sql);
-    $result = $pdo_statment->fetch(\PDO::FETCH_NUM);
-    $count = ceil($result[0] / self::SELECT_LIMIT);
-    return $count;
   }
 
   public function getCount(): int

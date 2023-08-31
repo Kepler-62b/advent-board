@@ -11,7 +11,7 @@
     <input type="text" name="description" value="test description" required>
     
     <label for="price">price</label>
-    <input type="text" name="price" required>
+    <input type="text" name="price" value="123" required>
 
     <label for="image">price</label>
     <input type="text" name="image" value="test image" required>
