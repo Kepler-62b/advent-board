@@ -27,7 +27,7 @@ class AdventRepository
   }
 
   /**
-   * @return array<object[]> 
+   * @return array<object[Advent]>
    */
 
   public function fetchAll(int $page = 1): array
@@ -47,14 +47,38 @@ class AdventRepository
       $pdo_statement = $connection->prepare($sql);
       $pdo_statement->bindValue(":offset", $offset, \PDO::PARAM_INT);
       $pdo_statement->execute();
-      return $pdo_statement->fetchAll(\PDO::FETCH_CLASS, Advent::class);
+
+      $result = $pdo_statement->fetchAll(\PDO::FETCH_ASSOC);
+
+      $modelStorage = [];
+      foreach ($result as $data) {
+        $modelStorage[] = (new HydratorService(
+          new Advent,
+          [
+            'id' => 'id',
+            'item' => 'item',
+            'description' => 'description',
+            'price' => 'price',
+            'image' => 'image',
+            'created_date' => 'createdDate',
+            'modified_date' => 'modifiedDate',
+          ]
+        ))->hydrate($data);
+      }
+      $result = $modelStorage;
+
+      return $result;
     } catch (\PDOException $exception) {
       // $monologLogger->critical('Error:', ['exception' => $exception]);
       throw new \PDOException($exception);
     }
   }
 
-  public function findById(int $id): ?Advent
+   /**
+   * @return array<object[Advent]>
+   */
+
+  public function findById(int $id): ?array
   {
     $connection = $this->pdo;
     $table = $this->table;
@@ -83,7 +107,7 @@ class AdventRepository
           ]
         );
 
-        $model = $hydrator->hydrate($result);
+        $model[] = $hydrator->hydrate($result);
         return $model;
       } else {
         return NULL;
@@ -135,7 +159,7 @@ class AdventRepository
 
 
   }
-  public function updateRow(Advent $advent): bool
+  public function update(array $data): bool
   {
     $connection = $this->pdo;
     $table = $this->table;
@@ -146,12 +170,15 @@ class AdventRepository
 
     $pdo_statment = $connection->prepare($sql);
 
+    $hydrator = new HydratorService(new Advent);
+    $model = $hydrator->hydrate($data);
+
     try {
-      $pdo_statment->bindValue(':id', $advent->getId(), \PDO::PARAM_INT);
-      $pdo_statment->bindValue(':item', $advent->getItem(), \PDO::PARAM_STR);
-      $pdo_statment->bindValue(':description', $advent->getPrice(), \PDO::PARAM_STR);
-      $pdo_statment->bindValue(':price', $advent->getPrice(), \PDO::PARAM_INT);
-      $pdo_statment->bindValue(':image', $advent->getImage(), \PDO::PARAM_STR);
+      $pdo_statment->bindValue(':id', $model->getId(), \PDO::PARAM_INT);
+      $pdo_statment->bindValue(':item', $model->getItem(), \PDO::PARAM_STR);
+      $pdo_statment->bindValue(':description', $model->getDescription(), \PDO::PARAM_STR);
+      $pdo_statment->bindValue(':price', $model->getPrice(), \PDO::PARAM_INT);
+      $pdo_statment->bindValue(':image', $model->getImage(), \PDO::PARAM_STR);
       $pdo_statment->execute();
       return true;
     } catch (\PDOException $exception) {

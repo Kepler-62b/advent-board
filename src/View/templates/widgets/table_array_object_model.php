@@ -9,7 +9,6 @@
       </th>
     <?php endforeach ?>
   </tr>
-  <?= var_dump($rows); ?>
 
   <?php foreach ($rows as $row): ?>
     <tr>

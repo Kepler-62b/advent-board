@@ -26,6 +26,7 @@ class AdventController extends DefaultController
 {
 
   private AdventRepository $repository;
+
   public function __construct(AdventRepository $repository)
   {
     $this->repository = $repository;
@@ -38,9 +39,9 @@ class AdventController extends DefaultController
   {
     $repository = $this->repository;
     if ($page = filter_input(INPUT_GET, 'page')) {
-      $data = $repository->fetchAll($page);
+      $adverts = $repository->fetchAll($page);
     } else {
-      $data = $repository->fetchAll();
+      $adverts = $repository->fetchAll();
     }
 
     $pagination = (new Pagination(['totalCount' => $repository->getCount()], ['sampleLimit' => 5]))->render();
@@ -49,7 +50,7 @@ class AdventController extends DefaultController
     $getFormWidget = (new GetFormWidget())->render();
     $tableWidget = new TableWidget(
       ['Id', 'Item', 'Description', (new SortWidget('Price', 'price')), 'Image', (new SortWidget('Date', 'created_date'))],
-      $data
+      $adverts
     );
 
     $content = (
@@ -65,21 +66,19 @@ class AdventController extends DefaultController
       )
     )->contentRender();
 
-    return (new Response($content))
-      ->send();
+    return (new Response($content))->send();
   }
 
   /**
-   * @todo принимать не весь массив из query string, а указанное значение в аргументе 
+   * @TODO принимать не весь массив из query string, а указанное значение в аргументе 
    */
   public function showById(array $actionParams = null, $interface = null): Response
   {
-    // var_dump($actionParams);
     $id = $actionParams['id'];
     $repository = $this->repository;
 
     $row = $repository->findById($id) ?? throw new NotFoundHttpException('Not found item ID ', $id);
-    
+
     if (isset($interface)) {
       return $this->apiRaw($row);
     }
@@ -140,8 +139,9 @@ class AdventController extends DefaultController
     );
 
     $content = (
-      new RenderViewService(
-      null,
+      new ViewRenderService(
+        ['layout' => 'main'],
+        ['content' => 'show_widgets'],
         [
         'table' => $tableWidget,
         'pagination' => $paginationWidget,
@@ -149,7 +149,7 @@ class AdventController extends DefaultController
         'getForm' => $getFormWidget
         ]
       )
-    )->contentRender('show_widgets');
+    )->contentRender();
 
     return (new Response($content))->send();
 
@@ -178,8 +178,9 @@ class AdventController extends DefaultController
     );
 
     $content = (
-      new RenderViewService(
-      null,
+      new ViewRenderService(
+        ['layout' => 'main'],
+        ['content' => 'show_widgets'],
         [
         'table' => $tableWidget,
         'pagination' => $paginationWidget,
@@ -187,14 +188,13 @@ class AdventController extends DefaultController
         'getForm' => $getFormWidget
         ]
       )
-    )->contentRender('show_widgets');
+    )->contentRender();
 
     return (new Response($content))->send();
   }
 
   public function create_form(): Response
   {
-
     $navigationWidget = (new NavigationWidget())->render();
 
     $content = (
@@ -218,30 +218,26 @@ class AdventController extends DefaultController
   {
     // $request = Request::createFromGlobals();
     // $files = $request->files;
-
-    $data = filter_input_array(INPUT_POST);
-    $data['price'] = 123;
-
     $repository = $this->repository;
 
-    
-    // START test code block  --------------------------------------
-    $repository->save($data);
-    
-    die;
-    // END test code block    --------------------------------------
-    
+    $data = filter_input_array(
+      INPUT_POST,
+      [
+        'item' => FILTER_SANITIZE_SPECIAL_CHARS,
+        'description' => FILTER_SANITIZE_SPECIAL_CHARS,
+        'price' => FILTER_VALIDATE_INT,
+        'image' => FILTER_SANITIZE_SPECIAL_CHARS,
+      ]
+    );
 
-    // if ($repository->save($data)) {
-    //   $this->create_form();
-    // }
-
+    if ($repository->save($data)) {
+      $this->create_form();
+    }
 
     return (new RedirectResponse('/create_form'))->send();
-
   }
 
-  public function update(): Response
+  public function update_form(): Response
   {
     $navigationWidget = (new NavigationWidget())->render();
 
@@ -250,7 +246,7 @@ class AdventController extends DefaultController
         ['layouts' => 'main'],
         [
         'content' => new RenderViewService(
-            ['content' => 'update'],
+            ['content' => 'update_text_only'],
             ['navigation' => $navigationWidget]
           )
         ]
@@ -258,5 +254,25 @@ class AdventController extends DefaultController
     )->renderView();
 
     return (new Response($content))->send();
+  }
+
+  public function update_action()
+  {
+    $repository = $this->repository;
+    $data = filter_input_array(
+      INPUT_POST,
+      [
+        'id' => FILTER_VALIDATE_INT,
+        'item' => FILTER_SANITIZE_SPECIAL_CHARS,
+        'description' => FILTER_SANITIZE_SPECIAL_CHARS,
+        'price' => FILTER_VALIDATE_INT,
+        'image' => FILTER_SANITIZE_SPECIAL_CHARS,
+      ]
+    );
+
+    if ($repository->update($data)) {
+      $this->update_form();
+    }
+
   }
 }
