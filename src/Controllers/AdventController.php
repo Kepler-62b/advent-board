@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Service\FileUploaderServise;
+use App\Service\Helpers\LinkManager;
 use App\Service\RenderViewService;
 use App\Service\ViewRenderService;
 use App\Service\NotFoundHttpException;
@@ -194,24 +195,33 @@ class AdventController extends DefaultController
   {
     $navigationWidget = (new NavigationWidget())->render();
 
-    $content = (
-      new RenderViewService(
-        ['layouts' => 'main'],
-        [
-        'content' => (
-            new RenderViewService(
-              ['content' => 'create_upload_file'],
-              ['navigation' => $navigationWidget]
-            )
-          )
-        ]
-      )
-    )->renderView();
+    // $content = (
+    //   new RenderViewService(
+    //     ['layouts' => 'main'],
+    //     [
+    //     'content' => (
+    //         new RenderViewService(
+    //           ['content' => 'create_upload_file'],
+    //           ['navigation' => $navigationWidget]
+    //         )
+    //       )
+    //     ]
+    //   )
+    // )->renderView();
 
-    return (new Response($content))->send();
+    $view = (new RenderViewService(
+      ['layouts' => 'main'],
+      [ 'content' => 'create_upload_file',
+      'navigation' => $navigationWidget]
+    ))->renderViewFromObject();
+
+    
+    
+
+    return (new Response($view))->send();
   }
 
-  public function create_action()
+  public function create_action(): Response
   {
     // $request = Request::createFromGlobals();
     // $files = $request->files;
@@ -227,17 +237,8 @@ class AdventController extends DefaultController
       ]
     );
 
-    
-    // START test code block  --------------------------------------
-    return (new RedirectResponse('/create'))->send();
-    
-    
-    die;
-    // END test code block    --------------------------------------
-    
-
     if ($repository->save($data)) {
-      $this->create_form();
+      return (new RedirectResponse(LinkManager::link('/create')))->send();
     }
 
   }
@@ -261,7 +262,7 @@ class AdventController extends DefaultController
     return (new Response($content))->send();
   }
 
-  public function update_action()
+  public function update_action(): Response
   {
     $repository = $this->repository;
     $data = filter_input_array(
@@ -276,7 +277,7 @@ class AdventController extends DefaultController
     );
 
     if ($repository->update($data)) {
-      $this->update_form();
+      return (new RedirectResponse(LinkManager::link('/update')))->send();
     }
 
   }
