@@ -29,7 +29,7 @@ class AdventRepository
   }
 
   /**
-   * @return array<object[Advent]>
+   * @return Advent[]
    */
 
   public function fetchAll(int $page = 1): array
@@ -53,22 +53,34 @@ class AdventRepository
       $result = $pdo_statement->fetchAll(\PDO::FETCH_ASSOC);
 
       $modelStorage = [];
+
+
+      // @TODO протестить на N объектах
+      // @TODO 1 реализация - не меняя код нигде - ответ в одно слово
+      // @TODO 2 реализация - не меняя код в репозитории - только в методе гидратора по сигнатуре: hydrate(classname, data, mapper)
+      // @TODO 
+
+      // $advent = new Advent;
+      // var_dump($advent);
+
+      $hydrator = new HydratorService
+      (
+        new Advent,
+        [
+          'id' => 'id',
+          'item' => 'item',
+          'description' => 'description',
+          'price' => 'price',
+          'image' => 'image',
+          'created_date' => 'createdDate',
+          'modified_date' => 'modifiedDate',
+        ]
+      );
+
       foreach ($result as $data) {
-        $modelStorage[] = (
-          new HydratorService(
-            new Advent,
-            [
-            'id' => 'id',
-            'item' => 'item',
-            'description' => 'description',
-            'price' => 'price',
-            'image' => 'image',
-            'created_date' => 'createdDate',
-            'modified_date' => 'modifiedDate',
-            ]
-          )
-        )->hydrate($data);
+        $modelStorage[] = clone $hydrator->hydrate($data);
       }
+
       $result = $modelStorage;
 
       return $result;

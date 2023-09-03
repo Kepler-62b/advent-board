@@ -26,7 +26,7 @@ class NavigationWidget implements WidgetInterface
 
   public function renderFromObject(): TemplateNavigation
   {
-    return new TemplateNavigation('navigation', 'widgets', ['count' => 5]);
+    return new TemplateNavigation('navigation', 'widgets');
   }
 
 }

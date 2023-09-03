@@ -42,6 +42,14 @@ class AdventController extends DefaultController
       $adverts = $repository->fetchAll();
     }
 
+    
+    // START test code block  --------------------------------------
+    var_dump($adverts);
+    
+    die;
+    // END test code block    --------------------------------------
+    
+
     $pagination = (new Pagination(['totalCount' => $repository->getCount()], ['sampleLimit' => 5]))->render();
 
     $navigationWidget = (new NavigationWidget())->render();
@@ -195,30 +203,23 @@ class AdventController extends DefaultController
   {
     $navigationWidget = (new NavigationWidget())->render();
 
-    // $content = (
-    //   new RenderViewService(
-    //     ['layouts' => 'main'],
-    //     [
-    //     'content' => (
-    //         new RenderViewService(
-    //           ['content' => 'create_upload_file'],
-    //           ['navigation' => $navigationWidget]
-    //         )
-    //       )
-    //     ]
-    //   )
-    // )->renderView();
+    $content = (
+      new RenderViewService(
+        ['layouts' => 'main'],
+        [
+        'content' => (
+            new RenderViewService(
+              ['content' => 'create_upload_file'],
+              ['navigation' => $navigationWidget]
+            )
+          )
+        ]
+      )
+    )->renderView();
 
-    $view = (new RenderViewService(
-      ['layouts' => 'main'],
-      [ 'content' => 'create_upload_file',
-      'navigation' => $navigationWidget]
-    ))->renderViewFromObject();
 
-    
-    
 
-    return (new Response($view))->send();
+    return (new Response($content))->send();
   }
 
   public function create_action(): Response
@@ -236,6 +237,7 @@ class AdventController extends DefaultController
         'image' => FILTER_SANITIZE_SPECIAL_CHARS,
       ]
     );
+
 
     if ($repository->save($data)) {
       return (new RedirectResponse(LinkManager::link('/create')))->send();

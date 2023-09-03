@@ -95,16 +95,24 @@ class HydratorService
     $reflection = new \ReflectionClass($this->model);
 
     if (!$this->map) {
-      // var_dump($this->map);
       foreach ($data as $key => $value) {
         if (array_key_exists($reflection->getProperty($key)->getName(), $data)) {
           $reflection->getProperty($key)->setValue($this->model, $value);
         }
       }
+
+
+
+
       return $this->model;
     } else {
       foreach ($data as $key => $value) {
         if (array_key_exists($key, $this->map)) {
+
+          // @TODO реализовать добавление строки с датой в объект DataTime не через сеттер
+          // $propery = $reflection->getProperty($this->map[$key]);
+          // $propery->setAccessible(true);
+
           if ($reflection->getProperty($this->map[$key])->getType()->isBuiltin()) {
             $reflection->getProperty($this->map[$key])->setValue($this->model, $value);
           } else {
@@ -114,5 +122,10 @@ class HydratorService
       }
       return $this->model;
     }
+  }
+
+  public function getThis()
+  {
+   return $this;
   }
 }
