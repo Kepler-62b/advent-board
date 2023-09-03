@@ -4,19 +4,18 @@ namespace App\Models;
 
 class Advent
 {
+  // @TODO убрать неиспользуесые сеттеры
+
   private int $id;
   private string $item;
   private string $description;
   private int $price;
   private string $image;
-  private string $created_date;
-  private string $modified_date;
 
-  public function setId(int $id): static
-  {
-    $this->id = $id;
-    return $this;
-  }
+  private \DateTimeImmutable $createdDate;
+
+  private \DateTimeImmutable $modifiedDate;
+
 
   public function getId(): int
   {
@@ -26,6 +25,7 @@ class Advent
   public function setItem(string $item): static
   {
     $this->item = $item;
+    // @TODO не используемое поведение - возвращать в методе void
     return $this;
   }
 
@@ -67,14 +67,24 @@ class Advent
     return $this->image;
   }
 
-  public function getCreatedDate(): string
+  public function getCreatedDate(): \DateTimeImmutable
   {
-    return $this->created_date;
+    return $this->createdDate;
+  }
+  public function setCreatedDate(string $date): static
+  {
+    $this->createdDate = new \DateTimeImmutable($date);
+    return $this;
   }
 
-  public function getModifiedDate(): string
+  public function getModifiedDate(): \DateTimeImmutable
   {
-    return $this->modified_date;
+    return $this->modifiedDate;
   }
 
+  public function setModifiedDate(string $date): static
+  {
+    $this->modifiedDate = new \DateTimeImmutable($date);
+    return $this;
+  }
 }

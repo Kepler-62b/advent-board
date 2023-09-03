@@ -2,6 +2,9 @@
 
 namespace App\Controllers;
 
+use App\Service\FileUploaderServise;
+use App\Service\Helpers\LinkManager;
+use App\Service\RenderViewService;
 use App\Service\ViewRenderService;
 use App\Service\NotFoundHttpException;
 use App\Service\Widgets\GetFormWidget;
@@ -11,15 +14,17 @@ use App\Service\Widgets\TableWidget;
 use App\Service\Widgets\NavigationWidget;
 use App\Service\Widgets\SortWidget;
 
-use Symfony\Component\HttpFoundation\Response;
-
 use App\Repository\AdventRepository;
-use App\Service\RenderViewService;
+
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
 
 class AdventController extends DefaultController
 {
 
   private AdventRepository $repository;
+
   public function __construct(AdventRepository $repository)
   {
     $this->repository = $repository;
@@ -32,20 +37,26 @@ class AdventController extends DefaultController
   {
     $repository = $this->repository;
     if ($page = filter_input(INPUT_GET, 'page')) {
-      $data = $repository->getAllRows($page);
+      $adverts = $repository->fetchAll($page);
     } else {
-      $data = $repository->getAllRows();
+      $adverts = $repository->fetchAll();
     }
 
-    // $paginationWidget = (new PaginationWidget())->render();
+    
+    // START test code block  --------------------------------------
+    var_dump($adverts);
+    
+    die;
+    // END test code block    --------------------------------------
+    
+
     $pagination = (new Pagination(['totalCount' => $repository->getCount()], ['sampleLimit' => 5]))->render();
-    // $pagination = (new Pagination(['totalCount' => $repository->getCount()], ['sampleLimit' => 5]));
 
     $navigationWidget = (new NavigationWidget())->render();
     $getFormWidget = (new GetFormWidget())->render();
     $tableWidget = new TableWidget(
       ['Id', 'Item', 'Description', (new SortWidget('Price', 'price')), 'Image', (new SortWidget('Date', 'created_date'))],
-      $data
+      $adverts
     );
 
     $content = (
@@ -61,19 +72,17 @@ class AdventController extends DefaultController
       )
     )->contentRender();
 
-    return (new Response($content))
-      ->send();
+    return (new Response($content))->send();
   }
 
   /**
-   * @todo принимать не весь массив из query string, а указанное значение в аргументе 
+   * @TODO принимать не весь массив из query string, а указанное значение в аргументе 
    */
   public function showById(array $actionParams = null, $interface = null): Response
   {
     $id = $actionParams['id'];
     $repository = $this->repository;
 
-    // @TODO сделать страницу 404
     $row = $repository->findById($id) ?? throw new NotFoundHttpException('Not found item ID ', $id);
 
     if (isset($interface)) {
@@ -136,8 +145,9 @@ class AdventController extends DefaultController
     );
 
     $content = (
-      new RenderViewService(
-      null,
+      new ViewRenderService(
+        ['layout' => 'main'],
+        ['content' => 'show_widgets'],
         [
         'table' => $tableWidget,
         'pagination' => $paginationWidget,
@@ -145,7 +155,7 @@ class AdventController extends DefaultController
         'getForm' => $getFormWidget
         ]
       )
-    )->contentRender('show_widgets');
+    )->contentRender();
 
     return (new Response($content))->send();
 
@@ -174,8 +184,9 @@ class AdventController extends DefaultController
     );
 
     $content = (
-      new RenderViewService(
-      null,
+      new ViewRenderService(
+        ['layout' => 'main'],
+        ['content' => 'show_widgets'],
         [
         'table' => $tableWidget,
         'pagination' => $paginationWidget,
@@ -183,24 +194,93 @@ class AdventController extends DefaultController
         'getForm' => $getFormWidget
         ]
       )
-    )->contentRender('show_widgets');
+    )->contentRender();
 
     return (new Response($content))->send();
   }
 
-  public function create(): Response
+  public function create_form(): Response
   {
     $navigationWidget = (new NavigationWidget())->render();
-    $renderView = new RenderViewService(null, ['navigation' => $navigationWidget]);
-    $content = $renderView->contentRender('create');
+
+    $content = (
+      new RenderViewService(
+        ['layouts' => 'main'],
+        [
+        'content' => (
+            new RenderViewService(
+              ['content' => 'create_upload_file'],
+              ['navigation' => $navigationWidget]
+            )
+          )
+        ]
+      )
+    )->renderView();
+
+
+
     return (new Response($content))->send();
   }
 
-  public function update(): Response
+  public function create_action(): Response
+  {
+    // $request = Request::createFromGlobals();
+    // $files = $request->files;
+    $repository = $this->repository;
+
+    $data = filter_input_array(
+      INPUT_POST,
+      [
+        'item' => FILTER_SANITIZE_SPECIAL_CHARS,
+        'description' => FILTER_SANITIZE_SPECIAL_CHARS,
+        'price' => FILTER_VALIDATE_INT,
+        'image' => FILTER_SANITIZE_SPECIAL_CHARS,
+      ]
+    );
+
+
+    if ($repository->save($data)) {
+      return (new RedirectResponse(LinkManager::link('/create')))->send();
+    }
+
+  }
+
+  public function update_form(): Response
   {
     $navigationWidget = (new NavigationWidget())->render();
-    $renderView = new RenderViewService(null, ['navigation' => $navigationWidget]);
-    $content = $renderView->contentRender('update');
+
+    $content = (
+      new RenderViewService(
+        ['layouts' => 'main'],
+        [
+        'content' => new RenderViewService(
+            ['content' => 'update_text_only'],
+            ['navigation' => $navigationWidget]
+          )
+        ]
+      )
+    )->renderView();
+
     return (new Response($content))->send();
+  }
+
+  public function update_action(): Response
+  {
+    $repository = $this->repository;
+    $data = filter_input_array(
+      INPUT_POST,
+      [
+        'id' => FILTER_VALIDATE_INT,
+        'item' => FILTER_SANITIZE_SPECIAL_CHARS,
+        'description' => FILTER_SANITIZE_SPECIAL_CHARS,
+        'price' => FILTER_VALIDATE_INT,
+        'image' => FILTER_SANITIZE_SPECIAL_CHARS,
+      ]
+    );
+
+    if ($repository->update($data)) {
+      return (new RedirectResponse(LinkManager::link('/update')))->send();
+    }
+
   }
 }

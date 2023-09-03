@@ -23,6 +23,7 @@ class SortWidget implements WidgetInterface
 
   public function render(): RenderViewService
   {
+    // @TODO  возвращать объект Template с названием шаблона и передавать его в Render
     return new RenderViewService(['widgets' => 'sort'], [
       'columnName' => $this->columnName,
       'filter' => $this->filter

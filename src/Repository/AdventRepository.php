@@ -2,9 +2,11 @@
 
 namespace App\Repository;
 
+use App\Models\AdventHydrate;
 use App\Service\DatabasePDO;
 use App\Models\Advent;
 
+use App\Service\HydratorService;
 use Dev\Tests\DefaultClass;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
@@ -16,6 +18,8 @@ class AdventRepository
    * property for SQL statement
    */
   private $table = 'advents_prod';
+
+  private ?int $lastInsertId;
   public const SELECT_LIMIT = 5;
 
 
@@ -24,7 +28,11 @@ class AdventRepository
     $this->pdo = $pdo;
   }
 
-  public function getAllRows(int $page = 1)
+  /**
+   * @return Advent[]
+   */
+
+  public function fetchAll(int $page = 1): array
   {
     // $monologLogger = new Logger(AdventRepository::class);
     // $monologLogger->pushHandler(new StreamHandler('dev/Logger/log/dev.log', Logger::DEBUG));
@@ -37,28 +45,56 @@ class AdventRepository
 
     $sql = "SELECT * FROM $table LIMIT $limit OFFSET :offset";
 
-    $pdo_statement = $connection->prepare($sql);
-
     try {
+      $pdo_statement = $connection->prepare($sql);
       $pdo_statement->bindValue(":offset", $offset, \PDO::PARAM_INT);
       $pdo_statement->execute();
 
+      $result = $pdo_statement->fetchAll(\PDO::FETCH_ASSOC);
 
-      // $result = $pdo_statement->fetchAll(\PDO::FETCH_CLASS, DefaultClass::class);
-      // $storage = new DefaultClass();
-      // $storage->set($result);
-      // return $storage->getIterator();
-      // --------------------------------------
+      $modelStorage = [];
 
-      return $pdo_statement->fetchAll(\PDO::FETCH_CLASS, Advent::class);
 
+      // @TODO протестить на N объектах
+      // @TODO 1 реализация - не меняя код нигде - ответ в одно слово
+      // @TODO 2 реализация - не меняя код в репозитории - только в методе гидратора по сигнатуре: hydrate(classname, data, mapper)
+      // @TODO 
+
+      // $advent = new Advent;
+      // var_dump($advent);
+
+      $hydrator = new HydratorService
+      (
+        new Advent,
+        [
+          'id' => 'id',
+          'item' => 'item',
+          'description' => 'description',
+          'price' => 'price',
+          'image' => 'image',
+          'created_date' => 'createdDate',
+          'modified_date' => 'modifiedDate',
+        ]
+      );
+
+      foreach ($result as $data) {
+        $modelStorage[] = clone $hydrator->hydrate($data);
+      }
+
+      $result = $modelStorage;
+
+      return $result;
     } catch (\PDOException $exception) {
       // $monologLogger->critical('Error:', ['exception' => $exception]);
       throw new \PDOException($exception);
     }
   }
 
-  public function findById(int $id): null|object
+  /**
+   * @return array<object[Advent]>
+   */
+
+  public function findById(int $id): ?array
   {
     $connection = $this->pdo;
     $table = $this->table;
@@ -70,9 +106,25 @@ class AdventRepository
     try {
       $pdo_statement->bindValue("id", $id, \PDO::PARAM_INT);
       $pdo_statement->execute();
+      // var_dump($pdo_statement->getColumnMeta(5));
 
-      if ($result = $pdo_statement->fetchObject(Advent::class)) {
-        return $result;
+      if ($result = $pdo_statement->fetch(\PDO::FETCH_ASSOC)) {
+
+        $hydrator = new HydratorService(
+          new Advent(),
+          [
+            'id' => 'id',
+            'item' => 'item',
+            'description' => 'description',
+            'price' => 'price',
+            'image' => 'image',
+            'created_date' => 'createdDate',
+            'modified_date' => 'modifiedDate',
+          ]
+        );
+
+        $model[] = $hydrator->hydrate($result);
+        return $model;
       } else {
         return NULL;
       }
@@ -81,31 +133,34 @@ class AdventRepository
     }
   }
 
-  public function saveRow(Advent $advent): bool
+  public function save(array $data): bool
   {
     $connection = $this->pdo;
     $table = $this->table;
 
+    $hydrator = new HydratorService(new Advent());
+    $model = $hydrator->hydrate($data);
+
     $sql = "INSERT INTO $table (item, description, price, image)
             VALUES (?, ?, ?, ?)";
 
-    $pdo_statment = $connection->prepare($sql);
-
     try {
-      $pdo_statment->bindValue(1, $advent->getItem(), \PDO::PARAM_STR);
-      $pdo_statment->bindValue(2, $advent->getDescription(), \PDO::PARAM_STR);
-      $pdo_statment->bindValue(3, $advent->getPrice(), \PDO::PARAM_INT);
-      $pdo_statment->bindValue(4, $advent->getImage(), \PDO::PARAM_STR);
+      $pdo_statment = $connection->prepare($sql);
+      $pdo_statment->bindValue(1, $model->getItem(), \PDO::PARAM_STR);
+      $pdo_statment->bindValue(2, $model->getDescription(), \PDO::PARAM_STR);
+      $pdo_statment->bindValue(3, $model->getPrice(), \PDO::PARAM_INT);
+      $pdo_statment->bindValue(4, $model->getImage(), \PDO::PARAM_STR);
       $pdo_statment->execute();
-      $insert_id = $connection->lastInsertId();
-      print "Row added " . $insert_id;
-      // $this->insert_id = $insert_id;
+      $lastInsertId = $connection->lastInsertId();
+      $this->lastInsertId = $lastInsertId;
+      // print "Row added " . $insert_id;
       return true;
     } catch (\PDOException $exception) {
       die('Ошибка: ' . $exception->getMessage());
     }
   }
-  public function updateRow(Advent $advent): bool
+
+  public function update(array $data): bool
   {
     $connection = $this->pdo;
     $table = $this->table;
@@ -116,51 +171,20 @@ class AdventRepository
 
     $pdo_statment = $connection->prepare($sql);
 
+    $hydrator = new HydratorService(new Advent);
+    $model = $hydrator->hydrate($data);
+
     try {
-      $pdo_statment->bindValue(':id', $advent->getId(), \PDO::PARAM_INT);
-      $pdo_statment->bindValue(':item', $advent->getItem(), \PDO::PARAM_STR);
-      $pdo_statment->bindValue(':description', $advent->getPrice(), \PDO::PARAM_STR);
-      $pdo_statment->bindValue(':price', $advent->getPrice(), \PDO::PARAM_INT);
-      $pdo_statment->bindValue(':image', $advent->getImage(), \PDO::PARAM_STR);
+      $pdo_statment->bindValue(':id', $model->getId(), \PDO::PARAM_INT);
+      $pdo_statment->bindValue(':item', $model->getItem(), \PDO::PARAM_STR);
+      $pdo_statment->bindValue(':description', $model->getDescription(), \PDO::PARAM_STR);
+      $pdo_statment->bindValue(':price', $model->getPrice(), \PDO::PARAM_INT);
+      $pdo_statment->bindValue(':image', $model->getImage(), \PDO::PARAM_STR);
       $pdo_statment->execute();
       return true;
     } catch (\PDOException $exception) {
       die('Ошибка: ' . $exception->getMessage());
     }
-  }
-
-  public function updateAttribute(Advent $advent, string $property, int $value)
-  {
-    // $connection = $this->pdo;
-    // $table = $this->table;
-    // $sql = "UPDATE $table 
-    //         SET image = :image WHERE id = :id";
-
-    // $pdo_statment = $connection->prepare($sql);
-
-    // try {
-    //   $pdo_statment->bindValue(':id', $advent->getId(), \PDO::PARAM_INT);
-    //   $pdo_statment->bindValue(':image', $image, \PDO::PARAM_STR);
-    //   $pdo_statment->execute();
-    //   print "Image added";
-    //   // $insert_id = $connection->lastInsertId();
-    //   // $this->insert_id = $insert_id;
-    // } catch (\PDOException $exception) {
-    //   die('Ошибка: ' . $exception->getMessage());
-    // }
-  }
-
-  public function getCountRows(): int
-  {
-    $connection = $this->pdo;
-    $table = $this->table;
-
-    $sql = "SELECT COUNT(*) FROM $table";
-
-    $pdo_statment = $connection->query($sql);
-    $result = $pdo_statment->fetch(\PDO::FETCH_NUM);
-    $count = ceil($result[0] / self::SELECT_LIMIT);
-    return $count;
   }
 
   public function getCount(): int

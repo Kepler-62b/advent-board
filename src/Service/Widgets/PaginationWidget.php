@@ -30,7 +30,8 @@ class PaginationWidget implements WidgetInterface
   private function countRow()
   {
     $repository = (new ControllerContainer())->get(self::REPOSITORY);
-    return $repository->getCountRows();
+    var_dump($repository->getCount());
+    return $repository->getCount();
   }
 
   public function render(): RenderViewService

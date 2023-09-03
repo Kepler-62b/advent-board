@@ -7,6 +7,9 @@ use App\Models\Advent;
 use App\Service\TemplateRenderService;
 use App\Service\Widgets\Pagination;
 use Dev\Tests\ExtractVarsService;
+use Dev\Tests\Services\RenderTemplateServise;
+use Dev\Tests\Services\TemplateNavigator;
+use Dev\Tests\TemplateNavigation;
 
 require 'vendor/autoload.php';
 
@@ -16,7 +19,7 @@ ini_set('display_errors', 'On');
 use Dev\Tests\PerfomanceTestService;
 use Dev\Logger\ErrorsGenerator;
 use Dev\Logger\LoggerService;
-use Dev\Tests\TestService;
+use Dev\Tests\TestServices;
 
 use App\Service\Widgets\SortWidget;
 use App\Service\Widgets\TableWidget;
@@ -48,10 +51,12 @@ $repository = new AdventRepository($db);
 $controller = new AdventController($repository);
 $linkManager = new LinkManager($request);
 $linkRender = new LinkRender();
-$test = new TestService();
+$test = new TestServices();
 $logger = new LoggerService();
 $error = new ErrorsGenerator();
-$test = new TestService();
+$test = new TestServices();
 $container = new ControllerContainer();
 
-$test->testApp($request);
+// $test->testApp($request);
+
+$test->testRenderTemplateService();

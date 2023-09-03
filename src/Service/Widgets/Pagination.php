@@ -50,9 +50,10 @@ class Pagination implements WidgetInterface
     return ceil($this->totalCount / $this->sampleLimit);
   }
 
-  private function create(): \Traversable
+  private function create(): array
   {
-
+    $pagination = [];
+    
     for ($i = 1; $i <= $this->count(); $i++) {
       $link = "<a href=\"{link}\" class=\"{class}\">{number}</a>";
       $replace['{link}'] = LinkManager::link('/show', [$this->divider => $i], $this->filter);
@@ -67,7 +68,7 @@ class Pagination implements WidgetInterface
     //   $storageLinks[] = "<a href=\"${link}\">${i}</a>";
     // }
 
-    return new \ArrayIterator($pagination);
+    return ($pagination);
   }
 
   public function render(): RenderViewService
