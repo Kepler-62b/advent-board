@@ -4,7 +4,9 @@ namespace App\Controllers;
 
 use App\Service\FileUploaderServise;
 use App\Service\Helpers\LinkManager;
+use App\Service\RenderTemplateServise;
 use App\Service\RenderViewService;
+use App\Service\TemplateNavigator;
 use App\Service\ViewRenderService;
 use App\Service\NotFoundHttpException;
 use App\Service\Widgets\GetFormWidget;
@@ -201,25 +203,26 @@ class AdventController extends DefaultController
 
   public function create_form(): Response
   {
-    $navigationWidget = (new NavigationWidget())->render();
+    $navigation = (new NavigationWidget())->getTemplate();
+    $content = new TemplateNavigator('create_text_only', 'content', ['navigation']);
 
-    $content = (
-      new RenderViewService(
-        ['layouts' => 'main'],
-        [
-        'content' => (
-            new RenderViewService(
-              ['content' => 'create_upload_file'],
-              ['navigation' => $navigationWidget]
-            )
-          )
-        ]
-      )
-    )->renderView();
+    $view = new RenderTemplateServise(['content' => $content, 'navigation' => $navigation]);
 
+    // $content = (
+    //   new RenderViewService(
+    //     ['layouts' => 'main'],
+    //     [
+    //     'content' => (
+    //         new RenderViewService(
+    //           ['content' => 'create_upload_file'],
+    //           ['navigation' => $navigationWidget]
+    //         )
+    //       )
+    //     ]
+    //   )
+    // )->renderView();
 
-
-    return (new Response($content))->send();
+    return (new Response($view))->send();
   }
 
   public function create_action(): Response

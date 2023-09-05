@@ -9,7 +9,7 @@
 
     <label for="description">description</label>
     <input type="text" name="description" value="test description" required>
-    
+
     <label for="price">price</label>
     <input type="text" name="price" value="123" required>
 
@@ -20,5 +20,7 @@
   </form>
 
   <?= $navigation ?>
+  <?= $getForm ?>
+
 
 </body>
