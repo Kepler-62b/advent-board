@@ -20,7 +20,7 @@ class RenderTemplateServise
 
   public function getProps()
   {
-    return $this->templateObjectsStorage;
+    return $this->templateRenderStorage;
   }
 
 
@@ -142,30 +142,25 @@ class RenderTemplateServise
 
   }
 
-  public function renderViewFromArrayObjects()
+  public function renderFromArrayObjects()
   {
-    $templateObject = current($this->templateObjectsStorage);
 
-    if (!is_null($templateObject->templateParams)) {
-      $templateSubObject = $this->templateObjectsStorage[current($templateObject->templateParams)];
-      if (!is_null($templateSubObject->templateParams)) {
-        $templateSubSubObject = $this->templateObjectsStorage[current($templateSubObject->templateParams)];
-        ob_start();
-        require $templateSubSubObject->templateDirectory . $templateSubSubObject->templateName . $templateSubSubObject->templateExtantion;
-        $content = current($templateSubObject->templateParams);
-        $$content = ob_get_clean();
+    krsort($this->templateObjectsStorage, SORT_REGULAR);
+
+    foreach ($this->templateObjectsStorage as $templateObject) {
+      // @TODO разобраться с присвоением имен переменной
+      if ($templateObject->templateType === 'widgets') {
+        $template = $templateObject->templateName;
+      } else {
+        $template = $templateObject->templateType;
       }
       ob_start();
-      require $templateSubObject->templateDirectory . $templateSubObject->templateName . $templateSubObject->templateExtantion;
-      $content = current($templateObject->templateParams);
-      $$content = ob_get_clean();
+      require $templateObject->templateDirectory . $templateObject->templateName . $templateObject->templateExtantion;
+      $$template = ob_get_clean();
     }
-    ob_start();
-    require $templateObject->templateDirectory . $templateObject->templateName . $templateObject->templateExtantion;
-    $content = $templateObject->templateName;
-    $$content = ob_get_clean();
 
-    return ($$content);
+    return $$template;
+
   }
 
 }

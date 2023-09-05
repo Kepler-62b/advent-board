@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Service\RenderTemplateServise;
+use App\Service\TemplateNavigator;
 use App\Models\Advent;
 use App\Service\TemplateRenderService;
 use App\Service\Widgets\Pagination;
 use Dev\Tests\ExtractVarsService;
-use Dev\Tests\Services\RenderTemplateServise;
-use Dev\Tests\Services\TemplateNavigator;
 use Dev\Tests\TemplateNavigation;
 
 require 'vendor/autoload.php';
@@ -59,7 +59,5 @@ $container = new ControllerContainer();
 
 // $test->testApp($request);
 
-// $test->testController($request, $controller, 'create_form');
-
-// $render = (new \App\Service\RenderTemplateServise([new \App\Service\TemplateNavigator('getForm', 'widgets')]));
+// $test->testRenderTemplateService();
 
