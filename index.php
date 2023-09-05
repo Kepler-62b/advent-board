@@ -59,4 +59,3 @@ $container = new ControllerContainer();
 
 // $test->testApp($request);
 
-$test->testRenderTemplateService();
