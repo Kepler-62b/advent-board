@@ -58,6 +58,7 @@ $test = new TestServices();
 $container = new ControllerContainer();
 
 // $test->testApp($request);
+print $test->testController($request, $controller, 'update_form');
 
 // $test->testRenderTemplateService();
 

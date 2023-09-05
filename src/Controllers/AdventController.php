@@ -206,7 +206,7 @@ class AdventController extends DefaultController
     $navigation = (new NavigationWidget())->getTemplate();
     $content = new TemplateNavigator('create_text_only', 'content', ['navigation']);
 
-    $view = new RenderTemplateServise(['content' => $content, 'navigation' => $navigation]);
+    $view = (new RenderTemplateServise(['content' => $content, 'navigation' => $navigation]))->render();
 
     // $content = (
     //   new RenderViewService(
@@ -250,21 +250,25 @@ class AdventController extends DefaultController
 
   public function update_form(): Response
   {
-    $navigationWidget = (new NavigationWidget())->render();
+    $navigation = (new NavigationWidget())->getTemplate();
+    $content = new TemplateNavigator('update', 'content');
+    $layout = new TemplateNavigator('main', 'layouts');
 
-    $content = (
-      new RenderViewService(
-        ['layouts' => 'main'],
-        [
-        'content' => new RenderViewService(
-            ['content' => 'update_text_only'],
-            ['navigation' => $navigationWidget]
-          )
-        ]
-      )
-    )->renderView();
+    $template = (new RenderTemplateServise([$layout ,$content, $navigation]))->renderFromArrayObjects();
 
-    return (new Response($content))->send();
+    // $content = (
+    //   new RenderViewService(
+    //     ['layouts' => 'main'],
+    //     [
+    //     'content' => new RenderViewService(
+    //         ['content' => 'update_text_only'],
+    //         ['navigation' => $navigationWidget]
+    //       )
+    //     ]
+    //   )
+    // )->renderView();
+
+    return (new Response($template))->send();
   }
 
   public function update_action(): Response
