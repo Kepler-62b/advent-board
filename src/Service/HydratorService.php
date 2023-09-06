@@ -4,13 +4,12 @@ namespace App\Service;
 
 class HydratorService
 {
-  private object $model;
 
+  private ?object $model;
   private ?array $map;
 
-  public function __construct(object $model, array $map = null)
+  public function __construct(array $map = null)
   {
-    $this->model = $model;
     $this->map = $map;
   }
 
@@ -90,9 +89,12 @@ class HydratorService
 
   }
 
-  public function hydrate(array $data): object
+  public function hydrate(string $className, array $data): object
   {
+    $this->model = new $className;
+
     $reflection = new \ReflectionClass($this->model);
+
 
     if (!$this->map) {
       foreach ($data as $key => $value) {
@@ -109,12 +111,16 @@ class HydratorService
           if ($propery->getType()->isBuiltin()) {
             $propery->setValue($this->model, $value);
           } else {
-            // $reflection->getMethod('set' . ucfirst($this->map[$key]))->invokeArgs($this->model, [$value]);
+            /**
+             * старая функциональность, использующая сеттеры модели
+             * $reflection->getMethod('set' . ucfirst($this->map[$key]))->invokeArgs($this->model, [$value]);
+             */
             $className = $propery->getType()->getName();
             $propery->setValue($this->model, new $className($value));
           }
         }
       }
+      
       return $this->model;
     }
   }

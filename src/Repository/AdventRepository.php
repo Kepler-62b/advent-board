@@ -51,17 +51,12 @@ class AdventRepository
       $pdo_statement->execute();
 
       $result = $pdo_statement->fetchAll(\PDO::FETCH_ASSOC);
-
-      $modelStorage = [];
-
-
-      // @TODO протестить на N объектах
-      // @TODO 1 реализация - не меняя код нигде - ответ в одно слово
-      // @TODO 2 реализация - не меняя код в репозитории - только в методе гидратора по сигнатуре: hydrate(classname, data, mapper)
-      // @TODO 
-
-      // $advent = new Advent;
-      // var_dump($advent);
+      
+      // START test code block  --------------------------------------
+      return ($result);
+      
+      // END test code block    --------------------------------------
+      
 
       $hydrator = new HydratorService
       (
@@ -77,26 +72,10 @@ class AdventRepository
         ]
       );
 
-
       foreach ($result as $data) {
         $modelsStorage[] = clone $hydrator->hydrate($data);
       }
-
-
-      // START test code block  --------------------------------------
-      var_dump($modelsStorage[0]);
-
-
-      die;
-      // END test code block    --------------------------------------
-
-      // START test code block  --------------------------------------
-      var_dump($modelsStorage);
-
-      die;
-      // END test code block    --------------------------------------
-
-
+      
       return $modelsStorage;
 
     } catch (\PDOException $exception) {

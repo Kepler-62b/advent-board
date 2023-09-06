@@ -57,4 +57,6 @@ $container = new ControllerContainer();
 
 // $test->testApp($request);
 
-$test->testController($request, $controller, 'showAll');
+// $test->testController($request, $controller, 'showAll');
+
+$test->testHydratorService($db, $repository);
