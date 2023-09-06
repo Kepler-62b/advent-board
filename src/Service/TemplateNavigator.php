@@ -17,11 +17,11 @@ class TemplateNavigator
   public string $templateExtantion = '.php';
   public ?array $templateParams;
 
-  public function __construct(string $templateName, string $templateDirectory, array $templateParams = null)
+  public function __construct(string $templateName, string $templateType, array $templateParams = null)
   {
-    $this->templateType = $templateDirectory;
+    $this->templateType = $templateType;
     $this->templateName = $templateName;
-    $this->templateDirectory = self::VIEW_PATH_MAP[$templateDirectory];
+    $this->templateDirectory = self::VIEW_PATH_MAP[$templateType];
     $this->templateParams = $templateParams;
   }
 

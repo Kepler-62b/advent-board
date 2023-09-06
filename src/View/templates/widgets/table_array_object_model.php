@@ -10,25 +10,25 @@
     <?php endforeach ?>
   </tr>
 
-  <?php foreach ($rows as $row): ?>
+  <?php foreach ($adverts as $advert): ?>
     <tr>
       <td>
-        <?= $row->getId() ?>
+        <?= $advert->getId() ?>
       </td>
       <td>
-        <a href="<?= LinkManager::link('/not_found') ?>"><?= $row->getItem() ?></a>
+        <a href="<?= LinkManager::link('/not_found') ?>"><?= $advert->getItem() ?></a>
       </td>
       <td>
-        <?= $row->getDescription() ?>
+        <?= $advert->getDescription() ?>
       </td>
       <td>
-        <?= $row->getPrice() ?>
+        <?= $advert->getPrice() ?>
       </td>
       <td>
-        <img src="<?= LinkManager::linkImage('/public/img/user/', $row->getImage()) ?>" alt="<?= $row->getImage() ?>">
+        <img src="<?= LinkManager::linkImage('/public/img/user/', $advert->getImage()) ?>" alt="<?= $advert->getImage() ?>">
       </td>
       <td>
-        <?= $row->getCreatedDate()->format('Y-m-d') ?>
+        <?= $advert->getCreatedDate()->format('Y-m-d') ?>
       </td>
     </tr>
   <?php endforeach ?>

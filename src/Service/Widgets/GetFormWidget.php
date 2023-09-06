@@ -12,12 +12,12 @@ class GetFormWidget implements WidgetInterface
 
   public function __construct()
   {
-
+    // empty
   }
 
   public function __toString(): string
   {
-   return (new RenderTemplateServise([$this->getTemplate()]))->render();
+   return (new RenderTemplateServise([$this->getTemplate()]))->renderFromListTemplates();
   }
 
   public function render(): RenderViewService

@@ -13,17 +13,6 @@ class RenderTemplateServise
     $this->templateObjectsStorage = $templateObjects;
   }
 
-  public function __toString(): string
-  {
-    return $this->render();
-  }
-
-  public function getProps()
-  {
-    return $this->templateRenderStorage;
-  }
-
-
   /**
    * ОПИСАНИЕ:
    * метод принимает объект TemplateNavigator - должен быть верхним в иерархии "зависимость от переменных", 
@@ -32,7 +21,7 @@ class RenderTemplateServise
    *  * объект - шаблон - экземпляр класса TemplateNavigator
    *  * свойство - параметр - свойство templateParams класса TemplateNavigator
    */
-  private function templateObjectProcessing(TemplateNavigator $templateObject)
+  private function templateProcessing(TemplateNavigator $templateObject)
   {
     // проверка объекта на наличие параметров в главном объекте - шаблоне
     if (!is_null($templateObject->templateParams)) {
@@ -101,10 +90,14 @@ class RenderTemplateServise
     }
   }
 
-  public function render()
+  /**
+   * returns a string with the rendered template
+   */
+
+  public function renderFromDependenciesTemplates(): string
   {
     $templateObject = current($this->templateObjectsStorage);
-    $this->templateObjectProcessing($templateObject);
+    $this->templateProcessing($templateObject);
 
     // временная обработка
     if ($templateObject->templateType === 'widgets') {
@@ -112,55 +105,31 @@ class RenderTemplateServise
     } else {
       return $this->templateRenderStorage[$templateObject->templateType];
     }
-
   }
 
   /**
-   * метод принимает объект и ищет в свойствах вложенные объекты и обрабатывает их
+   * returns a string with the rendered template
    */
-  public function renderViewFromAttachmentsObject()
+
+  public function renderFromListTemplates(): string
   {
-    foreach ($this->templateObjectsStorage as $templateObject) {
-      var_dump($templateObject);
-      if (!is_null($templateObject->templateParams) && !array_is_list($templateObject->templateParams)) {
-        foreach ($templateObject->templateParams as $templateSubObject) {
-          if (!is_null($templateSubObject->templateParams) && !array_is_list($templateSubObject->templateParams)) {
-            extract($templateObject->templateParams, EXTR_OVERWRITE);
-          }
-          ob_start();
-          require $templateSubObject->templateDirectory . $templateSubObject->templateName . $templateSubObject->templateExtantion;
-
-          $content = $templateSubObject->templateName;
-          $$content = ob_get_clean();
-        }
-      }
-      ob_start();
-      require $templateObject->templateDirectory . $templateObject->templateName . $templateObject->templateExtantion;
-      $content = ob_get_clean();
-      return ($content);
-    }
-
-  }
-
-  public function renderFromArrayObjects()
-  {
-
     krsort($this->templateObjectsStorage, SORT_REGULAR);
-
     foreach ($this->templateObjectsStorage as $templateObject) {
-      // @TODO разобраться с присвоением имен переменной
+      // @TODO разобраться с проверкой
       if ($templateObject->templateType === 'widgets') {
         $template = $templateObject->templateName;
       } else {
         $template = $templateObject->templateType;
       }
+
+      if (!is_null($templateObject->templateParams)) {
+        extract($templateObject->templateParams);
+      }
       ob_start();
       require $templateObject->templateDirectory . $templateObject->templateName . $templateObject->templateExtantion;
       $$template = ob_get_clean();
     }
-
     return $$template;
-
   }
 
 }

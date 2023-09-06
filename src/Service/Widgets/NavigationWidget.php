@@ -17,7 +17,7 @@ class NavigationWidget implements WidgetInterface
 
   public function __toString(): string
   {
-    return (new RenderTemplateServise([$this->getTemplate()]))->render();
+    return (new RenderTemplateServise([$this->getTemplate()]))->renderFromListTemplates();
 
     // $template = $this->render();
     // return $template->renderView();

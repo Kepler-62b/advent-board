@@ -8,8 +8,6 @@ use App\Service\TemplateNavigator;
 use App\Models\Advent;
 use App\Service\TemplateRenderService;
 use App\Service\Widgets\Pagination;
-use Dev\Tests\ExtractVarsService;
-use Dev\Tests\TemplateNavigation;
 
 require 'vendor/autoload.php';
 
@@ -58,7 +56,5 @@ $test = new TestServices();
 $container = new ControllerContainer();
 
 // $test->testApp($request);
-print $test->testController($request, $controller, 'update_form');
 
-// $test->testRenderTemplateService();
-
+$test->testController($request, $controller, 'showAll');
