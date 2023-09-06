@@ -100,23 +100,18 @@ class HydratorService
           $reflection->getProperty($key)->setValue($this->model, $value);
         }
       }
-
-
-
-
       return $this->model;
     } else {
       foreach ($data as $key => $value) {
         if (array_key_exists($key, $this->map)) {
-
           // @TODO реализовать добавление строки с датой в объект DataTime не через сеттер
-          // $propery = $reflection->getProperty($this->map[$key]);
-          // $propery->setAccessible(true);
-
-          if ($reflection->getProperty($this->map[$key])->getType()->isBuiltin()) {
-            $reflection->getProperty($this->map[$key])->setValue($this->model, $value);
+          $propery = $reflection->getProperty($this->map[$key]);
+          if ($propery->getType()->isBuiltin()) {
+            $propery->setValue($this->model, $value);
           } else {
-            $reflection->getMethod('set' . ucfirst($this->map[$key]))->invokeArgs($this->model, [$value]);
+            // $reflection->getMethod('set' . ucfirst($this->map[$key]))->invokeArgs($this->model, [$value]);
+            $className = $propery->getType()->getName();
+            $propery->setValue($this->model, new $className($value));
           }
         }
       }
@@ -126,6 +121,6 @@ class HydratorService
 
   public function getThis()
   {
-   return $this;
+    return $this;
   }
 }

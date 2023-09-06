@@ -44,8 +44,7 @@ class AdventController extends DefaultController
       $adverts = $repository->fetchAll();
     }
 
-    $pagination = (new Pagination(['totalCount' => $repository->getCount()], ['sampleLimit' => 5]))->getTemplate();
-
+    $paginationWidget = (new Pagination(['totalCount' => $repository->getCount()], ['sampleLimit' => 5]))->getTemplate();
     $navigationWidget = (new NavigationWidget())->getTemplate();
     $getFormWidget = (new GetFormWidget())->getTemplate();
     $tableWidget = (
@@ -57,7 +56,7 @@ class AdventController extends DefaultController
     $content = new TemplateNavigator('show_widgets', 'content');
     $layout = new TemplateNavigator('main', 'layouts');
 
-    $view = (new RenderTemplateServise([$layout, $content, $tableWidget, $pagination, $getFormWidget, $navigationWidget]))->renderFromListTemplates();
+    $view = (new RenderTemplateServise([$layout, $content, $tableWidget, $paginationWidget, $getFormWidget, $navigationWidget]))->renderFromListTemplates();
 
     return (new Response($view))->send();
   }

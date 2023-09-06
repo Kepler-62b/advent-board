@@ -77,13 +77,28 @@ class AdventRepository
         ]
       );
 
+
       foreach ($result as $data) {
-        $modelStorage[] = clone $hydrator->hydrate($data);
+        $modelsStorage[] = clone $hydrator->hydrate($data);
       }
 
-      $result = $modelStorage;
 
-      return $result;
+      // START test code block  --------------------------------------
+      var_dump($modelsStorage[0]);
+
+
+      die;
+      // END test code block    --------------------------------------
+
+      // START test code block  --------------------------------------
+      var_dump($modelsStorage);
+
+      die;
+      // END test code block    --------------------------------------
+
+
+      return $modelsStorage;
+
     } catch (\PDOException $exception) {
       // $monologLogger->critical('Error:', ['exception' => $exception]);
       throw new \PDOException($exception);
