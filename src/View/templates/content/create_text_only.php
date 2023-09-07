@@ -20,7 +20,6 @@
   </form>
 
   <?= $navigation ?>
-  <?= $getForm ?>
 
 
 </body>

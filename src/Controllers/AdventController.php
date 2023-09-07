@@ -2,13 +2,14 @@
 
 namespace App\Controllers;
 
-use App\Service\FileUploaderServise;
-use App\Service\Helpers\LinkManager;
+use App\Service\HydratorService;
 use App\Service\RenderTemplateServise;
-use App\Service\RenderViewService;
 use App\Service\TemplateNavigator;
 use App\Service\ViewRenderService;
 use App\Service\NotFoundHttpException;
+
+use App\Service\Helpers\LinkManager;
+
 use App\Service\Widgets\GetFormWidget;
 use App\Service\Widgets\Pagination;
 use App\Service\Widgets\PaginationWidget;
@@ -33,7 +34,7 @@ class AdventController extends DefaultController
   }
 
   /**
-   * @todo метод занимается валидацией входящих данных - подумать, куда ее убрать
+   * @TODO метод занимается валидацией входящих данных - подумать, куда ее убрать
    */
   public function showAll(): Response
   {
@@ -99,6 +100,7 @@ class AdventController extends DefaultController
       (new RenderTemplateServise([$layout, $content, $tableWidget, $getFormWidget, $navigationWidget]))
         ->renderFromListTemplates();
 
+    // @TODO старая функциональность по отрисовке шаблонов
     // $template = (
     //   new ViewRenderService(
     //     ['content' => 'get_widgets'],
@@ -197,11 +199,12 @@ class AdventController extends DefaultController
   public function create_form(): Response
   {
     $navigation = (new NavigationWidget())->getTemplate();
-    $content = new TemplateNavigator('create_text_only', 'content', ['navigation']);
-    $layout = new TemplateNavigator('main', 'layouts', ['content']);
+    $content = new TemplateNavigator('create_text_only', 'content');
+    $layout = new TemplateNavigator('main', 'layouts');
 
-    $view = (new RenderTemplateServise(['layouts' => $layout, 'content' => $content, 'navigation' => $navigation]))->render();
+    $view = (new RenderTemplateServise([$layout, $content, $navigation]))->renderFromListTemplates();
 
+    // @TODO старая функциональность по отрисовке шаблонов
     // $content = (
     //   new RenderViewService(
     //     ['layouts' => 'main'],
@@ -235,8 +238,14 @@ class AdventController extends DefaultController
       ]
     );
 
+    $hydrator = new HydratorService();
+    $model = $hydrator->hydrate(Advent::class, $data);
 
-    if ($repository->save($data)) {
+    if ($repository->save($model)) {
+      return (new RedirectResponse(LinkManager::link('/create')))->send();
+    } else {
+
+      // @TODO подумать куда редиректить
       return (new RedirectResponse(LinkManager::link('/create')))->send();
     }
 
@@ -250,6 +259,7 @@ class AdventController extends DefaultController
 
     $template = (new RenderTemplateServise([$layout, $content, $navigation]))->renderFromListTemplates();
 
+    // @TODO старая функциональность по отрисовке шаблонов
     // $content = (
     //   new RenderViewService(
     //     ['layouts' => 'main'],
@@ -279,7 +289,13 @@ class AdventController extends DefaultController
       ]
     );
 
-    if ($repository->update($data)) {
+    $model = (new HydratorService())->hydrate(Advent::class, $data);
+
+    if ($repository->update($model)) {
+      return (new RedirectResponse(LinkManager::link('/update')))->send();
+    } else {
+
+      // @TODO подумать куда редиректить
       return (new RedirectResponse(LinkManager::link('/update')))->send();
     }
 
