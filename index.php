@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Models\Advert;
 use App\Service\RenderTemplateServise;
 use App\Service\TemplateNavigator;
 use App\Models\Advent;

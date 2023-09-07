@@ -14,12 +14,13 @@ class Advert
   private \DateTimeImmutable $createdDate;
   private \DateTimeImmutable $modifiedDate;
 
-  public function __construct(int $id, string $item, string $description, int $price)
+  public function __construct(int $id, string $item, string $description, int $price, \DateTimeImmutable $createdDate)
   {
-   $this->id = $id;
-   $this->item = $item;
-   $this->description = $description;
-   $this->price = $price;
+    $this->id = $id;
+    $this->item = $item;
+    $this->description = $description;
+    $this->price = $price;
+    $this->createdDate = $createdDate;
   }
 
 
@@ -28,45 +29,23 @@ class Advert
     return $this->id;
   }
 
-  public function setItem(string $item): static
-  {
-    $this->item = $item;
-    // @TODO не используемое поведение - возвращать в методе void
-    return $this;
-  }
-
   public function getItem(): string
   {
     return $this->item;
   }
 
-  public function setDescription(string $description): static
-  {
-    $this->description = $description;
-    return $this;
-  }
 
   public function getDescription(): string
   {
     return $this->description;
   }
 
-  public function setPrice(int $price): static
-  {
-    $this->price = $price;
-    return $this;
-  }
 
   public function getPrice(): int
   {
     return $this->price;
   }
 
-  public function setImage(string $image): static
-  {
-    $this->image = $image;
-    return $this;
-  }
 
   public function getImage(): string
   {

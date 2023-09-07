@@ -51,31 +51,25 @@ class AdventRepository
       $pdo_statement->execute();
 
       $result = $pdo_statement->fetchAll(\PDO::FETCH_ASSOC);
-      
-      // START test code block  --------------------------------------
-      return ($result);
-      
-      // END test code block    --------------------------------------
-      
 
-      $hydrator = new HydratorService
-      (
-        new Advent,
-        [
-          'id' => 'id',
-          'item' => 'item',
-          'description' => 'description',
-          'price' => 'price',
-          'image' => 'image',
-          'created_date' => 'createdDate',
-          'modified_date' => 'modifiedDate',
-        ]
-      );
+      $hydrator = new HydratorService();
 
       foreach ($result as $data) {
-        $modelsStorage[] = clone $hydrator->hydrate($data);
+        $modelsStorage[] = $hydrator->hydrate(
+          Advent::class,
+          $data,
+          [
+            'id' => 'id',
+            'item' => 'item',
+            'description' => 'description',
+            'price' => 'price',
+            'image' => 'image',
+            'created_date' => 'createdDate',
+            'modified_date' => 'modifiedDate',
+          ]
+        );
       }
-      
+
       return $modelsStorage;
 
     } catch (\PDOException $exception) {
@@ -100,12 +94,14 @@ class AdventRepository
     try {
       $pdo_statement->bindValue("id", $id, \PDO::PARAM_INT);
       $pdo_statement->execute();
-      // var_dump($pdo_statement->getColumnMeta(5));
 
       if ($result = $pdo_statement->fetch(\PDO::FETCH_ASSOC)) {
 
-        $hydrator = new HydratorService(
-          new Advent(),
+        $hydrator = new HydratorService();
+
+        $model[] = $hydrator->hydrate(
+          Advent::class,
+          $result,
           [
             'id' => 'id',
             'item' => 'item',
@@ -116,8 +112,6 @@ class AdventRepository
             'modified_date' => 'modifiedDate',
           ]
         );
-
-        $model[] = $hydrator->hydrate($result);
         return $model;
       } else {
         return NULL;

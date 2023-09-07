@@ -162,8 +162,8 @@ class AdventController extends DefaultController
     extract($param, EXTR_OVERWRITE);
     $adverts = $repository->getMax($page, $filter);
 
-    $pagination = (new PaginationWidget())->getTemplate();
-    $navigation = (new NavigationWidget())->getTemplate();
+    $paginationWidget = (new PaginationWidget())->getTemplate();
+    $navigationWidget = (new NavigationWidget())->getTemplate();
     $getFormWidget = (new GetFormWidget())->render();
 
     $tableWidget = new TableWidget(
