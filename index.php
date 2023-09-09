@@ -56,4 +56,6 @@ $error = new ErrorsGenerator();
 $test = new TestServices();
 $container = new ControllerContainer();
 
-$test->testApp($request);
+// $test->testApp($request);
+
+$test->testHydratorService();

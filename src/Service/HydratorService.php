@@ -13,22 +13,6 @@ class HydratorService
     $this->map = $map;
   }
 
-  public function getConstructProperty(): array
-  {
-    $reflection = new \ReflectionClass($this->model);
-
-    $constuctor = $reflection->getConstructor();
-    $constructorParams = $constuctor->getParameters();
-    $param = $constructorParams[2];
-
-    $paramsStorage = [];
-    foreach ($constructorParams as $param) {
-      $paramsStorage[] = $param->getName();
-    }
-    return $paramsStorage;
-
-  }
-
   private function matching(array $map = null, $data = null)
   {
     $reflection = new \ReflectionClass($this->model);
