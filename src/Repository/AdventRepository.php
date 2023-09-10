@@ -14,14 +14,9 @@ use Monolog\Handler\StreamHandler;
 class AdventRepository
 {
   private DatabasePDO $pdo;
-  /**
-   * property for SQL statement
-   */
   private $table = 'advents_prod';
-
   private ?int $lastInsertId;
   public const SELECT_LIMIT = 5;
-
 
   public function __construct(DatabasePDO $pdo)
   {
@@ -31,11 +26,9 @@ class AdventRepository
   /**
    * @return Advent[]
    */
-
   public function fetchAll(int $page = 1): array
   {
-    // $monologLogger = new Logger(AdventRepository::class);
-    // $monologLogger->pushHandler(new StreamHandler('dev/Logger/log/dev.log', Logger::DEBUG));
+    $logger = (new Logger(AdventRepository::class))->pushHandler(new StreamHandler('dev/Logger/log/dev.log', Logger::DEBUG));
 
     $connection = $this->pdo;
     $table = $this->table;
@@ -52,48 +45,35 @@ class AdventRepository
 
       $result = $pdo_statement->fetchAll(\PDO::FETCH_ASSOC);
 
-      $modelStorage = [];
-
-
-      // @TODO протестить на N объектах
-      // @TODO 1 реализация - не меняя код нигде - ответ в одно слово
-      // @TODO 2 реализация - не меняя код в репозитории - только в методе гидратора по сигнатуре: hydrate(classname, data, mapper)
-      // @TODO 
-
-      // $advent = new Advent;
-      // var_dump($advent);
-
-      $hydrator = new HydratorService
-      (
-        new Advent,
-        [
-          'id' => 'id',
-          'item' => 'item',
-          'description' => 'description',
-          'price' => 'price',
-          'image' => 'image',
-          'created_date' => 'createdDate',
-          'modified_date' => 'modifiedDate',
-        ]
-      );
+      $hydrator = new HydratorService();
 
       foreach ($result as $data) {
-        $modelStorage[] = clone $hydrator->hydrate($data);
+        $modelsStorage[] = $hydrator->hydrate(
+          Advent::class,
+          $data,
+          [
+            'id' => 'id',
+            'item' => 'item',
+            'description' => 'description',
+            'price' => 'price',
+            'image' => 'image',
+            'created_date' => 'createdDate',
+            'modified_date' => 'modifiedDate',
+          ]
+        );
       }
 
-      $result = $modelStorage;
+      return $modelsStorage;
 
-      return $result;
     } catch (\PDOException $exception) {
-      // $monologLogger->critical('Error:', ['exception' => $exception]);
+      $logger->critical('Error:', ['exception' => $exception]);
       throw new \PDOException($exception);
     }
   }
 
   /**
-   * @return array<object[Advent]>
+   * @return Advent[]
    */
-
   public function findById(int $id): ?array
   {
     $connection = $this->pdo;
@@ -106,12 +86,14 @@ class AdventRepository
     try {
       $pdo_statement->bindValue("id", $id, \PDO::PARAM_INT);
       $pdo_statement->execute();
-      // var_dump($pdo_statement->getColumnMeta(5));
 
       if ($result = $pdo_statement->fetch(\PDO::FETCH_ASSOC)) {
 
-        $hydrator = new HydratorService(
-          new Advent(),
+        $hydrator = new HydratorService();
+
+        $model[] = $hydrator->hydrate(
+          Advent::class,
+          $result,
           [
             'id' => 'id',
             'item' => 'item',
@@ -122,8 +104,6 @@ class AdventRepository
             'modified_date' => 'modifiedDate',
           ]
         );
-
-        $model[] = $hydrator->hydrate($result);
         return $model;
       } else {
         return NULL;
@@ -133,13 +113,10 @@ class AdventRepository
     }
   }
 
-  public function save(array $data): bool
+  public function save(object $model): bool
   {
     $connection = $this->pdo;
     $table = $this->table;
-
-    $hydrator = new HydratorService(new Advent());
-    $model = $hydrator->hydrate($data);
 
     $sql = "INSERT INTO $table (item, description, price, image)
             VALUES (?, ?, ?, ?)";
@@ -160,7 +137,7 @@ class AdventRepository
     }
   }
 
-  public function update(array $data): bool
+  public function update(object $model): bool
   {
     $connection = $this->pdo;
     $table = $this->table;
@@ -170,9 +147,6 @@ class AdventRepository
             WHERE id = :id";
 
     $pdo_statment = $connection->prepare($sql);
-
-    $hydrator = new HydratorService(new Advent);
-    $model = $hydrator->hydrate($data);
 
     try {
       $pdo_statment->bindValue(':id', $model->getId(), \PDO::PARAM_INT);

@@ -2,7 +2,9 @@
 
 namespace App\Service\Widgets;
 
+use App\Service\RenderTemplateServise;
 use App\Service\RenderViewService;
+use App\Service\TemplateNavigator;
 
 class SortWidget implements WidgetInterface
 {
@@ -15,10 +17,12 @@ class SortWidget implements WidgetInterface
     $this->filter = $filter;
   }
 
-  public function __toString()
+  public function __toString(): string
   {
-    $template = $this->render();
-    return $template->renderView();
+    return (new RenderTemplateServise([$this->getTemplate()]))->renderFromListTemplates();
+
+    // $template = $this->render();
+    // return $template->renderView();
   }
 
   public function render(): RenderViewService
@@ -28,6 +32,11 @@ class SortWidget implements WidgetInterface
       'columnName' => $this->columnName,
       'filter' => $this->filter
     ]);
+  }
+
+  public function getTemplate()
+  {
+   return new TemplateNavigator('sort', 'widgets', ['columnName' => $this->columnName, 'filter' => $this->filter]);
   }
 
 

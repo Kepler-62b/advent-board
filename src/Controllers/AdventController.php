@@ -2,11 +2,14 @@
 
 namespace App\Controllers;
 
-use App\Service\FileUploaderServise;
-use App\Service\Helpers\LinkManager;
-use App\Service\RenderViewService;
+use App\Service\HydratorService;
+use App\Service\RenderTemplateServise;
+use App\Service\TemplateNavigator;
 use App\Service\ViewRenderService;
 use App\Service\NotFoundHttpException;
+
+use App\Service\Helpers\LinkManager;
+
 use App\Service\Widgets\GetFormWidget;
 use App\Service\Widgets\Pagination;
 use App\Service\Widgets\PaginationWidget;
@@ -31,7 +34,7 @@ class AdventController extends DefaultController
   }
 
   /**
-   * @todo метод занимается валидацией входящих данных - подумать, куда ее убрать
+   * @TODO метод занимается валидацией входящих данных - подумать, куда ее убрать
    */
   public function showAll(): Response
   {
@@ -42,37 +45,21 @@ class AdventController extends DefaultController
       $adverts = $repository->fetchAll();
     }
 
-    
-    // START test code block  --------------------------------------
-    var_dump($adverts);
-    
-    die;
-    // END test code block    --------------------------------------
-    
-
-    $pagination = (new Pagination(['totalCount' => $repository->getCount()], ['sampleLimit' => 5]))->render();
-
-    $navigationWidget = (new NavigationWidget())->render();
-    $getFormWidget = (new GetFormWidget())->render();
-    $tableWidget = new TableWidget(
-      ['Id', 'Item', 'Description', (new SortWidget('Price', 'price')), 'Image', (new SortWidget('Date', 'created_date'))],
+    $paginationWidget = (new Pagination(['totalCount' => $repository->getCount()], ['sampleLimit' => 5]))->getTemplate();
+    $navigationWidget = (new NavigationWidget())->getTemplate();
+    $getFormWidget = (new GetFormWidget())->getTemplate();
+    $tableWidget = (
+      new TableWidget(
+        ['Id', 'Item', 'Description', new SortWidget('Price', 'price'), 'Image', new SortWidget('Date', 'created_date')],
       $adverts
-    );
-
-    $content = (
-      new ViewRenderService(
-        ['content' => 'show_widgets'],
-        ['layouts' => 'main'],
-        [
-        'table' => $tableWidget,
-        'pagination' => $pagination,
-        'navigation' => $navigationWidget,
-        'getForm' => $getFormWidget
-        ]
       )
-    )->contentRender();
+    )->getTemplate();
+    $content = new TemplateNavigator('show_widgets', 'content');
+    $layout = new TemplateNavigator('main', 'layouts');
 
-    return (new Response($content))->send();
+    $view = (new RenderTemplateServise([$layout, $content, $tableWidget, $paginationWidget, $getFormWidget, $navigationWidget]))->renderFromListTemplates();
+
+    return (new Response($view))->send();
   }
 
   /**
@@ -83,40 +70,50 @@ class AdventController extends DefaultController
     $id = $actionParams['id'];
     $repository = $this->repository;
 
-    $row = $repository->findById($id) ?? throw new NotFoundHttpException('Not found item ID ', $id);
+    $advert = $repository->findById($id) ?? throw new NotFoundHttpException('Not found item ID ', $id);
 
     if (isset($interface)) {
-      return $this->apiRaw($row);
+      return $this->apiRaw($advert);
     }
 
-    $navigationWidget = (new NavigationWidget())->render();
-    $getFormWidget = (new GetFormWidget())->render();
+    $navigationWidget = (new NavigationWidget())->getTemplate();
+    $getFormWidget = (new GetFormWidget())->getTemplate();
 
-    $tableWidget = new TableWidget(
-      [
+    $tableWidget = (
+      new TableWidget(
+        [
         'id' => 'Id',
         'item' => 'Item',
         'description' => 'Description',
         'price' => 'Price',
         'image' => 'Image',
         'created_date' => 'Date'
-      ],
-      $row,
-    );
-
-    $content = (
-      new ViewRenderService(
-        ['content' => 'get_widgets'],
-        ['layouts' => 'main'],
-        [
-        'table' => $tableWidget,
-        'navigation' => $navigationWidget,
-        'getForm' => $getFormWidget,
-        ]
+        ],
+      $advert,
       )
-    )->contentRender();
+    )->getTemplate();
 
-    return (new Response($content))->send();
+    $content = new TemplateNavigator('get_widgets', 'content');
+    $layout = new TemplateNavigator('main', 'layouts');
+
+    $template =
+      (new RenderTemplateServise([$layout, $content, $tableWidget, $getFormWidget, $navigationWidget]))
+        ->renderFromListTemplates();
+
+    // @TODO старая функциональность по отрисовке шаблонов
+    // $template = (
+    //   new ViewRenderService(
+    //     ['content' => 'get_widgets'],
+    //     ['layouts' => 'main'],
+    //     [
+    //     'table' => $tableWidget,
+    //     'navigation' => $navigationWidget,
+    //     'getForm' => $getFormWidget,
+    //     ]
+    //   )
+    // )->contentRender();
+
+    return (new Response($template))->send();
   }
 
   public function showByMin(array $param): Response
@@ -165,10 +162,10 @@ class AdventController extends DefaultController
   {
     $repository = $this->repository;
     extract($param, EXTR_OVERWRITE);
-    $rows = $repository->getMax($page, $filter);
+    $adverts = $repository->getMax($page, $filter);
 
-    $paginationWidget = (new PaginationWidget())->render();
-    $navigationWidget = (new NavigationWidget())->render();
+    $paginationWidget = (new PaginationWidget())->getTemplate();
+    $navigationWidget = (new NavigationWidget())->getTemplate();
     $getFormWidget = (new GetFormWidget())->render();
 
     $tableWidget = new TableWidget(
@@ -180,7 +177,7 @@ class AdventController extends DefaultController
         'image' => 'Image',
         'created_date' => (new SortWidget('Date', 'created_date'))->render(),
       ],
-      $rows,
+      $adverts,
     );
 
     $content = (
@@ -201,25 +198,28 @@ class AdventController extends DefaultController
 
   public function create_form(): Response
   {
-    $navigationWidget = (new NavigationWidget())->render();
+    $navigation = (new NavigationWidget())->getTemplate();
+    $content = new TemplateNavigator('create_text_only', 'content');
+    $layout = new TemplateNavigator('main', 'layouts');
 
-    $content = (
-      new RenderViewService(
-        ['layouts' => 'main'],
-        [
-        'content' => (
-            new RenderViewService(
-              ['content' => 'create_upload_file'],
-              ['navigation' => $navigationWidget]
-            )
-          )
-        ]
-      )
-    )->renderView();
+    $view = (new RenderTemplateServise([$layout, $content, $navigation]))->renderFromListTemplates();
 
+    // @TODO старая функциональность по отрисовке шаблонов
+    // $content = (
+    //   new RenderViewService(
+    //     ['layouts' => 'main'],
+    //     [
+    //     'content' => (
+    //         new RenderViewService(
+    //           ['content' => 'create_upload_file'],
+    //           ['navigation' => $navigationWidget]
+    //         )
+    //       )
+    //     ]
+    //   )
+    // )->renderView();
 
-
-    return (new Response($content))->send();
+    return (new Response($view))->send();
   }
 
   public function create_action(): Response
@@ -238,8 +238,14 @@ class AdventController extends DefaultController
       ]
     );
 
+    $hydrator = new HydratorService();
+    $model = $hydrator->hydrate(Advent::class, $data);
 
-    if ($repository->save($data)) {
+    if ($repository->save($model)) {
+      return (new RedirectResponse(LinkManager::link('/create')))->send();
+    } else {
+
+      // @TODO подумать куда редиректить
       return (new RedirectResponse(LinkManager::link('/create')))->send();
     }
 
@@ -247,21 +253,26 @@ class AdventController extends DefaultController
 
   public function update_form(): Response
   {
-    $navigationWidget = (new NavigationWidget())->render();
+    $navigation = (new NavigationWidget())->getTemplate();
+    $content = new TemplateNavigator('update', 'content');
+    $layout = new TemplateNavigator('main', 'layouts');
 
-    $content = (
-      new RenderViewService(
-        ['layouts' => 'main'],
-        [
-        'content' => new RenderViewService(
-            ['content' => 'update_text_only'],
-            ['navigation' => $navigationWidget]
-          )
-        ]
-      )
-    )->renderView();
+    $template = (new RenderTemplateServise([$layout, $content, $navigation]))->renderFromListTemplates();
 
-    return (new Response($content))->send();
+    // @TODO старая функциональность по отрисовке шаблонов
+    // $content = (
+    //   new RenderViewService(
+    //     ['layouts' => 'main'],
+    //     [
+    //     'content' => new RenderViewService(
+    //         ['content' => 'update_text_only'],
+    //         ['navigation' => $navigationWidget]
+    //       )
+    //     ]
+    //   )
+    // )->renderView();
+
+    return (new Response($template))->send();
   }
 
   public function update_action(): Response
@@ -278,7 +289,13 @@ class AdventController extends DefaultController
       ]
     );
 
-    if ($repository->update($data)) {
+    $model = (new HydratorService())->hydrate(Advent::class, $data);
+
+    if ($repository->update($model)) {
+      return (new RedirectResponse(LinkManager::link('/update')))->send();
+    } else {
+
+      // @TODO подумать куда редиректить
       return (new RedirectResponse(LinkManager::link('/update')))->send();
     }
 

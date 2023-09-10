@@ -3,13 +3,12 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Models\Advert;
+use App\Service\RenderTemplateServise;
+use App\Service\TemplateNavigator;
 use App\Models\Advent;
 use App\Service\TemplateRenderService;
 use App\Service\Widgets\Pagination;
-use Dev\Tests\ExtractVarsService;
-use Dev\Tests\Services\RenderTemplateServise;
-use Dev\Tests\Services\TemplateNavigator;
-use Dev\Tests\TemplateNavigation;
 
 require 'vendor/autoload.php';
 
@@ -57,6 +56,4 @@ $error = new ErrorsGenerator();
 $test = new TestServices();
 $container = new ControllerContainer();
 
-// $test->testApp($request);
-
-$test->testRenderTemplateService();
+$test->testApp($request);

@@ -2,9 +2,11 @@
 
 namespace App\Service\Widgets;
 
+use App\Service\RenderTemplateServise;
 use App\Service\RenderViewService;
 use App\Service\ControllerContainer;
 use App\Service\Helpers\LinkManager;
+use App\Service\TemplateNavigator;
 
 
 /** 
@@ -29,8 +31,10 @@ class Pagination implements WidgetInterface
 
   public function __toString()
   {
-    $template = $this->render();
-    return $template->renderView();
+    return (new RenderTemplateServise([$this->getTemplate()]))->renderFromListTemplates();
+
+    // $template = $this->render();
+    // return $template->renderView();
   }
 
   public function setDivider(string $divider): self
@@ -50,10 +54,13 @@ class Pagination implements WidgetInterface
     return ceil($this->totalCount / $this->sampleLimit);
   }
 
+  /**
+   * returns an array of rendered links with each page number
+   */
   private function create(): array
   {
     $pagination = [];
-    
+
     for ($i = 1; $i <= $this->count(); $i++) {
       $link = "<a href=\"{link}\" class=\"{class}\">{number}</a>";
       $replace['{link}'] = LinkManager::link('/show', [$this->divider => $i], $this->filter);
@@ -79,6 +86,11 @@ class Pagination implements WidgetInterface
         'pagination' => $this->create(),
       ]
     );
+  }
+
+  public function getTemplate(): TemplateNavigator
+  {
+    return new TemplateNavigator('pagination_object', 'widgets', ['pagination' => $this->create()]);
   }
 
 

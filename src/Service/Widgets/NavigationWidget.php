@@ -4,7 +4,9 @@ namespace App\Service\Widgets;
 
 use App\Service\ViewRenderService;
 use App\Service\RenderViewService;
-use Dev\Tests\TemplateNavigation;
+
+use App\Service\RenderTemplateServise;
+use App\Service\TemplateNavigator;
 
 class NavigationWidget implements WidgetInterface
 {
@@ -15,8 +17,10 @@ class NavigationWidget implements WidgetInterface
 
   public function __toString(): string
   {
-    $template = $this->render();
-    return $template->renderView();
+    return (new RenderTemplateServise([$this->getTemplate()]))->renderFromListTemplates();
+
+    // $template = $this->render();
+    // return $template->renderView();
   }
 
   public function render(): RenderViewService
@@ -24,9 +28,9 @@ class NavigationWidget implements WidgetInterface
     return new RenderViewService(['widgets' => 'navigation']);
   }
 
-  public function renderFromObject(): TemplateNavigation
+  public function getTemplate(): TemplateNavigator
   {
-    return new TemplateNavigation('navigation', 'widgets');
+    return new TemplateNavigator('navigation', 'widgets');
   }
 
 }
