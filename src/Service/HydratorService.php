@@ -5,59 +5,6 @@ namespace App\Service;
 class HydratorService
 {
 
-  private ?object $model;
-  private ?array $map;
-
-  public function __construct(array $map = null)
-  {
-    $this->map = $map;
-  }
-
-  private function matching(array $map = null, $data = null)
-  {
-    $reflection = new \ReflectionClass($this->model);
-
-    // START test code block  --------------------------------------
-    var_dump($map);
-    var_dump($data);
-    var_dump($reflection->getProperties());
-
-    foreach ($data as $key => $value) {
-      if (array_key_exists($reflection->getProperty($key)->getName(), $data)) {
-        $reflection->getProperty($key)->setValue($this->model, $value);
-      }
-    }
-    var_dump($this->model);
-
-    die;
-    // return $this->model;
-
-    // END test code block    --------------------------------------
-
-
-    // START test code block  --------------------------------------
-    // var_dump($map);
-    // var_dump($data);
-    // var_dump($reflection->getProperties());
-    // var_dump($reflection->getProperty('id'));
-
-
-    foreach ($data as $key => $value) {
-      if (array_key_exists($key, $map)) {
-        $reflection->getProperty($map[$key])->setValue($this->model, $value);
-      }
-    }
-
-    var_dump($this->model);
-
-    die;
-    // return $this->model;
-
-    // END test code block    --------------------------------------
-
-
-  }
-
   public function extract(): array
   {
 

@@ -10,7 +10,6 @@ use PHPUnit\Framework\TestCase;
 
 class HydratorServiceTest extends TestCase
 {
-
   private HydratorService $hydrator;
 
   protected function setUp(): void
@@ -18,103 +17,97 @@ class HydratorServiceTest extends TestCase
     $this->hydrator = new HydratorService();
   }
 
+  public static function hydrateDataProvider(): array
+  {
+    return [
+      'AdventModel' =>
+        [
+          'className' => Advent::class,
+          'data' =>
+            [
+              'id' => 1,
+              'item' => 'first item',
+              'description' => 'first desc',
+              'price' => 111,
+              'image' => 'first.png',
+              'created_date' => '2023-06-23 11:11:11',
+              'modified_date' => '2023-06-29 11:11:11',
+            ],
+          'map' =>
+            [
+              'id' => 'id',
+              'item' => 'item',
+              'description' => 'description',
+              'price' => 'price',
+              'image' => 'image',
+              'created_date' => 'createdDate',
+              'modified_date' => 'modifiedDate',
+            ]
+        ],
+      'AdvertModel' =>
+        [
+          'className' => Advert::class,
+          'data' =>
+            [
+              'id' => 1,
+              'item' => 'first item',
+              'description' => 'first desc',
+              'price' => 111,
+              'image' => 'first.png',
+              'created_date' => '2023-06-23 11:11:11',
+              'modified_date' => '2023-06-29 11:11:11',
+            ],
+          'map' =>
+            [
+              'id' => 'id',
+              'item' => 'item',
+              'description' => 'description',
+              'price' => 'price',
+              'image' => 'image',
+              'created_date' => 'createdDate',
+              'modified_date' => 'modifiedDate',
+            ]
+        ],
+      'ImageModel' =>
+        [
+          'className' => Image::class,
+          'data' =>
+            [
+              'id' => 1,
+              'item' => 'first item',
+              'description' => 'first desc',
+              'price' => 111,
+              'image' => 'first.png',
+              'created_date' => '2023-06-23 11:11:11',
+              'modified_date' => '2023-06-29 11:11:11',
+            ],
+          'map' => [
+            'id' => 'id',
+            'item' => 'name',
+            'price' => 'item_id',
+          ]
+        ]
+    ];
+  }
+
   /**
-   * @dataProvider modelAdventDataProvider
+   * @dataProvider hydrateDataProvider
    */
-  public function testHydrateAdventModel(array $data, array $map): void
+  public function testHydrateModel(string $className, array $data, array $map): void
   {
+    $result = $this->hydrator->hydrate($className, $data, $map);
 
-    $result = $this->hydrator->hydrate(Advent::class, $data, $map);
+    $modelMethods = get_class_methods($result);
+    $getterFilter = array_filter($modelMethods, function ($value) {
+      return str_contains($value, 'get');
+    });
 
-    $this->assertInstanceOf(Advent::class, $result);
-    $this->assertNotEmpty($result);
+    foreach ($getterFilter as $getter) {
+      $this->assertNotNull($result->$getter());
+    }
+    $this->assertInstanceOf($className, $result);
+
 
   }
-
-  public static function modelAdventDataProvider(): array
-  {
-    return [
-      'Advent' =>
-      [
-        'data' =>
-        [
-          'id' => 1,
-          'item' => 'first item',
-          'description' => 'first desc',
-          'price' => 111,
-          'image' => 'first.png',
-          'created_date' => '2023-06-23 11:11:11',
-          'modified_date' => '2023-06-29 11:11:11',
-        ],
-        'map' =>
-        [
-          'id' => 'id',
-          'item' => 'item',
-          'description' => 'description',
-          'price' => 'price',
-          'image' => 'image',
-          'created_date' => 'createdDate',
-          'modified_date' => 'modifiedDate',
-        ]
-      ],
-    ];
-  }
-  public static function modelAdvertDataProvider(): array
-  {
-    return [
-      'Advent' =>
-      [
-        'data' =>
-        [
-          'id' => 1,
-          'item' => 'first item',
-          'description' => 'first desc',
-          'price' => 111,
-          'image' => 'first.png',
-          'created_date' => '2023-06-23 11:11:11',
-          'modified_date' => '2023-06-29 11:11:11',
-        ],
-        'map' =>
-        [
-          'id' => 'id',
-          'item' => 'item',
-          'description' => 'description',
-          'price' => 'price',
-          'image' => 'image',
-          'created_date' => 'createdDate',
-          'modified_date' => 'modifiedDate',
-        ]
-      ],
-    ];
-  }
-
-
-
-
-  // public function testHydrateImageModel(): void
-  // {
-  //   $data = [
-  //     'id' => 1,
-  //     'item' => 'first item',
-  //     'description' => 'first desc',
-  //     'price' => 111,
-  //     'image' => 'first.png',
-  //     'created_date' => '2023-06-23 11:11:11',
-  //     'modified_date' => '2023-06-29 11:11:11',
-  //   ];
-
-  //   $map = [
-  //     'id' => 'id',
-  //     'name' => 'item',
-  //     'item_id' => 'price',
-  //   ];
-
-  //   $result = $this->hydrator->hydrate(Image::class, $data, $map);
-
-  //   $this->assertInstanceOf(Image::class, $result);
-  //   $this->assertNotEmpty($result);
-  //   $this->assertObjectHasProperty('name', $result);
-
-  // }
 
 }

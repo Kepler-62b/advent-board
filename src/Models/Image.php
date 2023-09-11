@@ -4,11 +4,11 @@ namespace App\Models;
 
 class Image
 {
-  private int $id;
+  private ?int $id = null;
 
-  private string $name;
+  private ?string $name = null;
 
-  private int $item_id;
+  private ?int $item_id = null;
 
   public function setId(int $id): static
   {
@@ -16,7 +16,7 @@ class Image
     return $this;
   }
 
-  public function getId(): int
+  public function getId(): ?int
   {
     return $this->id;
   }
@@ -27,7 +27,7 @@ class Image
     return $this;
   }
 
-  public function getName(): string
+  public function getName(): ?string
   {
     return $this->name;
   }
@@ -38,7 +38,7 @@ class Image
     return $this;
   }
 
-  public function getItemId(): int
+  public function getItemId(): ?int
   {
     return $this->item_id;
   }
