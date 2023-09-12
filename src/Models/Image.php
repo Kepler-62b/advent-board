@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use App\Service\RelationObject;
+
 class Image
 {
   private ?int $id = null;
 
   private ?string $name = null;
 
-  private ?int $item_id = null;
+  private ?RelationObject $item_id = null;
 
   public function setId(int $id): static
   {
@@ -32,13 +34,7 @@ class Image
     return $this->name;
   }
 
-  public function setItemId(int $item_id): static
-  {
-    $this->item_id = $item_id;
-    return $this;
-  }
-
-  public function getItemId(): ?int
+  public function getItemId(): ?RelationObject
   {
     return $this->item_id;
   }

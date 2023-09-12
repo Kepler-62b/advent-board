@@ -65,7 +65,7 @@ class HydratorServiceTest extends TestCase
               'price' => 'price',
               'image' => 'image',
               'created_date' => 'createdDate',
-              'modified_date' => 'modifiedDate',
+//              'modified_date' => 'modifiedDate',
             ]
         ],
       'ImageModel' =>

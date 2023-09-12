@@ -19,6 +19,7 @@ ini_set('display_errors', 'On');
 use Dev\Tests\PerfomanceTestService;
 use Dev\Logger\ErrorsGenerator;
 use Dev\Logger\LoggerService;
+use Dev\Tests\Services\HydratorServiceLocalTest;
 use Dev\Tests\TestServices;
 
 use App\Service\Widgets\SortWidget;
@@ -59,7 +60,12 @@ $container = new ControllerContainer();
 
 // $test->testApp($request);
 
-  $test->testHydratorService();
+//  $test->testHydratorService();
+
+  $testHydrator = new HydratorServiceLocalTest();
+  $testHydrator->testHydrateAdvertModel();
+  $testHydrator->testHydrateImageModel();
+
 
 //$image = new Image();
 //var_dump($image);
