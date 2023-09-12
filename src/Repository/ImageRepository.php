@@ -2,51 +2,66 @@
 
 namespace App\Repository;
 
-use App\Database\DatabasePDO;
+use App\Service\DatabasePDO;
 use App\Models\Image;
+use App\Service\HydratorService;
 
 class ImageRepository
 {
+  private DatabasePDO $pdo;
+  private $table = 'images_dev';
+  public const SELECT_LIMIT = 5;
 
-
-  /**
-   * property for SQL statement
-   */
-  private $table = 'images_prod';
-  private $limit = 5;
-
-
-  public function __construct(
-    private Image $model,
-    private DatabasePDO $pdo
-  ) {
+  public function __construct(DatabasePDO $pdo) {
+    $this->pdo = $pdo;
   }
 
-  public function getAllRows(int $page = 1): array
+  /**
+   * @return Image[]
+   */
+  public function fetchAll(int $page = 1): array
   {
+
     $connection = $this->pdo;
     $table = $this->table;
-    $limit = $this->limit;
+    $limit = self::SELECT_LIMIT;
 
     $offset = ($page - 1) * $limit;
 
     $sql = "SELECT * FROM $table LIMIT $limit OFFSET :offset";
 
-    $pdo_statment = $connection->prepare($sql);
-
     try {
-      $pdo_statment->bindValue(":offset", $offset, \PDO::PARAM_INT);
+      $pdo_statement = $connection->prepare($sql);
+      $pdo_statement->bindValue(":offset", $offset, \PDO::PARAM_INT);
+      $pdo_statement->execute();
 
-      $pdo_statment->execute();
+      $result = $pdo_statement->fetchAll(\PDO::FETCH_ASSOC);
 
-      $result = $pdo_statment->fetchAll(\PDO::FETCH_ASSOC);
-      return $result;
+      $hydrator = new HydratorService();
+
+      foreach ($result as $data) {
+        $modelsStorage[] = $hydrator->hydrate(
+          Image::class,
+          $data,
+          [
+            'id' => 'id',
+            'name' => 'name',
+            'item_id' => 'item_id',
+          ]
+        );
+      }
+
+      return $modelsStorage;
+
     } catch (\PDOException $exception) {
-      die('Ошибка: ' . $exception->getMessage());
+      throw new \PDOException($exception);
     }
   }
 
-  public function getOneRow(int $id): array
+  /**
+   * @return Image[]
+   */
+  public function findById(int $id): ?array
   {
     $connection = $this->pdo;
     $table = $this->table;
@@ -58,94 +73,67 @@ class ImageRepository
     try {
       $pdo_statement->bindValue("id", $id, \PDO::PARAM_INT);
       $pdo_statement->execute();
-      $result = $pdo_statement->fetchAll(\PDO::FETCH_ASSOC);
-      return $result;
+
+      if ($result = $pdo_statement->fetch(\PDO::FETCH_ASSOC)) {
+
+        $hydrator = new HydratorService();
+
+        $model[] = $hydrator->hydrate(
+          Image::class,
+          $result,
+          [
+            'id' => 'id',
+            'item' => 'item',
+            'description' => 'description',
+            'price' => 'price',
+            'image' => 'image',
+            'created_date' => 'createdDate',
+            'modified_date' => 'modifiedDate',
+          ]
+        );
+        return $model;
+      } else {
+        return NULL;
+      }
     } catch (\PDOException $exception) {
       die('Ошибка: ' . $exception->getMessage());
     }
   }
 
-  public function saveRow(): bool
+  public function findByForeignKey(int $foreignKeyValue): ?array
   {
     $connection = $this->pdo;
-    $model = $this->model;
     $table = $this->table;
 
-    $sql = "INSERT INTO $table (item, description, price, image)
-            VALUES (?, ?, ?, ?)";
+    $sql = "SELECT * FROM $table WHERE item_id = :foreignKeyValue";
 
-    $pdo_statment = $connection->prepare($sql);
+    $pdo_statement = $connection->prepare($sql);
 
     try {
-      $pdo_statment->bindValue(1, $model->getName(), \PDO::PARAM_STR);
-      $pdo_statment->bindValue(3, $model->getItemId(), \PDO::PARAM_INT);
-      $pdo_statment->execute();
-      $insert_id = $connection->lastInsertId();
-      print "Row added " . $insert_id;
-      // $this->insert_id = $insert_id;
-      return true;
-    } catch (\PDOException $exception) {
-      die('Ошибка: ' . $exception->getMessage());
-    }
-  }
-  public function updateRow(): bool
-  {
-    $connection = $this->pdo;
-    $model = $this->model;
-    $table = $this->table;
+      $pdo_statement->bindValue("foreignKeyValue", $foreignKeyValue, \PDO::PARAM_INT);
+      $pdo_statement->execute();
 
-    $sql = "UPDATE $table 
-            SET item = :item, description = :description, price = :price, image = :image
-            WHERE id = :id";
+      if ($result = $pdo_statement->fetch(\PDO::FETCH_ASSOC)) {
 
-    $pdo_statment = $connection->prepare($sql);
+        $hydrator = new HydratorService();
 
-    try {
-      $pdo_statment->bindValue(':id', $model->getId(), \PDO::PARAM_INT);
-      $pdo_statment->bindValue(':price', $model->getName(), \PDO::PARAM_STR);
-      $pdo_statment->bindValue(':image', $model->getItemId(), \PDO::PARAM_INT);
-      $pdo_statment->execute();
-      return true;
+        $model[] = $hydrator->hydrate(
+          Image::class,
+          $result,
+          [
+            'id' => 'id',
+            'name' => 'name',
+            'item_id' => 'item_id',
+
+          ]
+        );
+        return $model;
+      } else {
+        return NULL;
+      }
     } catch (\PDOException $exception) {
       die('Ошибка: ' . $exception->getMessage());
     }
   }
 
-  public function getCountRows(): int
-  {
-    $connection = $this->pdo;
-    $table = $this->table;
-
-    $sql = "SELECT COUNT(*) FROM $table";
-
-    $pdo_statment = $connection->query($sql);
-    $result = $pdo_statment->fetch(\PDO::FETCH_NUM);
-    return $result[0];
-  }
-
-  public function sortRows(string $sort = null, string $page = null, string $filter = null): array
-  {
-    $connection = $this->pdo;
-    $table = $this->table;
-    $limit = $this->limit;
-
-    $offset = ($page - 1) * $limit;
-
-    if ($filter === NULL) {
-      $sql = "SELECT * FROM $table LIMIT $limit OFFSET :offset";
-      // var_dump($sql);
-    } elseif ($sort === 'min') {
-      $sql = "SELECT * FROM $table ORDER BY $filter ASC LIMIT $limit OFFSET :offset";
-    } elseif ($sort === 'max') {
-      $sql = "SELECT * FROM $table ORDER BY $filter DESC LIMIT $limit OFFSET :offset";
-    } elseif ($sort === 'def') {
-      $sql = "SELECT * FROM $table LIMIT $limit OFFSET :offset";
-    }
-
-    $pdo_statment = $connection->prepare($sql);
-    $pdo_statment->bindValue(":offset", $offset, \PDO::PARAM_INT);
-    $pdo_statment->execute();
-    $result = $pdo_statment->fetchAll(\PDO::FETCH_ASSOC);
-    return $result;
-  }
 }

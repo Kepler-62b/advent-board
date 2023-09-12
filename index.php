@@ -7,9 +7,8 @@ use App\Models\Advert;
 use App\Models\Image;
 use App\Service\RenderTemplateServise;
 use App\Service\TemplateNavigator;
-use App\Models\Advent;
-use App\Service\TemplateRenderService;
 use App\Service\Widgets\Pagination;
+use App\Models\Advent;
 
 require 'vendor/autoload.php';
 
@@ -60,14 +59,6 @@ $container = new ControllerContainer();
 
 // $test->testApp($request);
 
-//  $test->testHydratorService();
-
   $testHydrator = new HydratorServiceLocalTest();
-  $testHydrator->testHydrateAdvertModel();
+//  $testHydrator->testHydrateAdvertModel();
   $testHydrator->testHydrateImageModel();
-
-
-//$image = new Image();
-//var_dump($image);
-//
-//var_dump(is_null($image));

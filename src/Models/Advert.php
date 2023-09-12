@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Service\RelationManyToOne;
+use App\Service\RelationOneToMany;
+
 class Advert
 {
   // @TODO убрать неиспользуесые сеттеры
@@ -10,7 +13,7 @@ class Advert
   private ?string $item = null;
   private ?string $description = null;
   private ?int $price = null;
-  private ?string $image = null;
+  private ?RelationOneToMany $image = null;
   private ?\DateTimeImmutable $createdDate = null;
   private ?\DateTimeImmutable $modifiedDate = null;
 
@@ -43,7 +46,7 @@ class Advert
     return $this->price;
   }
 
-  public function getImage(): ?string
+  public function getImage(): ?RelationOneToMany
   {
     return $this->image;
   }

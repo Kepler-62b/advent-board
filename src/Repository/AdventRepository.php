@@ -2,12 +2,11 @@
 
 namespace App\Repository;
 
-use App\Models\AdventHydrate;
 use App\Service\DatabasePDO;
+use App\Service\HydratorService;
+
 use App\Models\Advent;
 
-use App\Service\HydratorService;
-use Dev\Tests\DefaultClass;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
