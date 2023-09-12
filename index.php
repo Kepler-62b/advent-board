@@ -7,9 +7,8 @@ use App\Models\Advert;
 use App\Models\Image;
 use App\Service\RenderTemplateServise;
 use App\Service\TemplateNavigator;
-use App\Models\Advent;
-use App\Service\TemplateRenderService;
 use App\Service\Widgets\Pagination;
+use App\Models\Advent;
 
 require 'vendor/autoload.php';
 

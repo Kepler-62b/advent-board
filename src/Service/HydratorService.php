@@ -49,7 +49,6 @@ class HydratorService
             // @TODO обработка RelationManyToOne
             // @TODO можно проверать instanseOf если RelationManyToOne будет наследоваться
             if (str_contains($className, 'RelationManyToOne')) {
-              var_dump($className);
               $property->setValue($model, new $className($value));
             } elseif (str_contains($className, 'RelationOneToMany')) {
               $property->setValue($model, new $className($data['id']));

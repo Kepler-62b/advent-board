@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Service\RelationManyToOne;
+use App\Service\RelationOneToMany;
 
 class Advert
 {
@@ -12,7 +13,7 @@ class Advert
   private ?string $item = null;
   private ?string $description = null;
   private ?int $price = null;
-  private ?Image $image = null;
+  private ?RelationOneToMany $image = null;
   private ?\DateTimeImmutable $createdDate = null;
   private ?\DateTimeImmutable $modifiedDate = null;
 
@@ -45,7 +46,7 @@ class Advert
     return $this->price;
   }
 
-  public function getImage(): ?Image
+  public function getImage(): ?RelationOneToMany
   {
     return $this->image;
   }
