@@ -17,7 +17,7 @@ class HydratorServiceTest extends TestCase
     $this->hydrator = new HydratorService();
   }
 
-  public static function hydrateDataProvider(): array
+  public static function totestHydrateModelDataProvider(): array
   {
     return [
       'AdventModel' =>
@@ -91,18 +91,18 @@ class HydratorServiceTest extends TestCase
   }
 
   /**
-   * @dataProvider hydrateDataProvider
+   * @dataProvider totestHydrateModelDataProvider
    */
   public function testHydrateModel(string $className, array $data, array $map): void
   {
     $result = $this->hydrator->hydrate($className, $data, $map);
 
     $modelMethods = get_class_methods($result);
-    $getterFilter = array_filter($modelMethods, function ($value) {
+    $gettersStorage = array_filter($modelMethods, function ($value) {
       return str_contains($value, 'get');
     });
 
-    foreach ($getterFilter as $getter) {
+    foreach ($gettersStorage as $getter) {
       $this->assertNotNull($result->$getter());
     }
     $this->assertInstanceOf($className, $result);
