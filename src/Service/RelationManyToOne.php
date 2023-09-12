@@ -4,7 +4,7 @@ namespace App\Service;
 
 use App\Repository\AdventRepository;
 
-class RelationObject
+class RelationManyToOne
 {
   public int $foreignKey;
   public object $references;

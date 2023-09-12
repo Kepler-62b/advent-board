@@ -60,14 +60,6 @@ $container = new ControllerContainer();
 
 // $test->testApp($request);
 
-//  $test->testHydratorService();
-
   $testHydrator = new HydratorServiceLocalTest();
-  $testHydrator->testHydrateAdvertModel();
+//  $testHydrator->testHydrateAdvertModel();
   $testHydrator->testHydrateImageModel();
-
-
-//$image = new Image();
-//var_dump($image);
-//
-//var_dump(is_null($image));
