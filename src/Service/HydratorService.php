@@ -5,19 +5,18 @@ namespace App\Service;
 class HydratorService
 {
 
-  public function extract(): array
+  public function extract(object $model): array
   {
-
-    $reflection = new \ReflectionClass($this->model);
+    $reflection = new \ReflectionClass($model);
 
     $propertyStorage = [];
     foreach ($reflection->getProperties() as $property) {
-      if ($property->isInitialized($this->model)) {
-        $propertyStorage[$property->getName()] = $property->getValue($this->model);
+      // @TODO реализовать проверку на notNull
+      if ($property->isInitialized($model)) {
+        $propertyStorage[$property->getName()] = $property->getValue($model);
       }
     }
     return $propertyStorage;
-
   }
 
   public function hydrate(string $className, array $data, array $map = null): object
@@ -37,17 +36,16 @@ class HydratorService
     } else {
       foreach ($data as $key => $value) {
         if (array_key_exists($key, $map)) {
-          // @TODO реализовать добавление строки с датой в объект DataTime не через сеттер
-          $propery = $reflection->getProperty($map[$key]);
-          if ($propery->getType()->isBuiltin()) {
-            $propery->setValue($this->model, $value);
+          $property = $reflection->getProperty($map[$key]);
+          if ($property->getType()->isBuiltin()) {
+            $property->setValue($this->model, $value);
           } else {
             /**
              * старая функциональность, использующая сеттеры модели
              * $reflection->getMethod('set' . ucfirst($map[$key]))->invokeArgs($this->model, [$value]);
              */
-            $className = $propery->getType()->getName();
-            $propery->setValue($this->model, new $className($value));
+            $className = $property->getType()->getName();
+            $property->setValue($this->model, new $className($value));
           }
         }
       }
@@ -56,7 +54,8 @@ class HydratorService
     }
   }
 
-  public function hydrateWithConstructor(string $className, array $data, array $map)
+  // @TODO тестировать метод
+  public function hydrateWithConstructor(string $className, array $data, array $map): object
   {
     $reflection = new \ReflectionClass($className);
 
