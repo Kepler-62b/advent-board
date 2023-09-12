@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App;
 
 use App\Models\Advert;
+use App\Models\Image;
 use App\Service\RenderTemplateServise;
 use App\Service\TemplateNavigator;
 use App\Models\Advent;
@@ -18,6 +19,7 @@ ini_set('display_errors', 'On');
 use Dev\Tests\PerfomanceTestService;
 use Dev\Logger\ErrorsGenerator;
 use Dev\Logger\LoggerService;
+use Dev\Tests\Services\HydratorServiceLocalTest;
 use Dev\Tests\TestServices;
 
 use App\Service\Widgets\SortWidget;
@@ -56,4 +58,16 @@ $error = new ErrorsGenerator();
 $test = new TestServices();
 $container = new ControllerContainer();
 
-$test->testApp($request);
+// $test->testApp($request);
+
+//  $test->testHydratorService();
+
+  $testHydrator = new HydratorServiceLocalTest();
+  $testHydrator->testHydrateAdvertModel();
+  $testHydrator->testHydrateImageModel();
+
+
+//$image = new Image();
+//var_dump($image);
+//
+//var_dump(is_null($image));

@@ -6,13 +6,13 @@ class Advert
 {
   // @TODO убрать неиспользуесые сеттеры
 
-  private int $id;
-  private string $item;
-  private string $description;
-  private int $price;
-  private string $image;
-  private \DateTimeImmutable $createdDate;
-  private \DateTimeImmutable $modifiedDate;
+  private ?int $id = null;
+  private ?string $item = null;
+  private ?string $description = null;
+  private ?int $price = null;
+  private ?string $image = null;
+  private ?\DateTimeImmutable $createdDate = null;
+  private ?\DateTimeImmutable $modifiedDate = null;
 
   public function __construct(int $id, string $item, string $description, int $price, \DateTimeImmutable $createdDate)
   {
@@ -23,41 +23,37 @@ class Advert
     $this->createdDate = $createdDate;
   }
 
-
-  public function getId(): int
+  public function getId(): ?int
   {
     return $this->id;
   }
 
-  public function getItem(): string
+  public function getItem(): ?string
   {
     return $this->item;
   }
 
-
-  public function getDescription(): string
+  public function getDescription(): ?string
   {
     return $this->description;
   }
 
-
-  public function getPrice(): int
+  public function getPrice(): ?int
   {
     return $this->price;
   }
 
-
-  public function getImage(): string
+  public function getImage(): ?string
   {
     return $this->image;
   }
 
-  public function getCreatedDate(): \DateTimeImmutable
+  public function getCreatedDate(): ?\DateTimeImmutable
   {
     return $this->createdDate;
   }
 
-  public function getModifiedDate(): \DateTimeImmutable
+  public function getModifiedDate(): ?\DateTimeImmutable
   {
     return $this->modifiedDate;
   }

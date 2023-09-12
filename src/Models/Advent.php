@@ -71,20 +71,10 @@ class Advent
   {
     return $this->createdDate;
   }
-  // public function setCreatedDate(string $date): static
-  // {
-  //   $this->createdDate = new \DateTimeImmutable($date);
-  //   return $this;
-  // }
 
   public function getModifiedDate(): \DateTimeImmutable
   {
     return $this->modifiedDate;
   }
 
-  // public function setModifiedDate(string $date): static
-  // {
-  //   $this->modifiedDate = new \DateTimeImmutable($date);
-  //   return $this;
-  // }
 }
