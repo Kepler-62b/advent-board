@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App;
@@ -39,14 +40,14 @@ use App\Service\ParseURLService;
 use App\Service\LinkRender;
 use App\Service\RenderViewService;
 use App\Service\ServiceContainer;
-use App\Service\DatabasePDO;
+use App\Service\PDOMySQL;
 use App\Service\RouteService;
 
 use App\Repository\AdventRepository;
 
 $request = Request::createFromGlobals();
 $model = new Advent();
-$db = new DatabasePDO();
+$db = new PDOMySQL();
 $repository = new AdventRepository($db);
 $controller = new AdventController($repository);
 $linkManager = new LinkManager($request);
