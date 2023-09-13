@@ -2,11 +2,10 @@
 
 namespace App\Service;
 
-use App\Repository\ImageRepository;
+use App\Repository\AdventRepository;
 
-class RelationOneToMany
+class ManyToOneRelation
 {
-
   public int $foreignKey;
   public object $references;
 
@@ -18,11 +17,12 @@ class RelationOneToMany
 
   private function getData(int $foreignKey): object
   {
-//    var_dump($foreignKey);
-    $repository = new ImageRepository(new DatabasePDO());
-    [$object] = $repository->findByForeignKey($foreignKey);
-//    var_dump($object);
+    // @TODO использовать гидратор внутри метода на raw данных
+    $repository = new AdventRepository(new DatabasePDO());
+    [$object] = $repository->findById($foreignKey);
     return $object;
   }
+
+
 
 }

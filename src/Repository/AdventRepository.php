@@ -13,7 +13,7 @@ use Monolog\Handler\StreamHandler;
 class AdventRepository
 {
   private DatabasePDO $pdo;
-  private $table = 'advents_prod';
+  private string $table = 'advents_prod';
   private ?int $lastInsertId;
   public const SELECT_LIMIT = 5;
 

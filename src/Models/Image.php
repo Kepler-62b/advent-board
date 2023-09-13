@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Service\RelationManyToOne;
+use App\Service\ManyToOneRelation;
 
 class Image
 {
@@ -10,7 +10,7 @@ class Image
 
   private ?string $name = null;
 
-  private ?RelationManyToOne $item_id = null;
+  private ?Advent $item_id = null;
 
   public function setId(int $id): static
   {
@@ -34,7 +34,7 @@ class Image
     return $this->name;
   }
 
-  public function getItemId(): ?RelationManyToOne
+  public function getItemId(): ?Advent
   {
     return $this->item_id;
   }

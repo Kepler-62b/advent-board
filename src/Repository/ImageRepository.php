@@ -9,10 +9,11 @@ use App\Service\HydratorService;
 class ImageRepository
 {
   private DatabasePDO $pdo;
-  private $table = 'images_dev';
+  private string $table = 'images_dev';
   public const SELECT_LIMIT = 5;
 
-  public function __construct(DatabasePDO $pdo) {
+  public function __construct(DatabasePDO $pdo)
+  {
     $this->pdo = $pdo;
   }
 
@@ -124,7 +125,6 @@ class ImageRepository
             'id' => 'id',
             'name' => 'name',
             'item_id' => 'item_id',
-
           ]
         );
         return $model;
