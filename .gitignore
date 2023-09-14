@@ -7,6 +7,21 @@
 /dev/
 ###< tests ###
 
+###> vscode ###
+.vscode
+###< vscode ###
+
 ###> phpunit cahe ###
 .phpunit.result.cache
 ###< phpunit cahe ###
+
+###> php-cs-fixer cahe ###
+.php-cs-fixer.cache
+###< php-cs-fixer cahe ###
+
+###> psalm baseline ###
+psalm-baseline.xml
+###< psalm baseline ###
+
+
+

@@ -23,7 +23,9 @@ class AdventRepository
     }
 
     /**
+     * @param int $page
      * @return Advent[]
+     * @throws \ReflectionException
      */
     public function fetchAll(int $page = 1): array
     {

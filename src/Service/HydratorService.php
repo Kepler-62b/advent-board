@@ -4,14 +4,13 @@ namespace App\Service;
 
 class HydratorService
 {
-
     public function extract(object $model): array
     {
         $reflection = new \ReflectionClass($model);
         $properties = $reflection->getProperties();
         $propertyStorage = [];
         foreach ($properties as $property) {
-            // @TODO реализовать проверку на notNull
+            // @TODO реализовать свойства проверку на Null
             if ($property->isInitialized($model)) {
                 $propertyStorage[$property->getName()] = $property->getValue($model);
             }
@@ -20,11 +19,14 @@ class HydratorService
     }
 
     /**
+     * @param class-string $className
+     * @param array<string, string> $data
+     * @param array<string, string>|null $map
      * @throws \ReflectionException
      */
     public function hydrate(string $className, array $data, array $map = null): object
     {
-
+        // @TODO может быть использовать какое-то подобие DTO для передачи map - чтобы было понятна структура массива map
         $reflection = new \ReflectionClass($className);
 
         $model = $reflection->newInstanceWithoutConstructor();
@@ -42,10 +44,6 @@ class HydratorService
                     if ($property->getType()->isBuiltin()) {
                         $property->setValue($model, $value);
                     } else {
-                        /**
-                         * старая функциональность, использующая сеттеры модели
-                         * $reflection->getMethod('set' . ucfirst($map[$key]))->invokeArgs($this->model, [$value]);
-                         */
                         $propertyType = $property->getType()->getName();
 
                         // @TODO обработка ManyToOneRelation
@@ -67,7 +65,7 @@ class HydratorService
                              * ГЛАВНЫЙ ВОПРОС - КАК ПОЛУЧАТЬ ДАННЫЕ ИЗ БАЗЫ?
                              */
 
-//                            фековые данные
+                            //                            фековые данные
                             $data = [
                                 'id' => 1,
                                 'item' => 'item',
@@ -101,7 +99,7 @@ class HydratorService
         return $model;
     }
 
-    //  @TODO тестировать метод
+    //  @TODO тестировать метод и доделать после тестирования
     //  public function hydrateWithConstructor(string $className, array $data, array $map): object
     //  {
     //    $reflection = new \ReflectionClass($className);
