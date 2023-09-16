@@ -6,6 +6,7 @@ namespace App;
 
 use App\Models\Advert;
 use App\Models\Image;
+use App\Service\ManyToOneRelation;
 use App\Service\RenderTemplateServise;
 use App\Service\TemplateNavigator;
 use App\Service\Widgets\Pagination;
@@ -60,8 +61,8 @@ $container = new ControllerContainer();
 
 // $test->testApp($request);
 
-//  $testHydrator = new HydratorServiceLocalTest();
-//  $testHydrator->testHydrateAdvertModel();
+  $testHydrator = new HydratorServiceLocalTest();
+  $testHydrator->testHydrateAdvertModel();
 //  $testHydrator->testHydrateImageModel();
 
 

@@ -118,8 +118,9 @@ class ImageRepository
             if ($result = $pdo_statement->fetch(\PDO::FETCH_ASSOC)) {
 
                 $hydrator = new HydratorService();
+                $models = [];
 
-                $model[] = $hydrator->hydrate(
+                $models[] = $hydrator->hydrate(
                     Image::class,
                     $result,
                     [
@@ -128,7 +129,19 @@ class ImageRepository
                         'item_id' => 'item_id',
                     ]
                 );
-                return $model;
+                
+//                foreach ($result as $data) {
+//                    $models[] = $hydrator->hydrate(
+//                        Image::class,
+//                        $data,
+//                        [
+//                            'id' => 'id',
+//                            'name' => 'name',
+//                            'item_id' => 'item_id',
+//                        ]
+//                    );
+//                }
+                return $models;
             } else {
                 return null;
             }

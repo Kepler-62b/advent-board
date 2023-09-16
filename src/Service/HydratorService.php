@@ -2,6 +2,8 @@
 
 namespace App\Service;
 
+use App\Service\ManyToOneRelation;
+
 class HydratorService
 {
     public function extract(object $model): array
@@ -27,6 +29,8 @@ class HydratorService
     public function hydrate(string $className, array $data, array $map = null): object
     {
         // @TODO может быть использовать какое-то подобие DTO для передачи map - чтобы было понятна структура массива map
+        // @TODO создавать stdClass, если $className не передано
+
         $reflection = new \ReflectionClass($className);
 
         $model = $reflection->newInstanceWithoutConstructor();
@@ -40,19 +44,22 @@ class HydratorService
         } else {
             foreach ($data as $key => $value) {
                 if (array_key_exists($key, $map)) {
+
                     $property = $reflection->getProperty($map[$key]);
-                    if ($property->getType()->isBuiltin()) {
+
+                    $propertyType = $property->getType();
+                    if ($propertyType->isBuiltin()) {
                         $property->setValue($model, $value);
                     } else {
-                        $propertyType = $property->getType()->getName();
+                        $propertyName = $propertyType->getName();
 
-                        // @TODO обработка ManyToOneRelation
-                        // @TODO можно проверать instanseOf если ManyToOneRelation будет наследоваться
-                        if (str_contains($propertyType, 'ManyToOneRelation')) {
-                            $property->setValue($model, new $propertyType($value));
-                        } elseif (str_contains($propertyType, 'OneToManyRelation')) {
-                            $property->setValue($model, new $propertyType($data['id']));
-                        } elseif (str_contains($propertyType, 'Model')) {
+                        if (str_contains($propertyName, 'ManyToOneRelation')) {
+                            // @TODO можно проверять instanseOf от какого-то родителя, если ManyToOneRelation будет наследоваться
+
+                            $property->setValue($model, new $propertyName($key, $value));
+                        } elseif (str_contains($propertyName, 'OneToManyRelation')) {
+                            $property->setValue($model, new $propertyName($data['id']));
+                        } elseif (str_contains($propertyName, 'Models')) {
                             /**
                              * @TODO отношения в гидраторе 1
                              * получить данные из базы без обработки гидратором и в условии запустить гидратор
@@ -64,33 +71,17 @@ class HydratorService
                              *
                              * ГЛАВНЫЙ ВОПРОС - КАК ПОЛУЧАТЬ ДАННЫЕ ИЗ БАЗЫ?
                              */
-
-                            //                            фековые данные
-                            $data = [
-                                'id' => 1,
-                                'item' => 'item',
-                                'description' => 'item desc',
-                                'price' => 50000,
-                                'image' => 'symfony.png',
-                                'created_date' => '2023-06-23 12:57:05',
-                                'modified_date' => '2023-06-29 23:57:47',
-                            ];
-
-                            $map = [
-                                'id' => 'id',
-                                'item' => 'item',
-                                'description' => 'description',
-                                'price' => 'price',
-                                'image' => 'image',
-                                'created_date' => 'createdDate',
-                                'modified_date' => 'modifiedDate',
-                            ];
-
-                            $underModel = $this->hydrate($propertyType, $data, $map);
-                            //              var_dump($underModel);
-                            $property->setValue($model, $underModel);
+                            [$attributes] = $property->getAttributes();
+                            $attribute = $attributes->getArguments();
+                            if ($attribute['relation'] === 'ManyToOneRelation') {
+                                $manyToOne = new ManyToOneRelation($propertyName, $data['id']);
+                                $property->setValue($model, $manyToOne->references);
+                            } elseif ($attribute['relation'] === 'OneToMany') {
+//                                $oneToMany = new OneToManyRelation($propertyName, $value);
+//                                $property->setValue($model, $oneToMany->references);
+                            }
                         } else {
-                            $property->setValue($model, new $propertyType($value));
+                            $property->setValue($model, new $propertyName($value));
                         }
                     }
                 }

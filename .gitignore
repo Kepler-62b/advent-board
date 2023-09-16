@@ -20,6 +20,7 @@
 ###< php-cs-fixer cahe ###
 
 ###> psalm baseline ###
+.idea
 psalm-baseline.xml
 ###< psalm baseline ###
 
