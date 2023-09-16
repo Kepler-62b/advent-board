@@ -12,11 +12,11 @@
 ###< vscode ###
 
 ###> phpunit cahe ###
-.phpunit.result.cache
+/.phpunit.result.cache
 ###< phpunit cahe ###
 
 ###> php-cs-fixer cahe ###
-.php-cs-fixer.cache
+/.php-cs-fixer.cache
 ###< php-cs-fixer cahe ###
 
 ###> psalm baseline ###
