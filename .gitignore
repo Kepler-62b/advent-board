@@ -8,7 +8,7 @@
 ###< tests ###
 
 ###> vscode ###
-.vscode
+/.vscode/
 ###< vscode ###
 
 ###> phpunit cahe ###
@@ -20,7 +20,7 @@
 ###< php-cs-fixer cahe ###
 
 ###> psalm baseline ###
-.idea
+/.idea/
 psalm-baseline.xml
 ###< psalm baseline ###
 
