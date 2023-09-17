@@ -2,104 +2,131 @@
 
 namespace App\Service;
 
+use App\Service\ManyToOneRelation;
+
 class HydratorService
 {
-
-  public function extract(object $model): array
-  {
-    $reflection = new \ReflectionClass($model);
-
-    $propertyStorage = [];
-    foreach ($reflection->getProperties() as $property) {
-      // @TODO реализовать проверку на notNull
-      if ($property->isInitialized($model)) {
-        $propertyStorage[$property->getName()] = $property->getValue($model);
-      }
-    }
-    return $propertyStorage;
-  }
-
-  public function hydrate(string $className, array $data, array $map = null): object
-  {
-
-    $reflection = new \ReflectionClass($className);
-
-    $model = $reflection->newInstanceWithoutConstructor();
-
-    if (!$map) {
-      foreach ($data as $key => $value) {
-        if (array_key_exists($reflection->getProperty($key)->getName(), $data)) {
-          $reflection->getProperty($key)->setValue($model, $value);
-        }
-      }
-      return $model;
-    } else {
-      foreach ($data as $key => $value) {
-        if (array_key_exists($key, $map)) {
-          $property = $reflection->getProperty($map[$key]);
-          if ($property->getType()->isBuiltin()) {
-            $property->setValue($model, $value);
-          } else {
-            /**
-             * старая функциональность, использующая сеттеры модели
-             * $reflection->getMethod('set' . ucfirst($map[$key]))->invokeArgs($this->model, [$value]);
-             */
-            $className = $property->getType()->getName();
-
-            // @TODO обработка RelationManyToOne
-            // @TODO можно проверать instanseOf если RelationManyToOne будет наследоваться
-            if (str_contains($className, 'RelationManyToOne')) {
-              $property->setValue($model, new $className($value));
-            } elseif (str_contains($className, 'RelationOneToMany')) {
-              $property->setValue($model, new $className($data['id']));
-            } else {
-              $property->setValue($model, new $className($value));
+    public function extract(object $model): array
+    {
+        $reflection = new \ReflectionClass($model);
+        $properties = $reflection->getProperties();
+        $propertyStorage = [];
+        foreach ($properties as $property) {
+            // @TODO реализовать свойства проверку на Null
+            if ($property->isInitialized($model)) {
+                $propertyStorage[$property->getName()] = $property->getValue($model);
             }
-          }
         }
-      }
-
-      return $model;
+        return $propertyStorage;
     }
-  }
 
-//  @TODO тестировать метод
-//  public function hydrateWithConstructor(string $className, array $data, array $map): object
-//  {
-//    $reflection = new \ReflectionClass($className);
-//
-//
-//    foreach ($reflection->getConstructor()->getParameters() as $param) {
-//      $constructPropertyMap[$param->getName()] = $param->getType();
-//    }
-//
-//    foreach ($data as $key => $value) {
-//      if (array_key_exists($map[$key], $constructPropertyMap)) {
-//        $propertyType = $constructPropertyMap[$map[$key]];
-//
-//        if ($propertyType->isBuiltin()) {
-//          $constructArgStorage[] = $value;
-//        } else {
-//          $class = $propertyType->getName();
-//          $constructArgStorage[] = new $class($value);
-//        }
-//      } else {
-//        $notConstructPropertyMap[$value] = $reflection->getProperty($map[$key]);
-//      }
-//    }
-//    $this->model = new $className(...$constructArgStorage);
-//
-//    foreach ($notConstructPropertyMap as $value => $propery) {
-//      if (!$propery->isInitialized($this->model)) {
-//        if ($propery->getType()->isBuiltin()) {
-//          $propery->setValue($this->model, $value);
-//        } else {
-//          $class = $propery->getType()->getName();
-//          $propery->setValue($this->model, new $class($value));
-//        }
-//      }
-//    }
-//
-//    return $this->model;
-//  }
+    /**
+     * @param class-string $className
+     * @param array<string, string> $data
+     * @param array<string, string>|null $map
+     * @throws \ReflectionException
+     */
+    public function hydrate(string $className, array $data, array $map = null): object
+    {
+        // @TODO может быть использовать какое-то подобие DTO для передачи map - чтобы было понятна структура массива map
+        // @TODO создавать stdClass, если $className не передано
+
+        $reflection = new \ReflectionClass($className);
+
+        $model = $reflection->newInstanceWithoutConstructor();
+
+        if (!$map) {
+            foreach ($data as $key => $value) {
+                if (array_key_exists(key: $reflection->getProperty($key)->getName(), array: $data)) {
+                    $reflection->getProperty($key)->setValue($model, $value);
+                }
+            }
+        } else {
+            foreach ($data as $key => $value) {
+                if (array_key_exists($key, $map)) {
+
+                    $property = $reflection->getProperty($map[$key]);
+
+                    $propertyType = $property->getType();
+                    if ($propertyType->isBuiltin()) {
+                        $property->setValue($model, $value);
+                    } else {
+                        $propertyName = $propertyType->getName();
+
+                        if (str_contains($propertyName, 'ManyToOneRelation')) {
+                            // @TODO можно проверять instanseOf от какого-то родителя, если ManyToOneRelation будет наследоваться
+
+                            $property->setValue($model, new $propertyName($key, $value));
+                        } elseif (str_contains($propertyName, 'OneToManyRelation')) {
+                            $property->setValue($model, new $propertyName($data['id']));
+                        } elseif (str_contains($propertyName, 'Models')) {
+                            /**
+                             * @TODO отношения в гидраторе 1
+                             * получить данные из базы без обработки гидратором и в условии запустить гидратор
+                             * на свойстве - объекте с полученными данными - нужен объект, делающий запросы в БД
+                             * ЛИБО
+                             * @TODO отношения в гидраторе 2
+                             * запустить репозиторий по названию объекта, получить из него данные (опять же без гидратора)
+                             * и наполнить объект - свойство
+                             *
+                             * ГЛАВНЫЙ ВОПРОС - КАК ПОЛУЧАТЬ ДАННЫЕ ИЗ БАЗЫ?
+                             */
+                            [$attributes] = $property->getAttributes();
+                            $attribute = $attributes->getArguments();
+                            if ($attribute['relation'] === 'ManyToOneRelation') {
+                                $manyToOne = new ManyToOneRelation($propertyName, $data['id']);
+                                $property->setValue($model, $manyToOne->references);
+                            } elseif ($attribute['relation'] === 'OneToMany') {
+//                                $oneToMany = new OneToManyRelation($propertyName, $value);
+//                                $property->setValue($model, $oneToMany->references);
+                            }
+                        } else {
+                            $property->setValue($model, new $propertyName($value));
+                        }
+                    }
+                }
+            }
+        }
+        return $model;
+    }
+
+    //  @TODO тестировать метод и доделать после тестирования
+    //  public function hydrateWithConstructor(string $className, array $data, array $map): object
+    //  {
+    //    $reflection = new \ReflectionClass($className);
+    //
+    //
+    //    foreach ($reflection->getConstructor()->getParameters() as $param) {
+    //      $constructPropertyMap[$param->getName()] = $param->getType();
+    //    }
+    //
+    //    foreach ($data as $key => $value) {
+    //      if (array_key_exists($map[$key], $constructPropertyMap)) {
+    //        $propertyType = $constructPropertyMap[$map[$key]];
+    //
+    //        if ($propertyType->isBuiltin()) {
+    //          $constructArgStorage[] = $value;
+    //        } else {
+    //          $class = $propertyType->getName();
+    //          $constructArgStorage[] = new $class($value);
+    //        }
+    //      } else {
+    //        $notConstructPropertyMap[$value] = $reflection->getProperty($map[$key]);
+    //      }
+    //    }
+    //    $this->model = new $className(...$constructArgStorage);
+    //
+    //    foreach ($notConstructPropertyMap as $value => $propery) {
+    //      if (!$propery->isInitialized($this->model)) {
+    //        if ($propery->getType()->isBuiltin()) {
+    //          $propery->setValue($this->model, $value);
+    //        } else {
+    //          $class = $propery->getType()->getName();
+    //          $propery->setValue($this->model, new $class($value));
+    //        }
+    //      }
+    //    }
+    //
+    //    return $this->model;
+    //  }
 }

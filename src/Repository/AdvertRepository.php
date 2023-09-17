@@ -5,12 +5,12 @@ namespace App\Repository;
 use App\Service\PDOMySQL;
 use App\Service\HydratorService;
 
-use App\Models\Advent;
+use App\Models\Advert;
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
-class AdventRepository
+class AdvertRepository
 {
     private PDOMySQL $pdo;
     private string $table = 'advents_prod';
@@ -24,12 +24,12 @@ class AdventRepository
 
     /**
      * @param int $page
-     * @return Advent[]
+     * @return Advert[]
      * @throws \ReflectionException
      */
     public function fetchAll(int $page = 1): array
     {
-        $logger = (new Logger(AdventRepository::class))->pushHandler(new StreamHandler('dev/Logger/log/dev.log', Logger::DEBUG));
+        $logger = (new Logger(AdvertRepository::class))->pushHandler(new StreamHandler('dev/Logger/log/dev.log', Logger::DEBUG));
 
         $connection = $this->pdo;
         $table = $this->table;
@@ -50,7 +50,7 @@ class AdventRepository
             $modelsStorage = [];
             foreach ($result as $data) {
                 $modelsStorage[] = $hydrator->hydrate(
-                    Advent::class,
+                    Advert::class,
                     $data,
                     [
                         'id' => 'id',
@@ -73,7 +73,7 @@ class AdventRepository
     }
 
     /**
-     * @return Advent[]
+     * @return Advert[]
      */
     public function findById(int $id): ?array
     {
@@ -93,7 +93,7 @@ class AdventRepository
                 $hydrator = new HydratorService();
 
                 $model[] = $hydrator->hydrate(
-                    Advent::class,
+                    Advert::class,
                     $result,
                     [
                         'id' => 'id',
@@ -188,7 +188,6 @@ class AdventRepository
         $pdo_statment->execute();
         $result = $pdo_statment->fetchAll(\PDO::FETCH_ASSOC);
         return $result;
-
     }
 
     public function getMin(int $page, string $filter): array
@@ -207,29 +206,4 @@ class AdventRepository
         return $result;
     }
 
-    public function sortRows(string $sort = null, string $page = null, string $filter = null): array
-    {
-        $connection = $this->pdo;
-        $table = $this->table;
-        $limit = self::SELECT_LIMIT;
-
-        $offset = ($page - 1) * $limit;
-
-        if ($filter === NULL) {
-            $sql = "SELECT * FROM $table LIMIT $limit OFFSET :offset";
-            // var_dump($sql);
-        } elseif ($sort === 'min') {
-            $sql = "SELECT * FROM $table ORDER BY $filter ASC LIMIT $limit OFFSET :offset";
-        } elseif ($sort === 'max') {
-            $sql = "SELECT * FROM $table ORDER BY $filter DESC LIMIT $limit OFFSET :offset";
-        } elseif ($sort === 'def') {
-            $sql = "SELECT * FROM $table LIMIT $limit OFFSET :offset";
-        }
-
-        $pdo_statment = $connection->prepare($sql);
-        $pdo_statment->bindValue(":offset", $offset, \PDO::PARAM_INT);
-        $pdo_statment->execute();
-        $result = $pdo_statment->fetchAll(\PDO::FETCH_ASSOC);
-        return $result;
-    }
 }

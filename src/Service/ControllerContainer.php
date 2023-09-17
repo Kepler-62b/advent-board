@@ -14,8 +14,8 @@ class ControllerContainer
   public function __construct()
   {
     $this->objects = [
-      'App\Service\DatabasePDO' => fn() => new DatabasePDO(),
-      'App\Repository\AdventRepository' => fn() => new AdventRepository($this->get('App\Service\DatabasePDO')),
+      'App\Service\PDOMySQL' => fn() => new PDOMySQL(),
+      'App\Repository\AdventRepository' => fn() => new AdventRepository($this->get('App\Service\PDOMySQL')),
       'App\Controllers\AdventController' => fn() => new AdventController($this->get('App\Repository\AdventRepository')),
     ];
   }
