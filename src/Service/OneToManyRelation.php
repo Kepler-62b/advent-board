@@ -4,20 +4,19 @@ namespace App\Service;
 
 class OneToManyRelation
 {
-    public array $relationModels = [];
+    public ?array $relationModels = [];
 
     public function __construct(int $foreignKey, string $modelName)
     {
-        $this->relationModels = $this->getData($foreignKey, $modelName);
+        $this->relationModels = $this->getDataFromRepository($foreignKey, $modelName);
         // @TODO сделать "ленивую" загрузку связанных моделей
         // $this->relationModels = fn() => $this->getData($foreignKey);
     }
 
     // @TODO подумать над названием метода
-    private function getData(int $foreignKey, string $modelName)
+    private function getDataFromRepository(int $foreignKey, string $modelName): ?array
     {
-        $repository = (new ControllerContainer())->get($modelName);
-        $objectArray = $repository->findById($foreignKey);
-        return $objectArray;
+        $repository = (object) (new ControllerContainer())->get($modelName);
+        return $repository->findById($foreignKey);
     }
 }

@@ -73,12 +73,6 @@ class AdventController extends DefaultController
 
         $advert = $repository->findById($id) ?? throw new NotFoundHttpException('Not found item ID ', $id);
 
-        // fake code
-        $relation = new RelationObject($advert);
-        $relation->manyToOne('id');
-        // fake code
-
-
         if (isset($interface)) {
             return $this->apiRaw($advert);
         }

@@ -17,7 +17,6 @@ class Advert
     private ?string $image = null;
     private ?\DateTimeImmutable $createdDate = null;
     private ?\DateTimeImmutable $modifiedDate = null;
-
     #[RelationAttribute(relationModel: Image::class)]
     private ?ManyToOneRelation $relationModel = null;
 
@@ -50,7 +49,7 @@ class Advert
         return $this->price;
     }
 
-    public function getImage(): ?Image
+    public function getImage(): ?string
     {
         return $this->image;
     }

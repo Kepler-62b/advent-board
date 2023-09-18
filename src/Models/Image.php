@@ -13,7 +13,6 @@ class Image
     private ?string $name = null;
 
     private ?string $item_id = null;
-
     #[RelationAttribute(relationModel: Advert::class)]
     private ?OneToManyRelation $relationModel = null;
 

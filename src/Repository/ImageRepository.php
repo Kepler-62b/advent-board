@@ -120,6 +120,7 @@ class ImageRepository
                 $hydrator = new HydratorService();
                 $models = [];
 
+                /** @var array<string, mixed> $data */
                 foreach ($result as $data) {
                     $models[] = $hydrator->hydrate(
                         Image::class,

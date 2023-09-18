@@ -9,7 +9,7 @@ class RelationAttribute
 
     public function __construct(string $relationModel)
     {
-        $this->$relationModel = $relationModel;
+        $this->relationModel = $relationModel;
     }
 
 }

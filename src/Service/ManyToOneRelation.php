@@ -9,20 +9,20 @@ class ManyToOneRelation
      */
 
     // @TODO подумать над названием свойства
-    public array $relationModels = [];
+    public ?array $relationModels = [];
 
-    public function __construct(int $foreignKey, string $modelName)
+    public function __construct(int $relationKey, string $modelName)
     {
-        $this->relationModels = $this->getData($foreignKey, $modelName);
+        $this->relationModels = $this->getDataFromRepository($relationKey, $modelName);
         // @TODO сделать "ленивую" загрузку связанных моделей
         // $this->relationModels = fn() => $this->getData($foreignKey);
     }
 
     // @TODO подумать над названием метода
-    private function getData(int $foreignKey, string $modelName)
+    private function getDataFromRepository(int $relationKey, string $modelName): ?array
     {
-        $repository = (new ControllerContainer())->get($modelName);
-        $objectArray = $repository->findByForeignKey($foreignKey);
-        return $objectArray;
+        // @TODO нужна проверка на instanceOf, чтобы был понятен тип у переменной $repository
+        $repository = (object) (new ControllerContainer())->get($modelName);
+        return $repository->findByForeignKey($relationKey);
     }
 }

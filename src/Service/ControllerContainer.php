@@ -19,8 +19,8 @@ class ControllerContainer
             'App\Repository\AdventRepository' => fn() => new AdventRepository($this->get('App\Service\PDOMySQL')),
             'App\Controllers\AdventController' => fn() => new AdventController($this->get('App\Repository\AdventRepository')),
             // @TODO подумать над сруктурой контейнера
-            'App\Models\Image' => fn() => new ImageRepository($this->get('App\Service\PDOMySQL')),
-            'App\Models\Advert' => fn() => new AdventRepository($this->get('App\Service\PDOMySQL')),
+            'App\Models\Image' => fn(): ImageRepository => new ImageRepository($this->get('App\Service\PDOMySQL')),
+            'App\Models\Advert' => fn(): AdventRepository => new AdventRepository($this->get('App\Service\PDOMySQL')),
         ];
     }
 

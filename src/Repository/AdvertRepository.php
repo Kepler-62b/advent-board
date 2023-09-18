@@ -73,7 +73,8 @@ class AdvertRepository
     }
 
     /**
-     * @return Advert[]
+     * @return ?Advert[]
+     * @throws \PDOException|\ReflectionException
      */
     public function findById(int $id): ?array
     {
