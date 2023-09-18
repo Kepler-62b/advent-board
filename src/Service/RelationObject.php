@@ -27,7 +27,11 @@ class RelationObject
             if (!$propertyType->isBuiltin()) {
                 $propertyName = $propertyType->getName();
                 if (str_contains($propertyName, "ManyToOneRelation")) {
-                    $property->setValue($this->model, new $propertyName($propertyHasId));
+                    // @TODO подумать, как получать значение атрибута
+                    [$attributes] = $property->getAttributes();
+                    $attribute = $attributes->getArguments();
+
+                    $property->setValue($this->model, new $propertyName($propertyHasId, $attribute['relationModel']));
                 }
             }
         }

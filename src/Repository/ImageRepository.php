@@ -102,45 +102,35 @@ class ImageRepository
         }
     }
 
-    public function findByForeignKey(int $foreignKeyValue): ?array
+    public function findByForeignKey(int $foreignKey): ?array
     {
         $connection = $this->pdo;
         $table = $this->table;
 
-        $sql = "SELECT * FROM $table WHERE item_id = :foreignKeyValue";
+        $sql = "SELECT * FROM $table WHERE item_id = :foreignKey";
 
         $pdo_statement = $connection->prepare($sql);
 
         try {
-            $pdo_statement->bindValue("foreignKeyValue", $foreignKeyValue, \PDO::PARAM_INT);
+            $pdo_statement->bindValue("foreignKey", $foreignKey, \PDO::PARAM_INT);
             $pdo_statement->execute();
 
-            if ($result = $pdo_statement->fetch(\PDO::FETCH_ASSOC)) {
+            if ($result = $pdo_statement->fetchAll(\PDO::FETCH_ASSOC)) {
 
                 $hydrator = new HydratorService();
                 $models = [];
 
-                $models[] = $hydrator->hydrate(
-                    Image::class,
-                    $result,
-                    [
-                        'id' => 'id',
-                        'name' => 'name',
-                        'item_id' => 'item_id',
-                    ]
-                );
-                
-//                foreach ($result as $data) {
-//                    $models[] = $hydrator->hydrate(
-//                        Image::class,
-//                        $data,
-//                        [
-//                            'id' => 'id',
-//                            'name' => 'name',
-//                            'item_id' => 'item_id',
-//                        ]
-//                    );
-//                }
+                foreach ($result as $data) {
+                    $models[] = $hydrator->hydrate(
+                        Image::class,
+                        $data,
+                        [
+                            'id' => 'id',
+                            'name' => 'name',
+                            'item_id' => 'item_id',
+                        ]
+                    );
+                }
                 return $models;
             } else {
                 return null;

@@ -18,8 +18,8 @@ class Advert
     private ?\DateTimeImmutable $createdDate = null;
     private ?\DateTimeImmutable $modifiedDate = null;
 
-    #[RelationAttribute(relationModel: 'Image')]
-    private ?ManyToOneRelation $imagesModel = null;
+    #[RelationAttribute(relationModel: Image::class)]
+    private ?ManyToOneRelation $relationModel = null;
 
     public function __construct(int $id, string $item, string $description, int $price, \DateTimeImmutable $createdDate)
     {

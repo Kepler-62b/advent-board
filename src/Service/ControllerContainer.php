@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Repository\AdventRepository;
 use App\Controllers\AdventController;
+use App\Repository\ImageRepository;
 
 class ControllerContainer
 {
@@ -17,6 +18,7 @@ class ControllerContainer
       'App\Service\PDOMySQL' => fn() => new PDOMySQL(),
       'App\Repository\AdventRepository' => fn() => new AdventRepository($this->get('App\Service\PDOMySQL')),
       'App\Controllers\AdventController' => fn() => new AdventController($this->get('App\Repository\AdventRepository')),
+      'App\Models\Image' => fn() => new ImageRepository($this->get('App\Service\PDOMySQL')),
     ];
   }
   public function has(string $id): bool
