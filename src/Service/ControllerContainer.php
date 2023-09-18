@@ -18,7 +18,7 @@ class ControllerContainer
             'App\Service\PDOMySQL' => fn() => new PDOMySQL(),
             'App\Repository\AdventRepository' => fn() => new AdventRepository($this->get('App\Service\PDOMySQL')),
             'App\Controllers\AdventController' => fn() => new AdventController($this->get('App\Repository\AdventRepository')),
-            // @TODO подумать над сруктурой контейнера
+            // @TODO подумать над сруктурой массива - контейнера
             'App\Models\Image' => fn(): ImageRepository => new ImageRepository($this->get('App\Service\PDOMySQL')),
             'App\Models\Advert' => fn(): AdventRepository => new AdventRepository($this->get('App\Service\PDOMySQL')),
         ];

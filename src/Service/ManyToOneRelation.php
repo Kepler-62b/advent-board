@@ -2,6 +2,9 @@
 
 namespace App\Service;
 
+use App\Repository\AdvertRepository;
+use App\Repository\ImageRepository;
+
 class ManyToOneRelation
 {
     /**
@@ -21,8 +24,10 @@ class ManyToOneRelation
     // @TODO подумать над названием метода
     private function getDataFromRepository(int $relationKey, string $modelName): ?array
     {
-        // @TODO нужна проверка на instanceOf, чтобы был понятен тип у переменной $repository
+        // @TODO нужна проверка на instanceOf, чтобы был понятен тип у переменной $repository - репозитории должны наследоваться
+        /** @var ImageRepository $repository */
         $repository = (object) (new ControllerContainer())->get($modelName);
+
         return $repository->findByForeignKey($relationKey);
     }
 }

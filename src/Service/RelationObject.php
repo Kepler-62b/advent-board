@@ -24,10 +24,10 @@ class RelationObject
         foreach ($properties as $property) {
 
             if ($property->getName() === $relationColumn) {
-                // @TODO $propertyHasRelationKey должно быть int - прописать проверку типа
-                if (is_numeric($property->getValue($this->model))) {
-                    $propertyHasRelationKey = $property->getValue($this->model);
-                }
+
+                // @TODO $propertyHasRelationKey должно быть int - можно прописать проверку типа
+                /** @var int $propertyHasRelationKey */
+                $propertyHasRelationKey = $property->getValue($this->model);
             }
 
             $propertyType = $property->getType() ?? throw new \Exception();
@@ -45,7 +45,7 @@ class RelationObject
                     [$attributes] = $property->getAttributes();
                     $attribute = $attributes->getArguments();
 
-                    if(!isset($propertyHasRelationKey)) {
+                    if (!isset($propertyHasRelationKey)) {
                         throw new \Exception();
                     }
 

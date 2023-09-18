@@ -2,6 +2,8 @@
 
 namespace App\Service;
 
+use App\Repository\AdvertRepository;
+
 class OneToManyRelation
 {
     public ?array $relationModels = [];
@@ -16,6 +18,9 @@ class OneToManyRelation
     // @TODO подумать над названием метода
     private function getDataFromRepository(int $foreignKey, string $modelName): ?array
     {
+        // @TODO нужна проверка на instanceOf, чтобы был понятен тип у переменной $repository
+        /** @var AdvertRepository $repository */
+
         $repository = (object) (new ControllerContainer())->get($modelName);
         return $repository->findById($foreignKey);
     }
