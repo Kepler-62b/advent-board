@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Service\ManyToOneRelation;
+use App\Service\OneToManyRelation;
 use App\Service\RelationAttribute;
 
 class Image
@@ -11,8 +12,10 @@ class Image
 
     private ?string $name = null;
 
-    #[RelationAttribute(relation: 'OneToMany')]
-    private ?Advert $item_id = null;
+    private ?string $item_id = null;
+
+    #[RelationAttribute(relationModel: 'Adverts')]
+    private ?OneToManyRelation $advertModel = null;
 
     public function setId(int $id): static
     {
@@ -36,7 +39,7 @@ class Image
         return $this->name;
     }
 
-    public function getItemId(): ?Advert
+    public function getItemId(): ?string
     {
         return $this->item_id;
     }

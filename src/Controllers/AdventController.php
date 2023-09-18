@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Service\HydratorService;
+use App\Service\RelationObject;
 use App\Service\RenderTemplateServise;
 use App\Service\TemplateNavigator;
 use App\Service\ViewRenderService;
@@ -71,6 +72,12 @@ class AdventController extends DefaultController
         $repository = $this->repository;
 
         $advert = $repository->findById($id) ?? throw new NotFoundHttpException('Not found item ID ', $id);
+
+        // fake code
+        $relation = new RelationObject($advert);
+        $relation->manyToOne('id');
+        // fake code
+
 
         if (isset($interface)) {
             return $this->apiRaw($advert);

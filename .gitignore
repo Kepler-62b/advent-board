@@ -11,18 +11,20 @@
 /.vscode/
 ###< vscode ###
 
+###> psalm ###
+/.idea/
+psalm-baseline.xml
+###< psalm ###
+
 ###> phpunit cahe ###
 /.phpunit.result.cache
 ###< phpunit cahe ###
 
-###> php-cs-fixer cahe ###
+###> php-cs-fixer cache ###
 /.php-cs-fixer.cache
-###< php-cs-fixer cahe ###
+###< php-cs-fixer cache ###
 
-###> psalm baseline ###
-/.idea/
-psalm-baseline.xml
-###< psalm baseline ###
+
 
 
 

@@ -5,11 +5,11 @@ namespace App\Service;
 #[\Attribute]
 class RelationAttribute
 {
-    public string $relation;
+    public string $relationModel;
 
-    public function __construct(string $relation)
+    public function __construct(string $relationModel)
     {
-        $this->relation = $relation;
+        $this->$relationModel = $relationModel;
     }
 
 }

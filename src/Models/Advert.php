@@ -14,10 +14,12 @@ class Advert
     private ?string $item = null;
     private ?string $description = null;
     private ?int $price = null;
-    #[RelationAttribute(relation: 'ManyToOneRelation')]
-    private ?Image $image = null;
+    private ?string $image = null;
     private ?\DateTimeImmutable $createdDate = null;
     private ?\DateTimeImmutable $modifiedDate = null;
+
+    #[RelationAttribute(relationModel: 'Image')]
+    private ?ManyToOneRelation $imagesModel = null;
 
     public function __construct(int $id, string $item, string $description, int $price, \DateTimeImmutable $createdDate)
     {

@@ -3,6 +3,8 @@
 namespace App\Service;
 
 use App\Service\ManyToOneRelation;
+use mysql_xdevapi\Exception;
+use function PHPUnit\Framework\throwException;
 
 class HydratorService
 {
@@ -47,46 +49,67 @@ class HydratorService
 
                     $property = $reflection->getProperty($map[$key]);
 
-                    $propertyType = $property->getType();
+                    $propertyType = $property->getType() ?? throw new \Exception();
+
+                    if (!$propertyType instanceof \ReflectionNamedType) {
+                        throw new \Exception();
+                    }
+
                     if ($propertyType->isBuiltin()) {
                         $property->setValue($model, $value);
                     } else {
+                        /**
+                         * @TODO отношения в гидраторе 1
+                         * получить данные из базы без обработки гидратором и в условии запустить гидратор
+                         * на свойстве - объекте с полученными данными - нужен объект, делающий запросы в БД
+                         * ЛИБО
+                         * @TODO отношения в гидраторе 2
+                         * запустить репозиторий по названию объекта, получить из него данные (опять же без гидратора)
+                         * и наполнить объект - свойство
+                         *
+                         * ГЛАВНЫЙ ВОПРОС - КАК ПОЛУЧАТЬ ДАННЫЕ ИЗ БАЗЫ?
+                         */
+
                         $propertyName = $propertyType->getName();
 
                         if (str_contains($propertyName, 'ManyToOneRelation')) {
-                            // @TODO можно проверять instanseOf от какого-то родителя, если ManyToOneRelation будет наследоваться
-
-                            $property->setValue($model, new $propertyName($key, $value));
+                            // @TODO нужно проверять instanseOf от какого-то родителя - ManyToOneRelation будет наследоваться
+                            $property->setValue($model, new $propertyName($key, $data['id']));
                         } elseif (str_contains($propertyName, 'OneToManyRelation')) {
+                            // @TODO нужно проверять instanseOf от какого-то родителя - OneToManyRelation будет наследоваться
+
                             $property->setValue($model, new $propertyName($data['id']));
                         } elseif (str_contains($propertyName, 'Models')) {
-                            /**
-                             * @TODO отношения в гидраторе 1
-                             * получить данные из базы без обработки гидратором и в условии запустить гидратор
-                             * на свойстве - объекте с полученными данными - нужен объект, делающий запросы в БД
-                             * ЛИБО
-                             * @TODO отношения в гидраторе 2
-                             * запустить репозиторий по названию объекта, получить из него данные (опять же без гидратора)
-                             * и наполнить объект - свойство
-                             *
-                             * ГЛАВНЫЙ ВОПРОС - КАК ПОЛУЧАТЬ ДАННЫЕ ИЗ БАЗЫ?
-                             */
+
                             [$attributes] = $property->getAttributes();
                             $attribute = $attributes->getArguments();
                             if ($attribute['relation'] === 'ManyToOneRelation') {
-                                $manyToOne = new ManyToOneRelation($propertyName, $data['id']);
+                                $manyToOne = new ManyToOneRelation($propertyName, (int)$data['id']);
                                 $property->setValue($model, $manyToOne->references);
                             } elseif ($attribute['relation'] === 'OneToMany') {
 //                                $oneToMany = new OneToManyRelation($propertyName, $value);
 //                                $property->setValue($model, $oneToMany->references);
                             }
                         } else {
-                            $property->setValue($model, new $propertyName($value));
+                            /** @var \DateTimeImmutable $propertyName */
+                            $propertyObject = new $propertyName($value);
+
+                            $property->setValue($model, $propertyObject);
                         }
                     }
                 }
             }
         }
+
+//        $properies = $reflection->getProperties();
+//        foreach ($properies as $property) {
+//            if ($property->getName() === "imageModel") {
+//                var_dump($property->getAttributes());
+//                $properyName = $property->getType()->getName();
+//                $property->setValue($model, new $properyName((int)$data['id']));
+//
+//            }
+//        }
         return $model;
     }
 

@@ -4,17 +4,35 @@ namespace App\Service;
 
 class RelationObject
 {
-    protected PDOMySQL $mySQL;
+    private object $model;
 
-    protected string $table = 'advents_prod';
-
-    public function __construct()
+    public function __construct(object $model)
     {
-        $this->mySQL = new PDOMySQL();
+        $this->model = $model;
     }
 
+    public function manyToOne(string $id, string $foreignKey = null)
+    {
+        // @TODO подумать над названием свойства для поиска отношения
+        // @TODO подумать какому объекту пердавать репозиторий
+        // @TODO использовать аттрибуты с именем модели (сущьности)
+        $reflection = new \ReflectionClass($this->model);
+        $properties = $reflection->getProperties();
+        foreach ($properties as $property) {
+            if ($property->getName() === $id) {
+                $propertyHasId = $property->getValue($this->model);
+            }
 
-
+            $propertyType = $property->getType();
+            if (!$propertyType->isBuiltin()) {
+                $propertyName = $propertyType->getName();
+                if (str_contains($propertyName, "ManyToOneRelation")) {
+                    $property->setValue($this->model, new $propertyName($propertyHasId));
+                }
+            }
+        }
+        return $this->model;
+    }
 
 
 }
