@@ -14,8 +14,8 @@ class Image
 
     private ?string $item_id = null;
 
-    #[RelationAttribute(relationModel: 'Adverts')]
-    private ?OneToManyRelation $advertModel = null;
+    #[RelationAttribute(relationModel: Advert::class)]
+    private ?OneToManyRelation $relationModel = null;
 
     public function setId(int $id): static
     {
@@ -42,5 +42,10 @@ class Image
     public function getItemId(): ?string
     {
         return $this->item_id;
+    }
+
+    public function getRelation(): ?OneToManyRelation
+    {
+        return $this->relationModel;
     }
 }

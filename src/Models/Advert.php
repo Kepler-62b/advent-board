@@ -65,4 +65,9 @@ class Advert
         return $this->modifiedDate;
     }
 
+    public function getRelation(): ?ManyToOneRelation
+    {
+        return $this->relationModel;
+    }
+
 }

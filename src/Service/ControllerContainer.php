@@ -9,29 +9,30 @@ use App\Repository\ImageRepository;
 class ControllerContainer
 {
 
-  private array $objects = [];
+    private array $objects = [];
 
 
-  public function __construct()
-  {
-    $this->objects = [
-      'App\Service\PDOMySQL' => fn() => new PDOMySQL(),
-      'App\Repository\AdventRepository' => fn() => new AdventRepository($this->get('App\Service\PDOMySQL')),
-      'App\Controllers\AdventController' => fn() => new AdventController($this->get('App\Repository\AdventRepository')),
-      'App\Models\Image' => fn() => new ImageRepository($this->get('App\Service\PDOMySQL')),
-    ];
-  }
-  public function has(string $id): bool
-  {
-    return isset($this->objects[$id]);
-  }
+    public function __construct()
+    {
+        $this->objects = [
+            'App\Service\PDOMySQL' => fn() => new PDOMySQL(),
+            'App\Repository\AdventRepository' => fn() => new AdventRepository($this->get('App\Service\PDOMySQL')),
+            'App\Controllers\AdventController' => fn() => new AdventController($this->get('App\Repository\AdventRepository')),
+            // @TODO подумать над сруктурой контейнера
+            'App\Models\Image' => fn() => new ImageRepository($this->get('App\Service\PDOMySQL')),
+            'App\Models\Advert' => fn() => new AdventRepository($this->get('App\Service\PDOMySQL')),
+        ];
+    }
 
-  public function get(string $id): mixed
-  {
-    return $this->objects[$id]();
-  }
+    public function has(string $id): bool
+    {
+        return isset($this->objects[$id]);
+    }
 
-
+    public function get(string $id): mixed
+    {
+        return $this->objects[$id]();
+    }
 
 
 }

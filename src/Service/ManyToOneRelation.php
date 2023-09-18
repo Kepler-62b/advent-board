@@ -2,23 +2,23 @@
 
 namespace App\Service;
 
-use App\Models\Advent;
-use App\Models\Image;
-use App\Repository\AdventRepository;
-use App\Repository\AdvertRepository;
-use App\Repository\ImageRepository;
-
 class ManyToOneRelation
 {
+    /**
+     * @TODO подумать, как отдавать конкретную связанную модель из массива моделей
+     */
+
     // @TODO подумать над названием свойства
     public array $relationModels = [];
 
-    public function __construct(int $foreignKey, string $modelName = null)
+    public function __construct(int $foreignKey, string $modelName)
     {
         $this->relationModels = $this->getData($foreignKey, $modelName);
-//        $this->relationModels = fn() => $this->getData($foreignKey);
+        // @TODO сделать "ленивую" загрузку связанных моделей
+        // $this->relationModels = fn() => $this->getData($foreignKey);
     }
 
+    // @TODO подумать над названием метода
     private function getData(int $foreignKey, string $modelName)
     {
         $repository = (new ControllerContainer())->get($modelName);
