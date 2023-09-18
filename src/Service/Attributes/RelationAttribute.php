@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Attributes;
 
 #[\Attribute]
 class RelationAttribute
 {
-    public string $relationModel;
+    private string $relationModel;
 
     public function __construct(string $relationModel)
     {

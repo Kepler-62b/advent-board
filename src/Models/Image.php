@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Service\ManyToOneRelation;
 use App\Service\OneToManyRelation;
-use App\Service\RelationAttribute;
+use App\Service\Attributes\RelationAttribute;
 
 class Image
 {
@@ -12,14 +12,14 @@ class Image
 
     private ?string $name = null;
 
-    private ?string $item_id = null;
+    private ?int $itemId = null;
     #[RelationAttribute(relationModel: Advert::class)]
     private ?OneToManyRelation $relationModel = null;
 
-    public function setId(int $id): static
+    public function __construct(string $name, int $itemId)
     {
-        $this->id = $id;
-        return $this;
+        $this->name = $name;
+        $this->itemId = $itemId;
     }
 
     public function getId(): ?int
@@ -27,7 +27,7 @@ class Image
         return $this->id;
     }
 
-    public function setName(string $name): static
+    public function setName(string $name): ?self
     {
         $this->name = $name;
         return $this;
@@ -38,9 +38,15 @@ class Image
         return $this->name;
     }
 
-    public function getItemId(): ?string
+    public function setItemId(int $itemId): ?self
     {
-        return $this->item_id;
+        $this->itemId = $itemId;
+        return $this;
+    }
+
+    public function getItemId(): ?int
+    {
+        return $this->itemId;
     }
 
     public function getRelation(): ?OneToManyRelation

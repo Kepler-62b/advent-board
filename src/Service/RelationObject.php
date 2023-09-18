@@ -17,17 +17,16 @@ class RelationObject
      */
     public function getRelation(string $relationColumn): object
     {
-        // @TODO подумать какому объекту пердавать репозиторий
-        // @TODO использовать аттрибуты с именем модели (сущьности)
         $reflection = new \ReflectionClass($this->model);
         $properties = $reflection->getProperties();
         foreach ($properties as $property) {
 
             if ($property->getName() === $relationColumn) {
-
                 // @TODO $propertyHasRelationKey должно быть int - можно прописать проверку типа
                 /** @var int $propertyHasRelationKey */
                 $propertyHasRelationKey = $property->getValue($this->model);
+            } else {
+                throw new \Exception('argument $relationColumn is not found/exist in current model');
             }
 
             $propertyType = $property->getType() ?? throw new \Exception();
@@ -46,7 +45,7 @@ class RelationObject
                     $attribute = $attributes->getArguments();
 
                     if (!isset($propertyHasRelationKey)) {
-                        throw new \Exception();
+                        throw new \Exception('Variable $propertyHasRelationKey is undefined');
                     }
 
                     /** @var ManyToOneRelation|OneToManyRelation $propertyName */

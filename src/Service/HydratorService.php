@@ -26,10 +26,9 @@ class HydratorService
                 }
             } else {
                 if (array_key_exists($key, $map)) {
-
                     $property = $reflection->getProperty($map[$key]);
 
-                    $propertyType = $property->getType() ?? throw new \Exception();
+                    $propertyType = $property->getType() ?? throw new \Exception('variable $propertyType is NULL value');
 
                     /** @var \ReflectionNamedType $propertyType */
                     if (!$propertyType instanceof \ReflectionNamedType) {

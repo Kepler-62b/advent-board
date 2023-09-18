@@ -48,7 +48,7 @@ class ImageRepository
                     [
                         'id' => 'id',
                         'name' => 'name',
-                        'item_id' => 'item_id',
+                        'item_id' => 'itemId',
                     ]
                 );
             }
@@ -85,12 +85,8 @@ class ImageRepository
                     $result,
                     [
                         'id' => 'id',
-                        'item' => 'item',
-                        'description' => 'description',
-                        'price' => 'price',
-                        'image' => 'image',
-                        'created_date' => 'createdDate',
-                        'modified_date' => 'modifiedDate',
+                        'name' => 'name',
+                        'item_id' => 'itemId',
                     ]
                 );
                 return $model;
@@ -128,7 +124,7 @@ class ImageRepository
                         [
                             'id' => 'id',
                             'name' => 'name',
-                            'item_id' => 'item_id',
+                            'item_id' => 'itemId',
                         ]
                     );
                 }
