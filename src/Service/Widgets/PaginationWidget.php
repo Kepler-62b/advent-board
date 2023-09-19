@@ -4,7 +4,7 @@ namespace App\Service\Widgets;
 
 use App\Service\RenderTemplateServise;
 use App\Service\RenderViewService;
-use App\Service\ControllerContainer;
+use App\Service\DependencyContainer;
 use Dev\Tests\Services\TemplateNavigator;
 
 
@@ -33,7 +33,7 @@ class PaginationWidget implements WidgetInterface
 
   private function countRow()
   {
-    $repository = (new ControllerContainer())->get(self::REPOSITORY);
+    $repository = (new DependencyContainer())->get(self::REPOSITORY);
     return ceil($repository->getCount()/$repository::SELECT_LIMIT);
   }
 

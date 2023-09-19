@@ -26,7 +26,7 @@ class ManyToOneRelation
     {
         // @TODO нужна проверка на instanceOf, чтобы был понятен тип у переменной $repository - репозитории должны наследоваться
         /** @var ImageRepository $repository */
-        $repository = (object) (new ControllerContainer())->get($modelName);
+        $repository = (object) (new DependencyContainer())->get($modelName);
 
         return $repository->findByForeignKey($relationKey);
     }

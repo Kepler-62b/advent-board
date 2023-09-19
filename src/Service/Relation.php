@@ -3,7 +3,7 @@
 namespace App\Service;
 
 // @TODO подумать над названием класса
-class RelationObject
+class Relation
 {
     private object $model;
 

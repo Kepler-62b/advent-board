@@ -21,7 +21,7 @@ class OneToManyRelation
         // @TODO нужна проверка на instanceOf, чтобы был понятен тип у переменной $repository
         /** @var AdvertRepository $repository */
 
-        $repository = (object) (new ControllerContainer())->get($modelName);
+        $repository = (object) (new DependencyContainer())->get($modelName);
         return $repository->findById($foreignKey);
     }
 }

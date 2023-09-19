@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Service\PDOMySQL;
+use App\Service\PHPAdventBoardDatabase;
 use App\Service\HydratorService;
 
 use App\Models\Advert;
@@ -12,12 +12,12 @@ use Monolog\Handler\StreamHandler;
 
 class AdvertRepository
 {
-    private PDOMySQL $pdo;
+    private PHPAdventBoardDatabase $pdo;
     private string $table = 'advents_prod';
     private ?int $lastInsertId;
     public const SELECT_LIMIT = 5;
 
-    public function __construct(PDOMySQL $pdo)
+    public function __construct(PHPAdventBoardDatabase $pdo)
     {
         $this->pdo = $pdo;
     }

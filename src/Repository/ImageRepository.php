@@ -2,18 +2,19 @@
 
 namespace App\Repository;
 
-use App\Service\PDOMySQL;
+use App\Service\PHPAdventBoardDatabase;
 use App\Models\Image;
 use App\Service\HydratorService;
 use ReflectionException;
 
 class ImageRepository
 {
-    private PDOMySQL $pdo;
+    // @TODO подумать над названием свойства
+    private PHPAdventBoardDatabase $pdo;
     private string $table = 'images_dev';
     public const SELECT_LIMIT = 5;
 
-    public function __construct(PDOMySQL $pdo)
+    public function __construct(PHPAdventBoardDatabase $pdo)
     {
         $this->pdo = $pdo;
     }
