@@ -25,9 +25,11 @@ class RelationObject
                 // @TODO $propertyHasRelationKey должно быть int - можно прописать проверку типа
                 /** @var int $propertyHasRelationKey */
                 $propertyHasRelationKey = $property->getValue($this->model);
-            } else {
-                throw new \Exception('argument $relationColumn is not found/exist in current model');
             }
+            // @TODO с этим условием код не продолжит работу - подумать, как решить
+//            else {
+//                throw new \Exception("argument $relationColumn is not found/exist in current model");
+//            }
 
             $propertyType = $property->getType() ?? throw new \Exception();
 
