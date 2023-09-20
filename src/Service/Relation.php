@@ -23,8 +23,8 @@ class Relation
 
             if ($property->getName() === $relationColumn) {
                 // @TODO $propertyHasRelationKey должно быть int - можно прописать проверку типа
-                /** @var int $propertyHasRelationKey */
-                $propertyHasRelationKey = $property->getValue($this->model);
+                /** @var int $propertyHasRelationKeyValue */
+                $propertyHasRelationKeyValue = $property->getValue($this->model);
             }
             // @TODO с этим условием код не продолжит работу - подумать, как решить
 //            else {
@@ -45,13 +45,13 @@ class Relation
                     // @TODO нужно проверять instanseOf от какого-то родителя
                     [$attributes] = $property->getAttributes();
                     $attribute = $attributes->getArguments();
-
-                    if (!isset($propertyHasRelationKey)) {
+                    // @TODO разобраться с условием проверки на инициализацию переменной $propertyHasRelationKey
+                    if (isset($propertyHasRelationKey)) {
                         throw new \Exception('Variable $propertyHasRelationKey is undefined');
+                    } else {
+                        /** @var ManyToOneRelation|OneToManyRelation $propertyName */
+                        $property->setValue($this->model, new $propertyName($propertyHasRelationKeyValue, $attribute['relationModel']));
                     }
-
-                    /** @var ManyToOneRelation|OneToManyRelation $propertyName */
-                    $property->setValue($this->model, new $propertyName($propertyHasRelationKey, $attribute['relationModel']));
                 }
             }
         }

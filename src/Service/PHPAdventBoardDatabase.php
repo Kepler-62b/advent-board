@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use Dev\Tests\Patterns\Singleton\SingletonTrait;
+use App\Service\SingletonTrait;
 
 // @TODO подумать над универсальной оберткой для наследования от нее всех подключений
 class PHPAdventBoardDatabase extends \PDO
@@ -18,6 +18,7 @@ class PHPAdventBoardDatabase extends \PDO
     protected function __construct()
     {
         parent::__construct("mysql:host=localhost;dbname=$this->dbname", $this->user, $this->pass);
+//        var_dump(debug_backtrace());
     }
 
 
