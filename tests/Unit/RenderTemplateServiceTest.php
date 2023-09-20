@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit;
+namespace tests\Unit;
 
 use App\Service\Helpers\LinkManager;
 use App\Service\RenderTemplateServise;

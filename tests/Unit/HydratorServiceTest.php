@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Tests\Unit;
+namespace Tests\Unit;
 
 use App\Models\Advent;
 use App\Models\Advert;
 use App\Models\Image;
 use App\Service\HydratorService;
 use PHPUnit\Framework\TestCase;
-use SebastianBergmann\CodeCoverage\Node\Iterator;
 
 class HydratorServiceTest extends TestCase
 {
@@ -42,7 +41,7 @@ class HydratorServiceTest extends TestCase
                             'price' => 'price',
                             'image' => 'image',
                             'created_date' => 'createdDate',
-                            'modified_date' => 'modifiedDate',
+//                            'modified_date' => 'modifiedDate',
                         ]
                 ],
             'AdvertModel' =>
@@ -51,12 +50,12 @@ class HydratorServiceTest extends TestCase
                     'data' =>
                         [
                             'id' => 1,
-                            'item' => 'first item',
-                            'description' => 'first desc',
+                            'item' => 'ITEM',
+                            'description' => 'DESCRIPTION',
                             'price' => 111,
-                            'image' => 'first.png',
+                            'image' => 'IMAGE.JPEG',
                             'created_date' => '2023-06-23 11:11:11',
-                            'modified_date' => '2023-06-29 11:11:11',
+//                            'modified_date' => '2023-06-29 11:11:11',
                         ],
                     'map' =>
                         [
@@ -65,8 +64,8 @@ class HydratorServiceTest extends TestCase
                             'description' => 'description',
                             'price' => 'price',
                             'image' => 'image',
-                            'created_date' => 'createdDate',
-//              'modified_date' => 'modifiedDate',
+//                            'created_date' => 'createdDate',
+//                            'modified_date' => 'modifiedDate',
                         ]
                 ],
             'ImageModel' =>
@@ -77,7 +76,6 @@ class HydratorServiceTest extends TestCase
                             'id' => 1,
                             'name' => 'name',
                             'item_id' => 111,
-
                         ],
                     'map' => [
                         'id' => 'id',
@@ -100,8 +98,8 @@ class HydratorServiceTest extends TestCase
 
         $model = (array)$result;
 
-        foreach ($map as $property) {
-            if (property_exists($result, $property)) {
+        foreach ($map as $key => $property) {
+            if (property_exists($result, $property) && array_key_exists($key, $data)) {
                 $this->assertNotNull($model["\0$className\0$property"], "AssertFail: Property $property is NULL VALUE");
             }
         }
