@@ -3,49 +3,68 @@ declare(strict_types=1);
 
 namespace Tests\Integration;
 
+use App\Repository\ImageRepository;
 use App\Service\OneToManyRelation;
 use App\Models\Image;
+use App\Service\PHPAdventBoardDatabase;
 use App\Service\Relation;
 use PHPUnit\Framework\TestCase;
 
 class RelationTest extends TestCase
 {
 
-    public static function toTestModelInit(): array
+    public static function toTestGetRepositoryDataProvider(): array
     {
         return
-            [
-                'ImageModel' => ['modelClassname' => Image::class, 'name' => 'moto.png', 'itemId' => 50],
-            ];
+        [
+//            'database' => ['databaseName' => 'App\Repository\PHPAdventBoardDatabase'],
+            'repository' => ['repository' => 'App\Repository\ImageRepository'],
+        ];
     }
 
-    protected function testModelInit($modelName, $name, $itemId)
+
+    public function testGetDatabaseConnection(): PHPAdventBoardDatabase
     {
-        $model = new $modelName($name, $itemId);
-        $this->assertInstanceOf($modelName, $model);
-        $this->assertIsObject($model);
+        $databaseConnection = PHPAdventBoardDatabase::getInstance();
+        $this->assertInstanceOf(PHPAdventBoardDatabase::class, $databaseConnection);
+        return $databaseConnection;
+    }
+
+    /**
+     * @depends testGetDatabaseConnection
+     * @dataProvider toTestGetRepositoryDataProvider
+     */
+    public function testGetRepository($repository, $databaseConnection): ImageRepository
+    {
+        $repository = new $repository($databaseConnection);
+        $this->assertInstanceOf(ImageRepository::class, $repository);
+        return $repository;
+    }
+
+    /** @depends testGetRepository */
+    public function testGetModelFromRepository($repository): object
+    {
+        [$model] = $repository->findById(27);
+        $this->assertInstanceOf(Image::class, $model);
         return $model;
     }
 
-    protected function testRelationInit($modelName, $name, $itemId)
+    /** @depends testGetModelFromRepository */
+    public function testRelationInit($model): Relation
     {
-        $model = $this->testModelInit($modelName, $name, $itemId);
         $relation = new Relation($model);
-        $this->assertIsObject($relation);
+        $this->assertInstanceOf(Relation::class, $relation);
         return $relation;
     }
 
     /**
-     * @dataProvider toTestModelInit
+     * @depends testRelationInit
      */
-    public function testGetRelationReturnRelationTypeObject($modelName, $name, $itemId): void
+    public function testGetRelationReturnRelationTypeObject($relation): void
     {
-        $relation = $this->testRelationInit($modelName, $name, $itemId);
         $result = $relation->getRelation('itemId');
-//        dd($result);
 
         $model = (array)$result;
-
         foreach ($model as $property) {
             // @TODO условие не на проверку объекта, а инстанс от того же типа, который был указан в пустой моделе
             if (is_object($property)) {
@@ -54,16 +73,6 @@ class RelationTest extends TestCase
                 $this->assertNotNull($property->relationModels, "AssertFail: Property model has a NULL VALUE");
             }
         }
-
-        // @TODO наполнять модель данными полностью
     }
-
-
-    public function testGetRelationHydrateRelationTypeObject(): void
-    {
-        $relation = new OneToManyRelation(65, Image::class);
-        $this->assertNotNull($relation->relationModels);
-    }
-
 
 }
