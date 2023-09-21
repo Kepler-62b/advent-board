@@ -7,13 +7,9 @@ use App\Service\OneToManyRelation;
 use App\Models\Image;
 use App\Service\Relation;
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\Depends;
 
 class RelationTest extends TestCase
 {
-    private Relation $relation;
-    private Image $imageModel;
-    private object $database;
 
     public static function toTestModelInit(): array
     {
@@ -23,10 +19,7 @@ class RelationTest extends TestCase
             ];
     }
 
-    /**
-     * @dataProvider toTestModelInit
-     * */
-    public function testModelInit($modelName, $name, $itemId): object
+    protected function testModelInit($modelName, $name, $itemId)
     {
         $model = new $modelName($name, $itemId);
         $this->assertInstanceOf($modelName, $model);
@@ -34,24 +27,22 @@ class RelationTest extends TestCase
         return $model;
     }
 
-    /**
-     * @depends testModelInit
-     */
-    public function testRelationInit(object $model): object
+    protected function testRelationInit($modelName, $name, $itemId)
     {
-        $this->assertIsObject($model);
+        $model = $this->testModelInit($modelName, $name, $itemId);
         $relation = new Relation($model);
         $this->assertIsObject($relation);
         return $relation;
     }
 
     /**
-     * @depends testRelationInit
+     * @dataProvider toTestModelInit
      */
-    public function testGetRelationReturnRelationTypeObject($relation): void
+    public function testGetRelationReturnRelationTypeObject($modelName, $name, $itemId): void
     {
+        $relation = $this->testRelationInit($modelName, $name, $itemId);
         $result = $relation->getRelation('itemId');
-        var_dump($result);
+//        dd($result);
 
         $model = (array)$result;
 
