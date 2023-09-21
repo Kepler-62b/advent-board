@@ -8,6 +8,7 @@ class OneToManyRelation
 {
     public ?array $relationModels = [];
 
+    // @TODO не понятно, нужен ли здесь конструкт
     public function __construct(int $foreignKey, string $modelName)
     {
         $this->relationModels = $this->getDataFromRepository($foreignKey, $modelName);

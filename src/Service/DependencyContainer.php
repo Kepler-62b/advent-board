@@ -20,11 +20,14 @@ class DependencyContainer
             // @TODO создание объекта при каждом подключении
 //            'App\Service\PHPAdventBoardDatabase' => fn() => new PHPAdventBoardDatabase(),
             'App\Service\PHPAdventBoardDatabase' => fn() => PHPAdventBoardDatabase::getInstance(),
+
             'App\Repository\AdvertRepository' => fn() => new AdvertRepository($this->get('App\Service\PHPAdventBoardDatabase')),
             'App\Repository\AdventRepository' => fn() => new AdventRepository($this->get('App\Service\PHPAdventBoardDatabase')),
+
             'App\Controllers\AdventController' => fn() => new AdvertRepository($this->get('App\Repository\PHPAdventBoardDatabase')),
+
             'App\Models\Image' => fn(): ImageRepository => new ImageRepository($this->get('App\Service\PHPAdventBoardDatabase')),
-            'App\Models\Advert' => fn(): AdventRepository => new AdventRepository($this->get('App\Service\PHPAdventBoardDatabase')),
+            'App\Models\Advert' => fn(): AdvertRepository => new AdvertRepository($this->get('App\Service\PHPAdventBoardDatabase')),
             // @TODO вторая БД - подумать, как отделить маппинг
             'App\Service\LaravelDatabase' => fn() => LaravelDatabase::getInstance(),
             'App\Repository\CityRepository' => fn() => new CityRepository($this->get('App\Service\LaravelDatabase')),

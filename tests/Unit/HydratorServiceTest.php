@@ -95,7 +95,7 @@ final class HydratorServiceTest extends TestCase
     {
         $result = $this->hydrator->hydrate($className, $data, $map);
 
-        $this->assertInstanceOf($className, $result, "Hydrate model is not instanceof $className class");
+        $this->assertInstanceOf($className, $result, "AssertFail: Return model after hydrate is not instanceof $className class");
         $this->assertIsObject($result);
 
         $model = (array)$result;

@@ -14,6 +14,7 @@ class ManyToOneRelation
     // @TODO подумать над названием свойства
     public ?array $relationModels = [];
 
+    // @TODO не понятно, нужен ли здесь конструкт
     public function __construct(int $relationKey, string $modelName)
     {
         $this->relationModels = $this->getDataFromRepository($relationKey, $modelName);

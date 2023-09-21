@@ -90,6 +90,8 @@ class AdvertRepository
             $pdo_statement->execute();
 
             if ($result = $pdo_statement->fetch(\PDO::FETCH_ASSOC)) {
+                // @TODO выбрасывать fatch === false
+//                throw new \Exception("row with id {$id} not found in '{$this->table}' table");
 
                 $hydrator = new HydratorService();
 
