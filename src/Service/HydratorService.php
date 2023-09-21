@@ -9,6 +9,7 @@ class HydratorService
      * @param array<string, mixed> $data
      * @param array<string, string>|null $map
      * @throws \ReflectionException
+     * @return object
      */
     public function hydrate(string $className, array $data, array $map = null): object
     {

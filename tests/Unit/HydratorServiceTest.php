@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Tests\Unit;
 
@@ -8,7 +9,7 @@ use App\Models\Image;
 use App\Service\HydratorService;
 use PHPUnit\Framework\TestCase;
 
-class HydratorServiceTest extends TestCase
+final class HydratorServiceTest extends TestCase
 {
     private HydratorService $hydrator;
 
@@ -20,6 +21,7 @@ class HydratorServiceTest extends TestCase
     public static function toTestHydrateModelDataProvider(): array
     {
         return [
+            // @TODO добавить датасет с отсутсвием маппинга - протестировать
             'AdventModel' =>
                 [
                     'className' => Advent::class,
@@ -51,7 +53,7 @@ class HydratorServiceTest extends TestCase
                         [
                             'id' => 1,
                             'item' => 'ITEM',
-                            'description' => 'DESCRIPTION',
+//                            'description' => 'DESCRIPTION',
                             'price' => 111,
                             'image' => 'IMAGE.JPEG',
                             'created_date' => '2023-06-23 11:11:11',
@@ -100,7 +102,7 @@ class HydratorServiceTest extends TestCase
 
         foreach ($map as $key => $property) {
             if (property_exists($result, $property) && array_key_exists($key, $data)) {
-                $this->assertNotNull($model["\0$className\0$property"], "AssertFail: Property $property is NULL VALUE");
+                $this->assertNotNull($model["\0$className\0$property"], "AssertFail: Property $property of the $className model has a NULL VALUE");
             }
         }
     }

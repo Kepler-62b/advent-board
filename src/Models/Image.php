@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Service\ManyToOneRelation;
 use App\Service\OneToManyRelation;
 use App\Service\Attributes\RelationAttribute;
 
