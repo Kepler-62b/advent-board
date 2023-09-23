@@ -1,17 +1,20 @@
 <?xml version="1.0"?>
 <psalm
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns="https://getpsalm.org/schema/config"
-        xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
-        errorLevel="1"
-        errorBaseline="psalm-baseline.xml"
-        phpVersion="8.1"
+    phpVersion="8.1"
+    errorLevel="1"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://getpsalm.org/schema/config"
+    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+    errorBaseline="psalm_baseline.xml"
+    resolveFromConfigFile="true"
+    findUnusedBaselineEntry="false"
+    findUnusedCode="false"
 >
     <projectFiles>
-        <directory name="src"/>
+        <directory name="src" />
         <ignoreFiles>
-            <directory name="vendor"/>
-            <directory name="dev"/>
+            <directory name="vendor" />
+            <directory name="dev" />
         </ignoreFiles>
     </projectFiles>
 </psalm>

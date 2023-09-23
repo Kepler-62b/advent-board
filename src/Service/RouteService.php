@@ -31,10 +31,10 @@ class RouteService
     $actionParams = $matchURL['action_params'];
 
     if (empty($actionParams)) {
-      (new ControllerContainer())->get($controller)->$action();
+      (new DependencyContainer())->get($controller)->$action();
       // return $response->getContent();
     } else {
-      (new ControllerContainer())->get($controller)->$action($actionParams, $interface);
+      (new DependencyContainer())->get($controller)->$action($actionParams, $interface);
       // return $response->getContent();
     }
 

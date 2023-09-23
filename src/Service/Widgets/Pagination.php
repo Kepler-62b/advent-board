@@ -4,7 +4,6 @@ namespace App\Service\Widgets;
 
 use App\Service\RenderTemplateServise;
 use App\Service\RenderViewService;
-use App\Service\ControllerContainer;
 use App\Service\Helpers\LinkManager;
 use App\Service\TemplateNavigator;
 

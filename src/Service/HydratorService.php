@@ -2,29 +2,14 @@
 
 namespace App\Service;
 
-use App\Service\ManyToOneRelation;
-
 class HydratorService
 {
-    public function extract(object $model): array
-    {
-        $reflection = new \ReflectionClass($model);
-        $properties = $reflection->getProperties();
-        $propertyStorage = [];
-        foreach ($properties as $property) {
-            // @TODO реализовать свойства проверку на Null
-            if ($property->isInitialized($model)) {
-                $propertyStorage[$property->getName()] = $property->getValue($model);
-            }
-        }
-        return $propertyStorage;
-    }
-
     /**
      * @param class-string $className
-     * @param array<string, string> $data
+     * @param array<string, mixed> $data
      * @param array<string, string>|null $map
      * @throws \ReflectionException
+     * @return object
      */
     public function hydrate(string $className, array $data, array $map = null): object
     {
@@ -35,54 +20,32 @@ class HydratorService
 
         $model = $reflection->newInstanceWithoutConstructor();
 
-        if (!$map) {
-            foreach ($data as $key => $value) {
+        foreach ($data as $key => $value) {
+            if (!$map) {
                 if (array_key_exists(key: $reflection->getProperty($key)->getName(), array: $data)) {
                     $reflection->getProperty($key)->setValue($model, $value);
                 }
-            }
-        } else {
-            foreach ($data as $key => $value) {
+            } else {
                 if (array_key_exists($key, $map)) {
-
                     $property = $reflection->getProperty($map[$key]);
 
-                    $propertyType = $property->getType();
+                    $propertyType = $property->getType() ?? throw new \Exception('variable $propertyType is NULL value');
+
+                    /** @var \ReflectionNamedType $propertyType */
+                    if (!$propertyType instanceof \ReflectionNamedType) {
+                        throw new \Exception();
+                    }
+
                     if ($propertyType->isBuiltin()) {
                         $property->setValue($model, $value);
                     } else {
+
                         $propertyName = $propertyType->getName();
 
-                        if (str_contains($propertyName, 'ManyToOneRelation')) {
-                            // @TODO можно проверять instanseOf от какого-то родителя, если ManyToOneRelation будет наследоваться
-
-                            $property->setValue($model, new $propertyName($key, $value));
-                        } elseif (str_contains($propertyName, 'OneToManyRelation')) {
-                            $property->setValue($model, new $propertyName($data['id']));
-                        } elseif (str_contains($propertyName, 'Models')) {
-                            /**
-                             * @TODO отношения в гидраторе 1
-                             * получить данные из базы без обработки гидратором и в условии запустить гидратор
-                             * на свойстве - объекте с полученными данными - нужен объект, делающий запросы в БД
-                             * ЛИБО
-                             * @TODO отношения в гидраторе 2
-                             * запустить репозиторий по названию объекта, получить из него данные (опять же без гидратора)
-                             * и наполнить объект - свойство
-                             *
-                             * ГЛАВНЫЙ ВОПРОС - КАК ПОЛУЧАТЬ ДАННЫЕ ИЗ БАЗЫ?
-                             */
-                            [$attributes] = $property->getAttributes();
-                            $attribute = $attributes->getArguments();
-                            if ($attribute['relation'] === 'ManyToOneRelation') {
-                                $manyToOne = new ManyToOneRelation($propertyName, $data['id']);
-                                $property->setValue($model, $manyToOne->references);
-                            } elseif ($attribute['relation'] === 'OneToMany') {
-//                                $oneToMany = new OneToManyRelation($propertyName, $value);
-//                                $property->setValue($model, $oneToMany->references);
-                            }
-                        } else {
-                            $property->setValue($model, new $propertyName($value));
-                        }
+                        // @TODO подумать как еще можно проверять $propertyName для инстанса класса с конструктором
+                        /** @var \DateTimeImmutable $propertyName */
+                        $propertyObject = new $propertyName($value);
+                        $property->setValue($model, $propertyObject);
                     }
                 }
             }

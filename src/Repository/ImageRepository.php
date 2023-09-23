@@ -2,18 +2,19 @@
 
 namespace App\Repository;
 
-use App\Service\PDOMySQL;
+use App\Service\PHPAdventBoardDatabase;
 use App\Models\Image;
 use App\Service\HydratorService;
 use ReflectionException;
 
 class ImageRepository
 {
-    private PDOMySQL $pdo;
+    // @TODO подумать над названием свойства
+    private PHPAdventBoardDatabase $pdo;
     private string $table = 'images_dev';
     public const SELECT_LIMIT = 5;
 
-    public function __construct(PDOMySQL $pdo)
+    public function __construct(PHPAdventBoardDatabase $pdo)
     {
         $this->pdo = $pdo;
     }
@@ -48,7 +49,7 @@ class ImageRepository
                     [
                         'id' => 'id',
                         'name' => 'name',
-                        'item_id' => 'item_id',
+                        'item_id' => 'itemId',
                     ]
                 );
             }
@@ -85,12 +86,8 @@ class ImageRepository
                     $result,
                     [
                         'id' => 'id',
-                        'item' => 'item',
-                        'description' => 'description',
-                        'price' => 'price',
-                        'image' => 'image',
-                        'created_date' => 'createdDate',
-                        'modified_date' => 'modifiedDate',
+                        'name' => 'name',
+                        'item_id' => 'itemId',
                     ]
                 );
                 return $model;
@@ -102,45 +99,36 @@ class ImageRepository
         }
     }
 
-    public function findByForeignKey(int $foreignKeyValue): ?array
+    public function findByForeignKey(int $foreignKey): ?array
     {
         $connection = $this->pdo;
         $table = $this->table;
 
-        $sql = "SELECT * FROM $table WHERE item_id = :foreignKeyValue";
+        $sql = "SELECT * FROM $table WHERE item_id = :foreignKey";
 
         $pdo_statement = $connection->prepare($sql);
 
         try {
-            $pdo_statement->bindValue("foreignKeyValue", $foreignKeyValue, \PDO::PARAM_INT);
+            $pdo_statement->bindValue("foreignKey", $foreignKey, \PDO::PARAM_INT);
             $pdo_statement->execute();
 
-            if ($result = $pdo_statement->fetch(\PDO::FETCH_ASSOC)) {
+            if ($result = $pdo_statement->fetchAll(\PDO::FETCH_ASSOC)) {
 
                 $hydrator = new HydratorService();
                 $models = [];
 
-                $models[] = $hydrator->hydrate(
-                    Image::class,
-                    $result,
-                    [
-                        'id' => 'id',
-                        'name' => 'name',
-                        'item_id' => 'item_id',
-                    ]
-                );
-                
-//                foreach ($result as $data) {
-//                    $models[] = $hydrator->hydrate(
-//                        Image::class,
-//                        $data,
-//                        [
-//                            'id' => 'id',
-//                            'name' => 'name',
-//                            'item_id' => 'item_id',
-//                        ]
-//                    );
-//                }
+                /** @var array<string, mixed> $data */
+                foreach ($result as $data) {
+                    $models[] = $hydrator->hydrate(
+                        Image::class,
+                        $data,
+                        [
+                            'id' => 'id',
+                            'name' => 'name',
+                            'item_id' => 'itemId',
+                        ]
+                    );
+                }
                 return $models;
             } else {
                 return null;

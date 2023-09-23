@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Service\PDOMySQL;
+use App\Service\PHPAdventBoardDatabase;
 use App\Service\HydratorService;
 
 use App\Models\Advert;
@@ -12,12 +12,12 @@ use Monolog\Handler\StreamHandler;
 
 class AdvertRepository
 {
-    private PDOMySQL $pdo;
+    private PHPAdventBoardDatabase $pdo;
     private string $table = 'advents_prod';
     private ?int $lastInsertId;
     public const SELECT_LIMIT = 5;
 
-    public function __construct(PDOMySQL $pdo)
+    public function __construct(PHPAdventBoardDatabase $pdo)
     {
         $this->pdo = $pdo;
     }
@@ -73,7 +73,8 @@ class AdvertRepository
     }
 
     /**
-     * @return Advert[]
+     * @return ?Advert[]
+     * @throws \PDOException|\ReflectionException
      */
     public function findById(int $id): ?array
     {
@@ -89,6 +90,8 @@ class AdvertRepository
             $pdo_statement->execute();
 
             if ($result = $pdo_statement->fetch(\PDO::FETCH_ASSOC)) {
+                // @TODO выбрасывать fatch === false
+//                throw new \Exception("row with id {$id} not found in '{$this->table}' table");
 
                 $hydrator = new HydratorService();
 

@@ -2,55 +2,33 @@
 
 namespace App\Service;
 
-use App\Models\Image;
 use App\Repository\AdvertRepository;
 use App\Repository\ImageRepository;
 
 class ManyToOneRelation
 {
-    public int $foreignKey;
+    /**
+     * @TODO подумать, как отдавать конкретную связанную модель из массива моделей
+     */
 
-    public $references;
+    // @TODO подумать над названием свойства
+    public ?array $relationModels = [];
 
-    public function __construct(string $className, int $foreignKey)
+    // @TODO не понятно, нужен ли здесь конструкт
+    public function __construct(int $relationKey, string $modelName)
     {
-        $this->foreignKey = $foreignKey;
-//        $this->references = $this->fetchByForeignKey($className, $foreignKey);
-        $this->references = $this->getData($foreignKey);
-//        $this->references = fn() => $this->getData($foreignKey);
-
+        $this->relationModels = $this->getDataFromRepository($relationKey, $modelName);
+        // @TODO сделать "ленивую" загрузку связанных моделей
+        // $this->relationModels = fn() => $this->getData($foreignKey);
     }
 
-    private function getData(int $foreignKey)
+    // @TODO подумать над названием метода
+    private function getDataFromRepository(int $relationKey, string $modelName): ?array
     {
-        $repository = new ImageRepository(new PDOMySQL());
-        [$objectArray] = $repository->findByForeignKey($foreignKey);
-        return $objectArray;
+        // @TODO нужна проверка на instanceOf, чтобы был понятен тип у переменной $repository - репозитории должны наследоваться
+        /** @var ImageRepository $repository */
+        $repository = (object) (new DependencyContainer())->get($modelName);
+
+        return $repository->findByForeignKey($relationKey);
     }
-
-    public function fetchByForeignKey(string $className, int $foreignKey): ?array
-    {
-        $connection = new PDOMySQL();
-        $table = 'images_dev';
-
-        $sql = "SELECT * FROM $table WHERE item_id = :foreignKeyValue";
-
-        $pdo_statement = $connection->prepare($sql);
-
-        try {
-            $pdo_statement->bindValue("foreignKeyValue", $foreignKey, \PDO::PARAM_INT);
-            $pdo_statement->execute();
-
-            if ($result = $pdo_statement->fetch(\PDO::FETCH_ASSOC)) {
-
-                return $result;
-            } else {
-                return null;
-            }
-        } catch (\PDOException $exception) {
-            die('Ошибка: ' . $exception->getMessage());
-        }
-    }
-
-
 }
