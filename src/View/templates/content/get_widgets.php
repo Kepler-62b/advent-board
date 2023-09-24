@@ -1,3 +1,3 @@
-<?= $table_array_object_model ?>
+<?= $table_array_objects ?>
 <?= $navigation ?>
 <?= $getForm ?>

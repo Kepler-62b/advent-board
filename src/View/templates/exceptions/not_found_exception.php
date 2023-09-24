@@ -4,7 +4,7 @@
     <?= $id ?>
   </h2>
 
-  <?= $getForm ?>
-  <?= $navigation ?>
+  <?= $getFormWidget ?>
+  <?= $navigationWidget ?>
 
 </body>

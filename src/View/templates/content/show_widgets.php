@@ -1,4 +1,4 @@
-<?= $table_array_object_model ?>
+<?= $table_array_objects ?>
 <?= $pagination_object ?>
 <?= $navigation ?>
 <?= $getForm ?>

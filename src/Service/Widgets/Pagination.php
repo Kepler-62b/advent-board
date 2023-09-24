@@ -2,10 +2,10 @@
 
 namespace App\Service\Widgets;
 
-use App\Service\RenderTemplateServise;
+use App\Service\RenderTemplateService;
 use App\Service\RenderViewService;
 use App\Service\Helpers\LinkManager;
-use App\Service\TemplateNavigator;
+use App\Service\Template;
 
 
 /** 
@@ -30,10 +30,7 @@ class Pagination implements WidgetInterface
 
   public function __toString()
   {
-    return (new RenderTemplateServise([$this->getTemplate()]))->renderFromListTemplates();
-
-    // $template = $this->render();
-    // return $template->renderView();
+    return (new RenderTemplateService([$this->getTemplate()]))->renderFromListTemplates();
   }
 
   public function setDivider(string $divider): self
@@ -87,9 +84,9 @@ class Pagination implements WidgetInterface
     );
   }
 
-  public function getTemplate(): TemplateNavigator
+  public function getTemplate(): Template
   {
-    return new TemplateNavigator('pagination_object', 'widgets', ['pagination' => $this->create()]);
+    return new Template('pagination_object', 'widgets', ['pagination' => $this->create()]);
   }
 
 

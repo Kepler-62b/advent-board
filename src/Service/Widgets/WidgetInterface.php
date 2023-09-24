@@ -5,9 +5,7 @@ namespace App\Service\Widgets;
 interface WidgetInterface
 {
   /**
-   * return object - rendering widgets templates
-   * 
+   * @TODO привести в соответствие с зависимыми объектами
    */
-  public function render(): object;
 
 }

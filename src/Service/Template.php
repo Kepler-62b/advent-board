@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-class TemplateNavigator
+class Template
 {
   private const VIEW_PATH_MAP = [
     'layouts' => 'src/View/templates/layouts/',

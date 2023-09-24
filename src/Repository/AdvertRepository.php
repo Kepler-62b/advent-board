@@ -29,8 +29,6 @@ class AdvertRepository
      */
     public function fetchAll(int $page = 1): array
     {
-        $logger = (new Logger(AdvertRepository::class))->pushHandler(new StreamHandler('dev/Logger/log/dev.log', Logger::DEBUG));
-
         $connection = $this->pdo;
         $table = $this->table;
         $limit = self::SELECT_LIMIT;
@@ -67,7 +65,6 @@ class AdvertRepository
             return $modelsStorage;
 
         } catch (\PDOException $exception) {
-            $logger->critical('Error:', ['exception' => $exception]);
             throw new \PDOException($exception);
         }
     }
@@ -146,9 +143,8 @@ class AdvertRepository
         $connection = $this->pdo;
         $table = $this->table;
 
-        $sql = "UPDATE $table 
-            SET item = :item, description = :description, price = :price, image = :image
-            WHERE id = :id";
+        $sql =
+            "UPDATE $table SET item = :item, description = :description, price = :price, image = :image WHERE id = :id";
 
         $pdo_statment = $connection->prepare($sql);
 
@@ -186,11 +182,36 @@ class AdvertRepository
         $offset = ($page - 1) * $limit;
 
         $sql = "SELECT * FROM $table ORDER BY $filter DESC LIMIT $limit OFFSET :offset";
-        $pdo_statment = $connection->prepare($sql);
-        $pdo_statment->bindValue(":offset", $offset, \PDO::PARAM_INT);
-        $pdo_statment->execute();
-        $result = $pdo_statment->fetchAll(\PDO::FETCH_ASSOC);
-        return $result;
+
+        try {
+            $pdo_statement = $connection->prepare($sql);
+            $pdo_statement->bindValue(":offset", $offset, \PDO::PARAM_INT);
+            $pdo_statement->execute();
+
+            $result = $pdo_statement->fetchAll(\PDO::FETCH_ASSOC);
+
+            $hydrator = new HydratorService();
+            $modelsStorage = [];
+            foreach ($result as $data) {
+                $modelsStorage[] = $hydrator->hydrate(
+                    Advert::class,
+                    $data,
+                    [
+                        'id' => 'id',
+                        'item' => 'item',
+                        'description' => 'description',
+                        'price' => 'price',
+                        'image' => 'image',
+                        'created_date' => 'createdDate',
+                        'modified_date' => 'modifiedDate',
+                    ]
+                );
+            }
+
+            return $modelsStorage;
+        } catch (\PDOException $exception) {
+            throw new \PDOException($exception);
+        }
     }
 
     public function getMin(int $page, string $filter): array
@@ -202,11 +223,35 @@ class AdvertRepository
         $offset = ($page - 1) * $limit;
 
         $sql = "SELECT * FROM $table ORDER BY $filter ASC LIMIT $limit OFFSET :offset";
-        $pdo_statment = $connection->prepare($sql);
-        $pdo_statment->bindValue(":offset", $offset, \PDO::PARAM_INT);
-        $pdo_statment->execute();
-        $result = $pdo_statment->fetchAll(\PDO::FETCH_ASSOC);
-        return $result;
+        try {
+            $pdo_statement = $connection->prepare($sql);
+            $pdo_statement->bindValue(":offset", $offset, \PDO::PARAM_INT);
+            $pdo_statement->execute();
+
+            $result = $pdo_statement->fetchAll(\PDO::FETCH_ASSOC);
+
+            $hydrator = new HydratorService();
+            $modelsStorage = [];
+            foreach ($result as $data) {
+                $modelsStorage[] = $hydrator->hydrate(
+                    Advert::class,
+                    $data,
+                    [
+                        'id' => 'id',
+                        'item' => 'item',
+                        'description' => 'description',
+                        'price' => 'price',
+                        'image' => 'image',
+                        'created_date' => 'createdDate',
+                        'modified_date' => 'modifiedDate',
+                    ]
+                );
+            }
+
+            return $modelsStorage;
+        } catch (\PDOException $exception) {
+            throw new \PDOException($exception);
+        }
     }
 
 }
