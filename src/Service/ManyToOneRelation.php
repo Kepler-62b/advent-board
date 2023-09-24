@@ -12,7 +12,7 @@ class ManyToOneRelation
      */
 
     // @TODO подумать над названием свойства
-    public ?array $relationModels = [];
+    public array $relationModels = [];
 
     // @TODO не понятно, нужен ли здесь конструкт
     public function __construct(int $relationKey, string $modelName)
@@ -23,12 +23,23 @@ class ManyToOneRelation
     }
 
     // @TODO подумать над названием метода
-    private function getDataFromRepository(int $relationKey, string $modelName): ?array
+    private function getDataFromRepository(int $relationKey, string $modelName): array
     {
-        // @TODO нужна проверка на instanceOf, чтобы был понятен тип у переменной $repository - репозитории должны наследоваться
-        /** @var ImageRepository $repository */
-        $repository = (object) (new DependencyContainer())->get($modelName);
+        $repository = (object)(new DependencyContainer())->get($modelName);
+        // @TODO нужна проверка на instanceOf, чтобы был понятен тип у переменной $repository после маппинга в контейнере зависимостей
+        // @TODO для проверки нужно сделать общего предка для всех репозиториев (например, абстрактный класс)
 
-        return $repository->findByForeignKey($relationKey);
+        $repositoryName = get_class($repository);
+        if (method_exists($repository, 'findByForeignKey')) {
+            $relationModels = $repository->findByForeignKey($relationKey);
+        } else {
+            throw new \Exception("NotFoundMethodException: Method 'findById' does not exist in '$repositoryName' repository");
+        }
+
+        if (!$relationModels) {
+            throw new \Exception("NotFoundForeignKeyException: Not found relationModel with ID $relationKey in '$repositoryName'");
+        } else {
+            return $relationModels;
+        }
     }
 }

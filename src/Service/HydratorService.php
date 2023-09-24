@@ -21,6 +21,7 @@ class HydratorService
         $model = $reflection->newInstanceWithoutConstructor();
 
         foreach ($data as $key => $value) {
+            // @TODO тестировать условие без маппинга
             if (!$map) {
                 if (array_key_exists(key: $reflection->getProperty($key)->getName(), array: $data)) {
                     $reflection->getProperty($key)->setValue($model, $value);

@@ -72,48 +72,6 @@ class AdventRepository
         }
     }
 
-    /**
-     * @return Advent[]
-     */
-    public function findById(int $id): ?array
-    {
-        $connection = $this->pdo;
-        $table = $this->table;
-
-        $sql = "SELECT * FROM $table WHERE id = :id";
-
-        $pdo_statement = $connection->prepare($sql);
-
-        try {
-            $pdo_statement->bindValue("id", $id, \PDO::PARAM_INT);
-            $pdo_statement->execute();
-
-            if ($result = $pdo_statement->fetch(\PDO::FETCH_ASSOC)) {
-
-                $hydrator = new HydratorService();
-
-                $model[] = $hydrator->hydrate(
-                    Advent::class,
-                    $result,
-                    [
-                        'id' => 'id',
-                        'item' => 'item',
-                        'description' => 'description',
-                        'price' => 'price',
-                        'image' => 'image',
-                        'created_date' => 'createdDate',
-                        'modified_date' => 'modifiedDate',
-                    ]
-                );
-                return $model;
-            } else {
-                return NULL;
-            }
-        } catch (\PDOException $exception) {
-            die('Ошибка: ' . $exception->getMessage());
-        }
-    }
-
     public function save(object $model): bool
     {
         $connection = $this->pdo;

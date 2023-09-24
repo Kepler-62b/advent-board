@@ -6,7 +6,7 @@ namespace Tests\Integration;
 use App\Service\Relation;
 use PHPUnit\Framework\TestCase;
 
-class RelationTest extends TestCase
+final class RelationTest extends TestCase
 {
 
     public static function toTestGetRepositoryDataProvider(): array
