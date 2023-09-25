@@ -7,6 +7,7 @@ use App\Service\HydratorService;
 
 use App\Models\Advert;
 
+use App\Service\Relation;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
@@ -47,7 +48,7 @@ class AdvertRepository
             $hydrator = new HydratorService();
             $modelsStorage = [];
             foreach ($result as $data) {
-                $modelsStorage[] = $hydrator->hydrate(
+                $model = $hydrator->hydrate(
                     Advert::class,
                     $data,
                     [
@@ -60,8 +61,9 @@ class AdvertRepository
                         'modified_date' => 'modifiedDate',
                     ]
                 );
+                $relationModel = (new Relation($model))->getRelation('id');
+                $modelsStorage[] = $relationModel;
             }
-
             return $modelsStorage;
 
         } catch (\PDOException $exception) {

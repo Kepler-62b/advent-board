@@ -48,6 +48,7 @@ class AdvertController extends DefaultController
         $navigationWidget = (new NavigationWidget())->getTemplate();
         $getFormWidget = (new GetFormWidget())->getTemplate();
         $tableWidget = (new TableWidget(
+            'table_widget_array_adverts_objects',
             [
                 'Id',
                 'Item',
@@ -56,9 +57,9 @@ class AdvertController extends DefaultController
                 'Image',
                 new SortWidget('Date', 'created_date')
             ],
-            $adverts
+            ['adverts' => $adverts]
         ))->getTemplate();
-        $content = new Template('show_widgets', 'content');
+        $content = new Template('show_widgets_adverts', 'content');
         $layout = new Template('main', 'layouts');
 
         $view = (new RenderTemplateService(
@@ -90,6 +91,7 @@ class AdvertController extends DefaultController
 
         $tableWidget = (
         new TableWidget(
+            'table_widget_array_adverts_objects',
             [
                 'id' => 'Id',
                 'item' => 'Item',
@@ -98,9 +100,8 @@ class AdvertController extends DefaultController
                 'image' => 'Image',
                 'created_date' => 'Date'
             ],
-            $advert,
-        )
-        )->getTemplate();
+            ['adverts' => $advert],
+        ))->getTemplate();
 
         $content = new Template('get_widgets', 'content');
         $layout = new Template('main', 'layouts');
@@ -117,7 +118,7 @@ class AdvertController extends DefaultController
     {
         $repository = $this->repository;
         extract($param, EXTR_OVERWRITE);
-        $rows = $repository->getMin($page, $filter);
+        $adverts = $repository->getMin($page, $filter);
 
         $paginationWidget = (new Pagination(['totalCount' => $repository->getCount()], ['sampleLimit' => 5]))->getTemplate();
         $navigationWidget = (new NavigationWidget())->getTemplate();
@@ -127,6 +128,7 @@ class AdvertController extends DefaultController
         $sortDateWidget = new SortWidget('Date', 'created_date');
 
         $tableWidget = (new TableWidget(
+            'table_widget_array_adverts_objects',
             [
                 'id' => 'Id',
                 'item' => 'Item',
@@ -135,9 +137,9 @@ class AdvertController extends DefaultController
                 'image' => 'Image',
                 'created_date' => $sortDateWidget
             ],
-            $rows,
+            ['adverts' => $adverts],
         ))->getTemplate();
-        $content = new Template('show_widgets', 'content');
+        $content = new Template('show_widgets_adverts', 'content');
         $layout = new Template('main', 'layouts');
 
         $view = (new RenderTemplateService(
@@ -160,6 +162,7 @@ class AdvertController extends DefaultController
         $getFormWidget = (new GetFormWidget())->getTemplate();
 
         $tableWidget = (new TableWidget(
+            'table_widget_array_adverts_objects',
             [
                 'id' => 'Id',
                 'item' => 'Item',
@@ -168,9 +171,9 @@ class AdvertController extends DefaultController
                 'image' => 'Image',
                 'created_date' => (new SortWidget('Date', 'created_date')),
             ],
-            $adverts,
+            ['adverts' => $adverts],
         ))->getTemplate();
-        $content = new Template('show_widgets', 'content');
+        $content = new Template('show_widgets_adverts', 'content');
         $layout = new Template('main', 'layouts');
 
         $view = (new RenderTemplateService(
@@ -253,5 +256,18 @@ class AdvertController extends DefaultController
             // @TODO подумать куда редиректить
             return (new RedirectResponse(LinkManager::link('/create')))->send();
         }
+    }
+
+    public function notFound(): Response
+    {
+        $navigationWidget = new Template('navigation', 'widgets');
+        $content = new Template('not_found_page_advert_controller', 'content', ['navigation']);
+        $layout = new Template('main', 'layouts', ['content']);
+        $view = (new RenderTemplateService([$layout, $content, $navigationWidget]))->renderFromListTemplates();
+
+        return (new Response())
+            ->setContent($view)
+            ->setStatusCode(Response::HTTP_NOT_FOUND)
+            ->send();
     }
 }

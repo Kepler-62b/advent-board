@@ -8,6 +8,7 @@ use App\Service\ViewRenderService;
 
 class TableWidget implements WidgetInterface
 {
+    private string $templateName;
     private array $columnNames = [];
     private object|array $data;
     private ?array $linkImages = [];
@@ -15,8 +16,9 @@ class TableWidget implements WidgetInterface
     /**
      * @todo убрать из зависимостей LinkRender
      */
-    public function __construct(array $columnNames, object|array $data = null, array $linkImages = null)
+    public function __construct(string $templateName, array $columnNames, object|array $data = null, array $linkImages = null)
     {
+        $this->templateName = $templateName;
         $this->columnNames = $columnNames;
         $this->data = $data;
         $this->linkImages = $linkImages;
@@ -29,10 +31,12 @@ class TableWidget implements WidgetInterface
 
     public function getTemplate(): Template
     {
-        return new Template('table_array_objects', 'widgets',
+        $dataName = key($this->data);
+//        var_dump($this->data[$dataName]);
+        return new Template($this->templateName, 'widgets',
             [
                 'columnNames' => $this->columnNames,
-                'adverts' => $this->data
+                $dataName => $this->data[$dataName],
             ]);
     }
 

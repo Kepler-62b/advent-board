@@ -4,6 +4,8 @@ namespace App\Service;
 
 use App\Controllers\AdventController;
 use App\Controllers\AdvertController;
+use App\Controllers\DefaultController;
+use App\Controllers\ImageController;
 use App\Models\Advent;
 use App\Repository\AdventRepository;
 use App\Repository\AdvertRepository;
@@ -18,7 +20,7 @@ class DependencyContainer
 
     public function __construct()
     {
-        // @TODO подумать над сруктурой массива - контейнера
+        // @TODO подумать над структурой массива - контейнера
         $this->objects = [
             // @TODO создание объекта при каждом подключении
             /** база данных */
@@ -27,9 +29,11 @@ class DependencyContainer
             /** репозитории */
             'App\Repository\AdventRepository' => fn() => new AdventRepository($this->get('App\Service\PHPAdventBoardDatabase')),
             'App\Repository\AdvertRepository' => fn() => new AdvertRepository($this->get('App\Service\PHPAdventBoardDatabase')),
+            'App\Repository\ImageRepository' => fn() => new ImageRepository($this->get('App\Service\PHPAdventBoardDatabase')),
             /** контроллеры */
             'App\Controllers\AdventController' => fn() => new AdventController($this->get('App\Repository\AdventRepository')),
             'App\Controllers\AdvertController' => fn() => new AdvertController($this->get('App\Repository\AdvertRepository')),
+            'App\Controllers\ImageController' => fn() => new ImageController($this->get('App\Repository\ImageRepository')),
             /** модели */
             'App\Models\Image' => fn(): ImageRepository => new ImageRepository($this->get('App\Service\PHPAdventBoardDatabase')),
             'App\Models\Advent' => fn(): AdventRepository => new AdventRepository($this->get('App\Service\PHPAdventBoardDatabase')),
@@ -38,6 +42,9 @@ class DependencyContainer
             'App\Service\LaravelDatabase' => fn() => LaravelDatabase::getInstance(),
             'App\Repository\CityRepository' => fn() => new CityRepository($this->get('App\Service\LaravelDatabase')),
             'App\Models\City' => fn() => new CityRepository($this->get('App\Service\LaravelDatabase')),
+            /** разные службы */
+            'App\Controllers\DefaultController' => fn() => new DefaultController(),
+
 
         ];
     }

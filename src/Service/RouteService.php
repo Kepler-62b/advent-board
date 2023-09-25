@@ -19,6 +19,7 @@ class RouteService
     public function routing(): void
     {
         $matchURL = $this->parseURL->matchURL;
+
         var_dump($matchURL);
 
         $interface = $matchURL['interface'];
@@ -27,6 +28,7 @@ class RouteService
         $actionParams = $matchURL['action_params'];
 
         if (empty($actionParams)) {
+//            var_dump((new DependencyContainer())->get($controller));
             (new DependencyContainer())->get($controller)->$action();
         } else {
             (new DependencyContainer())->get($controller)->$action($actionParams, $interface);

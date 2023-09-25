@@ -1,4 +1,12 @@
 {
+  "/": {
+    "action": "homePage",
+    "controller": "App\\Controllers\\AdvertController"
+  },
+  "/not_found": {
+    "action": "notFound",
+    "controller": "App\\Controllers\\AdvertController"
+  },
   "/show": {
     "action": "showAll",
     "controller": "App\\Controllers\\AdvertController"
@@ -9,10 +17,6 @@
   },
   "/show/sort/max/": {
     "action": "showByMax",
-    "controller": "App\\Controllers\\AdvertController"
-  },
-  "/": {
-    "action": "homePage",
     "controller": "App\\Controllers\\AdvertController"
   },
   "/get": {
@@ -34,5 +38,13 @@
   "/update_action": {
     "action": "update_action",
     "controller": "App\\Controllers\\AdvertController"
+  },
+  "/images/show": {
+    "action": "showAll",
+    "controller": "App\\Controllers\\ImageController"
+  },
+  "/images/get_relation": {
+    "action": "showByForeignKey",
+    "controller": "App\\Controllers\\ImageController"
   }
 }

@@ -24,7 +24,6 @@ class ImageRepository
      */
     public function fetchAll(int $page = 1): array
     {
-
         $connection = $this->pdo;
         $table = $this->table;
         $limit = self::SELECT_LIMIT;
@@ -136,5 +135,17 @@ class ImageRepository
         } catch (\PDOException $exception) {
             die('Ошибка: ' . $exception->getMessage());
         }
+    }
+
+    public function getCount(): int
+    {
+        $connection = $this->pdo;
+        $table = $this->table;
+
+        $sql = "SELECT COUNT(*) FROM $table";
+
+        $pdo_statment = $connection->query($sql);
+        [$count] = $pdo_statment->fetch(\PDO::FETCH_NUM);
+        return $count;
     }
 }

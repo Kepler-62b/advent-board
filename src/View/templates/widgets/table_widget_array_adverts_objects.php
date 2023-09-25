@@ -1,4 +1,5 @@
 <?php use App\Service\Helpers\LinkManager ?>
+<h1>Adverts</h1>
 
 <table>
 
@@ -16,7 +17,7 @@
         <?= $advert->getId() ?>
       </td>
       <td>
-        <a href="<?= LinkManager::link('/not_found') ?>"><?= $advert->getItem() ?></a>
+        <a href="<?= LinkManager::link('/images/get_relation', ['foreignKey' => $advert->getId()]) ?>"><?= $advert->getItem() ?></a>
       </td>
       <td>
         <?= $advert->getDescription() ?>
