@@ -1,0 +1,47 @@
+networks:
+  advertsing:
+    name: advertsing
+
+services:
+  dev-nginx:
+    container_name: dev-nginx
+    image: nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./build/server/nginx/vhost.conf:/etc/nginx/conf.d/default.conf
+      - ./:/var/www/advertsing
+    networks:
+      - advertsing
+    depends_on:
+      - dev-phpfpm
+      - dev-mysql
+  dev-phpfpm:
+    container_name: dev-phpfpm
+    build: /mnt/d/domains/dev.local/www/advertsing/build/images/php8.1-fpm
+    volumes:
+      - ./:/var/www/advertsing
+    networks:
+      - advertsing
+    depends_on:
+      - dev-mysql
+  dev-mysql:
+    container_name: dev-mysql
+    image: mysql:5.7.16
+    volumes:
+      - ./build/database-data/mysql-5.7.16:/var/lib/mysql
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=' '
+    networks:
+      - advertsing
+  dev-phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin
+    ports:
+      - 2500:80
+    environment:
+      - PMA_HOST=dev-mysql
+    networks:
+      - advertsing
+    depends_on:
+      - dev-mysql
