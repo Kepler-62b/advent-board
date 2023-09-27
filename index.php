@@ -20,4 +20,12 @@ $link = new LinkManager($request);
 $container = new DependencyContainer();
 $test = new TestServices();
 
-$test->testApp($request);
+// $test->testApp($request);
+
+$user = "root";
+$pass = "";
+$dsn = "mysql:host=localhost;port=3306;dbname=php_advent_board;charset=utf8";
+
+$pdo = new \PDO($dsn, $user, $pass);
+dd($pdo);
+// phpinfo();
