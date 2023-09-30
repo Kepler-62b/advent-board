@@ -2,51 +2,58 @@
 
 namespace App\Service\Widgets;
 
-use App\Service\RenderTemplateServise;
-use App\Service\TemplateNavigator;
+use App\Service\RenderTemplateService;
+use App\Service\Template;
 use App\Service\ViewRenderService;
 
 class TableWidget implements WidgetInterface
 {
-  private array $columnNames = [];
-  private $data;
-  private ?array $linkImages = [];
+    private string $templateName;
+    private array $columnNames = [];
+    private object|array $data;
+    private ?array $linkImages = [];
 
-  /**
-   * @todo убрать из зависимостей LinkRender
-   */
-  public function __construct(array $columnNames, object|array $data = null, array $linkImages = null)
-  {
-    $this->columnNames = $columnNames;
-    $this->data = $data;
-    $this->linkImages = $linkImages;
-  }
+    /**
+     * @todo убрать из зависимостей LinkRender
+     */
+    public function __construct(string $templateName, array $columnNames, object|array $data = null, array $linkImages = null)
+    {
+        $this->templateName = $templateName;
+        $this->columnNames = $columnNames;
+        $this->data = $data;
+        $this->linkImages = $linkImages;
+    }
 
-  public function __toString(): string
-  {
-    return (new RenderTemplateServise([$this->getTemplate()]))->renderFromListTemplates();
+    public function __toString(): string
+    {
+        return (new RenderTemplateService([$this->getTemplate()]))->renderFromListTemplates();
+    }
 
-    // $template = $this->render();
-    // return $template->contentRender();
-  }
+    public function getTemplate(): Template
+    {
+        $dataName = key($this->data);
+//        var_dump($this->data[$dataName]);
+        return new Template($this->templateName, 'widgets',
+            [
+                'columnNames' => $this->columnNames,
+                $dataName => $this->data[$dataName],
+            ]);
+    }
 
-  public function render(): ViewRenderService
-  {
-    return new ViewRenderService(
-      ['widgets' => 'table_array_object_model'],
-      null,
-      [
-        'columnNames' => $this->columnNames,
-        'adverts' => $this->data,
-        'linkImages' => $this->linkImages,
-      ]
-    );
+    /** @deprecated */
+    public function render(): ViewRenderService
+    {
+        return new ViewRenderService(
+            ['widgets' => 'table_array_objects'],
+            null,
+            [
+                'columnNames' => $this->columnNames,
+                'adverts' => $this->data,
+                'linkImages' => $this->linkImages,
+            ]
+        );
 
-  }
+    }
 
-  public function getTemplate(): TemplateNavigator
-  {
-    return new TemplateNavigator('table_array_object_model', 'widgets', ['columnNames' => $this->columnNames, 'adverts' => $this->data]);
-  }
 
 }

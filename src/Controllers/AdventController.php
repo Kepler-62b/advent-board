@@ -4,8 +4,8 @@ namespace App\Controllers;
 
 use App\Service\HydratorService;
 use App\Service\Relation;
-use App\Service\RenderTemplateServise;
-use App\Service\TemplateNavigator;
+use App\Service\RenderTemplateService;
+use App\Service\Template;
 use App\Service\ViewRenderService;
 use App\Service\NotFoundHttpException;
 use App\Service\Helpers\LinkManager;
@@ -54,10 +54,10 @@ class AdventController extends DefaultController
             $adverts
         )
         )->getTemplate();
-        $content = new TemplateNavigator('show_widgets', 'content');
-        $layout = new TemplateNavigator('main', 'layouts');
+        $content = new Template('show_widgets', 'content');
+        $layout = new Template('main', 'layouts');
 
-        $view = (new RenderTemplateServise([$layout, $content, $tableWidget, $paginationWidget, $getFormWidget, $navigationWidget]))->renderFromListTemplates();
+        $view = (new RenderTemplateService([$layout, $content, $tableWidget, $paginationWidget, $getFormWidget, $navigationWidget]))->renderFromListTemplates();
 
         return (new Response($view))->send();
     }
@@ -94,11 +94,11 @@ class AdventController extends DefaultController
         )
         )->getTemplate();
 
-        $content = new TemplateNavigator('get_widgets', 'content');
-        $layout = new TemplateNavigator('main', 'layouts');
+        $content = new Template('get_widgets', 'content');
+        $layout = new Template('main', 'layouts');
 
         $template =
-            (new RenderTemplateServise([$layout, $content, $tableWidget, $getFormWidget, $navigationWidget]))
+            (new RenderTemplateService([$layout, $content, $tableWidget, $getFormWidget, $navigationWidget]))
                 ->renderFromListTemplates();
 
         // @TODO старая функциональность по отрисовке шаблонов
@@ -199,10 +199,10 @@ class AdventController extends DefaultController
     public function create_form(): Response
     {
         $navigation = (new NavigationWidget())->getTemplate();
-        $content = new TemplateNavigator('create_text_only', 'content');
-        $layout = new TemplateNavigator('main', 'layouts');
+        $content = new Template('create_text_only', 'content');
+        $layout = new Template('main', 'layouts');
 
-        $view = (new RenderTemplateServise([$layout, $content, $navigation]))->renderFromListTemplates();
+        $view = (new RenderTemplateService([$layout, $content, $navigation]))->renderFromListTemplates();
 
         // @TODO старая функциональность по отрисовке шаблонов
         // $content = (
@@ -252,10 +252,10 @@ class AdventController extends DefaultController
     public function update_form(): Response
     {
         $navigation = (new NavigationWidget())->getTemplate();
-        $content = new TemplateNavigator('update', 'content');
-        $layout = new TemplateNavigator('main', 'layouts');
+        $content = new Template('update', 'content');
+        $layout = new Template('main', 'layouts');
 
-        $template = (new RenderTemplateServise([$layout, $content, $navigation]))->renderFromListTemplates();
+        $template = (new RenderTemplateService([$layout, $content, $navigation]))->renderFromListTemplates();
 
         // @TODO старая функциональность по отрисовке шаблонов
         // $content = (

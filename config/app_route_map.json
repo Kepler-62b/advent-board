@@ -1,38 +1,50 @@
 {
+  "/": {
+    "action": "homePage",
+    "controller": "App\\Controllers\\AdvertController"
+  },
+  "/not_found": {
+    "action": "notFound",
+    "controller": "App\\Controllers\\AdvertController"
+  },
   "/show": {
     "action": "showAll",
-    "controller": "App\\Controllers\\AdventController"
+    "controller": "App\\Controllers\\AdvertController"
   },
   "/show/sort/min/": {
     "action": "showByMin",
-    "controller": "App\\Controllers\\AdventController"
+    "controller": "App\\Controllers\\AdvertController"
   },
   "/show/sort/max/": {
     "action": "showByMax",
-    "controller": "App\\Controllers\\AdventController"
-  },
-  "/": {
-    "action": "homePage",
-    "controller": "App\\Controllers\\AdventController"
+    "controller": "App\\Controllers\\AdvertController"
   },
   "/get": {
     "action": "showById",
-    "controller": "App\\Controllers\\AdventController"
+    "controller": "App\\Controllers\\AdvertController"
   },
   "/create": {
     "action": "create_form",
-    "controller": "App\\Controllers\\AdventController"
+    "controller": "App\\Controllers\\AdvertController"
   },
   "/create_action": {
     "action": "create_action",
-    "controller": "App\\Controllers\\AdventController"
+    "controller": "App\\Controllers\\AdvertController"
   },
   "/update": {
     "action": "update_form",
-    "controller": "App\\Controllers\\AdventController"
+    "controller": "App\\Controllers\\AdvertController"
   },
   "/update_action": {
     "action": "update_action",
-    "controller": "App\\Controllers\\AdventController"
+    "controller": "App\\Controllers\\AdvertController"
+  },
+  "/images/show": {
+    "action": "showAll",
+    "controller": "App\\Controllers\\ImageController"
+  },
+  "/images/get_relation": {
+    "action": "showByForeignKey",
+    "controller": "App\\Controllers\\ImageController"
   }
 }

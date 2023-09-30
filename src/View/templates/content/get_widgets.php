@@ -1,3 +1,3 @@
-<?= $table_array_object_model ?>
+<?= $table_widget_array_adverts_objects ?>
 <?= $navigation ?>
 <?= $getForm ?>

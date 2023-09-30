@@ -2,8 +2,6 @@
 
 namespace App\Service;
 
-use App\Repository\AdvertRepository;
-
 class OneToManyRelation
 {
     public ?array $relationModels = [];
@@ -19,9 +17,22 @@ class OneToManyRelation
     // @TODO подумать над названием метода
     private function getDataFromRepository(int $foreignKey, string $modelName): ?array
     {
-        // @TODO нужна проверка на instanceOf, чтобы был понятен тип у переменной $repository
-        /** @var AdvertRepository $repository */
-        $repository = (object) (new DependencyContainer())->get($modelName);
-        return $repository->findById($foreignKey);
+        $repository = (object)(new DependencyContainer())->get($modelName);
+        // @TODO нужна проверка на instanceOf, чтобы был понятен тип у переменной $repository после маппинга в контейнере зависимостей
+        // @TODO для проверки нужно сделать общего предка для всех репозиториев (например, абстрактный класс)
+
+        $repositoryName = get_class($repository);
+        // @TODO проверка на существование метода в репозитории
+        if (method_exists($repository, 'findById')) {
+            $relationModels = $repository->findById($foreignKey);
+        } else {
+            throw new \BadMethodCallException("NotFoundMethodException: Method 'findById' does not exist in '$repositoryName' repository");
+        }
+
+        if (!$relationModels) {
+            throw new \DomainException("NotFoundForeignKeyException: Not found relationModel with ID $foreignKey in '$repositoryName'");
+        } else {
+            return $relationModels;
+        }
     }
 }

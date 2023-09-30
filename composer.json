@@ -13,7 +13,8 @@
   "require": {
     "symfony/http-kernel": "^6.3",
     "symfony/framework-bundle": "^6.3",
-    "monolog/monolog": "^3.4"
+    "monolog/monolog": "^3.4",
+    "robmorgan/phinx": "^0.15.2"
   },
   "require-dev": {
     "phpunit/phpunit": "^10.3",

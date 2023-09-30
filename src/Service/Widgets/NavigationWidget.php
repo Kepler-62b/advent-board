@@ -5,32 +5,29 @@ namespace App\Service\Widgets;
 use App\Service\ViewRenderService;
 use App\Service\RenderViewService;
 
-use App\Service\RenderTemplateServise;
-use App\Service\TemplateNavigator;
+use App\Service\RenderTemplateService;
+use App\Service\Template;
 
 class NavigationWidget implements WidgetInterface
 {
 
-  public function __construct()
-  {
-  }
+    public function __construct()
+    {
+    }
 
-  public function __toString(): string
-  {
-    return (new RenderTemplateServise([$this->getTemplate()]))->renderFromListTemplates();
+    public function __toString(): string
+    {
+        return (new RenderTemplateService([$this->getTemplate()]))->renderFromListTemplates();
+    }
 
-    // $template = $this->render();
-    // return $template->renderView();
-  }
+    public function getTemplate(): Template
+    {
+        return new Template('navigation', 'widgets');
+    }
 
-  public function render(): RenderViewService
-  {
-    return new RenderViewService(['widgets' => 'navigation']);
-  }
-
-  public function getTemplate(): TemplateNavigator
-  {
-    return new TemplateNavigator('navigation', 'widgets');
-  }
+    public function render(): RenderViewService
+    {
+        return new RenderViewService(['widgets' => 'navigation']);
+    }
 
 }
