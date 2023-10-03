@@ -1,49 +1,47 @@
 networks:
-  advertsing:
-    name: advertsing
+  adverts-board:
+    name: adverts-board
 
 services:
-  dev-nginx:
-    container_name: dev-nginx
+  adverts-nginx:
+    container_name: adverts-nginx
     image: nginx
     ports:
       - 8080:80
     volumes:
       - ./docker/server/nginx/vhost.conf:/etc/nginx/conf.d/default.conf
-      - ./:/var/www/advertsing
+      - ./:/var/app/adverts-board
     networks:
-      - advertsing
+      - adverts-board
     depends_on:
-      - dev-phpfpm
-      - dev-mysql
-  dev-phpfpm:
-    container_name: dev-phpfpm
+      - adverts-phpfpm
+      - adverts-mysql
+  adverts-phpfpm:
+    container_name: adverts-phpfpm
     build: ./docker/images/php8.1-fpm
     volumes:
-      - ./:/var/www/advertsing
+      - ./:/var/app/adverts-board
     networks:
-      - advertsing
-    depends_on:
-      - dev-mysql
-  dev-mysql:
-    container_name: dev-mysql
+      - adverts-board
+  adverts-mysql:
+    container_name: adverts-mysql
     image: mysql:5.7.16
     ports:
-      - 4307:3306
+      - 3306:3306
     volumes:
       - ./docker/database/mysql-5.7.16/data:/var/lib/mysql
     environment:
       - MYSQL_ALLOW_EMPTY_PASSWORD=' '
     networks:
-      - advertsing
-  dev-phpmyadmin:
-    container_name: dev-phpmyadmin
-    image: phpmyadmin
+      - adverts-board
+  adverts-postgres:
+    container_name: adverts-postgres
+    image: postgres
     ports:
-      - 2500:80
+      - 5432:5432
     environment:
-      - PMA_HOST=dev-mysql
+      - POSTGRES_DB=adverts-board
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=secret
     networks:
-      - advertsing
-    depends_on:
-      - dev-mysql
+      - adverts-board

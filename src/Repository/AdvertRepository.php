@@ -14,7 +14,7 @@ use Monolog\Handler\StreamHandler;
 class AdvertRepository
 {
     private PHPAdventBoardDatabase $pdo;
-    private string $table = 'advents_prod';
+    private string $table = 'adverts';
     private ?int $lastInsertId;
     public const SELECT_LIMIT = 5;
 

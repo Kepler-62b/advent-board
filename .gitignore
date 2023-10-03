@@ -13,7 +13,7 @@
 
 ###> psalm ###
 /.idea/
-psalm-baseline.xml
+psalm_baseline.xml
 ###< psalm ###
 
 ###> phpunit cahe ###

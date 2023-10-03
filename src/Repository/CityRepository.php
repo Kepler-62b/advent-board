@@ -4,16 +4,16 @@ namespace App\Repository;
 
 use App\Models\Image;
 use App\Service\HydratorService;
-use App\Service\LaravelDatabase;
+use App\Service\PostgresAdvertsBoard;
 use ReflectionException;
 
 class CityRepository
 {
-    private LaravelDatabase $DatabaseConnectionPDO;
+    private PostgresAdvertsBoard $DatabaseConnectionPDO;
     private string $table = 'cities';
     public const SELECT_LIMIT = 5;
 
-    public function __construct(LaravelDatabase $DatabaseConnectionPDO)
+    public function __construct(PostgresAdvertsBoard $DatabaseConnectionPDO)
     {
         $this->DatabaseConnectionPDO = $DatabaseConnectionPDO;
     }
