@@ -25,7 +25,8 @@ class DependencyContainer
             // @TODO создание объекта при каждом подключении
             /** база данных */
 //            'App\Service\PHPAdventBoardDatabase' => fn() => new PHPAdventBoardDatabase(),
-            'App\Service\PHPAdventBoardDatabase' => fn() => PHPAdventBoardDatabase::getInstance(),
+//            'App\Service\PHPAdventBoardDatabase' => fn() => PHPAdventBoardDatabase::getInstance(),
+            'App\Service\PHPAdventBoardDatabase' => fn() => PostgresAdvertsBoard::getInstance(),
             /** репозитории */
             'App\Repository\AdventRepository' => fn() => new AdventRepository($this->get('App\Service\PHPAdventBoardDatabase')),
             'App\Repository\AdvertRepository' => fn() => new AdvertRepository($this->get('App\Service\PHPAdventBoardDatabase')),

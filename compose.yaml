@@ -6,6 +6,7 @@ services:
   adverts-nginx:
     container_name: adverts-nginx
     image: nginx
+    restart: always
     ports:
       - 8080:80
     volumes:
@@ -15,28 +16,32 @@ services:
       - adverts-board
     depends_on:
       - adverts-phpfpm
-      - adverts-mysql
   adverts-phpfpm:
     container_name: adverts-phpfpm
     build: ./docker/images/php8.1-fpm
+    restart: always
     volumes:
       - ./:/var/app/adverts-board
+      - ./docker/modules/Xdebug/zzz-xdebug.ini:/usr/local/etc/php/conf.d/zzz-xdebug.ini
+    environment:
+      - XDEBUG_CONFIG=discover_client_host=true client_host=host.docker.internal log_level=0
     networks:
       - adverts-board
-  adverts-mysql:
-    container_name: adverts-mysql
+  advert-mysql:
+    container_name: advert-mysql
     image: mysql:5.7.16
+    restart: always
     ports:
       - 3306:3306
-    volumes:
-      - ./docker/database/mysql-5.7.16/data:/var/lib/mysql
     environment:
-      - MYSQL_ALLOW_EMPTY_PASSWORD=' '
+      - MYSQL_DATABASE=adverts-board
+      - MYSQL_ROOT_PASSWORD=secret
     networks:
       - adverts-board
   adverts-postgres:
     container_name: adverts-postgres
     image: postgres
+    restart: always
     ports:
       - 5432:5432
     environment:

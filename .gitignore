@@ -16,6 +16,11 @@
 psalm_baseline.xml
 ###< psalm ###
 
+###> docker data ###
+/docker/database/mysql-5.7.16/data
+/docker/database/postgres/data
+###< docker data ###
+
 ###> phpunit cahe ###
 /.phpunit.result.cache
 ###< phpunit cahe ###

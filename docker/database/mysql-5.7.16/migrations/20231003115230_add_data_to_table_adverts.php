@@ -22,7 +22,7 @@ final class AddDataToTableAdverts extends AbstractMigration
         $sql = /** @lang text */
             "
         INSERT INTO `adverts` (`id`, `item`, `description`, `price`, `image`, `created_date`, `modified_date`) VALUES
-            (1, 'item', 'item desc', 50000, 'symfony.png', '2023-06-23 12:57:05', '2023-06-29 23:57:47'),
+            (1, 'mysql item', 'item desc', 50000, 'symfony.png', '2023-06-23 12:57:05', '2023-06-29 23:57:47'),
             (2, 'item two', 'desc item', 1000, 'moto.png', '2023-06-23 14:45:05', '2023-06-27 17:15:02'),
             (3, 'item 3', 'desc', 111, 'wheels.png', '2023-06-23 15:50:18', '2023-06-27 16:52:22'),
             (4, 'bicycle', 'used bicycle', 10000, 'bike.png', '2023-06-23 23:29:47', '2023-06-23 23:29:47'),
