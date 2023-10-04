@@ -44,7 +44,7 @@ class AdvertController extends DefaultController
         }
 
         $paginationWidget = (new PaginationWidget('pagination_object', ['totalCount' => $repository->getCount()], ['sampleLimit' => 5]))->getTemplate();
-        $navigationWidget = (new NavigationWidget('navigation'))->getTemplate();
+        $navigationWidget = (new NavigationWidget('navigation_bootstrap'))->getTemplate();
         $getFormWidget = (new GetFormWidget('form_get'))->getTemplate();
         $tableWidget = (new TableWidget(
             'table_widget_array_adverts_objects',
@@ -61,11 +61,8 @@ class AdvertController extends DefaultController
         $content = new Template('show_widgets_adverts', 'content');
         $layout = new Template('main', 'layouts');
 
-        $view = (new RenderTemplateService(
-            [
-                $layout, $content, $tableWidget, $paginationWidget, $getFormWidget, $navigationWidget
-            ]
-        ))->renderFromListTemplates();
+        $view = (new RenderTemplateService([$layout, $content, $tableWidget, $paginationWidget, $getFormWidget, $navigationWidget]))
+            ->renderFromListTemplates();
 
         return (new Response($view))->send();
     }
@@ -85,7 +82,7 @@ class AdvertController extends DefaultController
             return $this->apiRaw($advert);
         }
 
-        $navigationWidget = (new NavigationWidget('navigation'))->getTemplate();
+        $navigationWidget = (new NavigationWidget('navigation_bootstrap'))->getTemplate();
         $getFormWidget = (new GetFormWidget('form_get'))->getTemplate();
 
         $tableWidget = (
@@ -120,7 +117,7 @@ class AdvertController extends DefaultController
         $adverts = $repository->getMin($page, $filter);
 
         $paginationWidget = (new PaginationWidget('pagination_object', ['totalCount' => $repository->getCount()], ['sampleLimit' => 5]))->getTemplate();
-        $navigationWidget = (new NavigationWidget('navigation'))->getTemplate();
+        $navigationWidget = (new NavigationWidget('navigation_bootstrap'))->getTemplate();
         $getFormWidget = (new GetFormWidget('form_get'))->getTemplate();
 
         $sortPriceWidget = new SortWidget('Price', 'price');
@@ -157,7 +154,7 @@ class AdvertController extends DefaultController
         $adverts = $repository->getMax($page, $filter);
 
         $paginationWidget = (new PaginationWidget('pagination_object', ['totalCount' => $repository->getCount()], ['sampleLimit' => 5]))->getTemplate();
-        $navigationWidget = (new NavigationWidget('navigation'))->getTemplate();
+        $navigationWidget = (new NavigationWidget('navigation_bootstrap'))->getTemplate();
         $getFormWidget = (new GetFormWidget('form_get'))->getTemplate();
 
         $tableWidget = (new TableWidget(
@@ -186,7 +183,7 @@ class AdvertController extends DefaultController
 
     public function create_form(): Response
     {
-        $navigation = (new NavigationWidget('navigation'))->getTemplate();
+        $navigation = (new NavigationWidget('navigation_bootstrap'))->getTemplate();
         $content = new Template('create_text_only', 'content');
         $layout = new Template('main', 'layouts');
 
@@ -224,7 +221,7 @@ class AdvertController extends DefaultController
 
     public function update_form(): Response
     {
-        $navigation = (new NavigationWidget('navigation'))->getTemplate();
+        $navigation = (new NavigationWidget('navigation_bootstrap'))->getTemplate();
         $content = new Template('update', 'content');
         $layout = new Template('main', 'layouts');
 
@@ -259,7 +256,7 @@ class AdvertController extends DefaultController
 
     public function notFound(): Response
     {
-        $navigationWidget = new Template('navigation', 'widgets');
+        $navigationWidget = new Template('navigation_bootstrap', 'widgets');
         $content = new Template('not_found_page_advert_controller', 'content', ['navigation']);
         $layout = new Template('main', 'layouts', ['content']);
         $view = (new RenderTemplateService([$layout, $content, $navigationWidget]))->renderFromListTemplates();

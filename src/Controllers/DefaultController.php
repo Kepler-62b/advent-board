@@ -13,10 +13,10 @@ class DefaultController
 {
     public function homePage(): Response
     {
-        $navigationWidget = new Template('navigation', 'widgets');
-        $content = new Template('home_page', 'content', ['navigation']);
-        $layout = new Template('main', 'layouts', ['content']);
-        $view = (new RenderTemplateService([$layout, $content, $navigationWidget]))->renderFromListTemplates();
+        $navigation = new Template('navigation_bootstrap', 'widgets');
+        $content = new Template('home_page', 'content');
+        $layout = new Template('main', 'layouts');
+        $view = (new RenderTemplateService([$layout, $content, $navigation]))->renderFromListTemplates();
 
         return (new Response())
             ->setContent($view)
@@ -29,10 +29,10 @@ class DefaultController
      */
     public function notFound(): Response
     {
-        $navigationWidget = new Template('navigation', 'widgets');
-        $content = new Template('not_found_page', 'content', ['navigation']);
-        $layout = new Template('main', 'layouts', ['content']);
-        $view = (new RenderTemplateService([$layout, $content, $navigationWidget]))->renderFromListTemplates();
+        $navigation = new Template('navigation_bootstrap', 'widgets');
+        $content = new Template('not_found_page', 'content');
+        $layout = new Template('main', 'layouts');
+        $view = (new RenderTemplateService([$layout, $content, $navigation]))->renderFromListTemplates();
 
         return (new Response())
             ->setContent($view)

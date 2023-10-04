@@ -1,4 +1,4 @@
-<?php use App\Service\Helpers\LinkManager ?>
+<?php use App\Service\Helpers\LinkManager; ?>
 <h3>Navigation</h3>
 <hr>
 

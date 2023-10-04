@@ -35,7 +35,7 @@ class ImageController
             $images = $repository->fetchAll();
         }
 
-        $navigationWidget = (new NavigationWidget('navigation'))->getTemplate();
+        $navigationWidget = (new NavigationWidget('navigation_bootstrap'))->getTemplate();
         $getFormWidget = (new GetFormWidget('form_get'))->getTemplate();
         $tableWidget = (
         new TableWidget(
@@ -60,7 +60,7 @@ class ImageController
         $images = $repository->findByForeignKey($foregnKey) ?? throw new NotFoundHttpException("Not found images ID $foregnKey");
 
         // @TODO разобраться с пагинацией
-        $navigationWidget = (new NavigationWidget('navigation'))->getTemplate();
+        $navigationWidget = (new NavigationWidget('navigation_bootstrap'))->getTemplate();
         $getFormWidget = (new GetFormWidget('form_get'))->getTemplate();
         $tableWidget = (
         new TableWidget(

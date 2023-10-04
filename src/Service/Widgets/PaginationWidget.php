@@ -61,7 +61,7 @@ class PaginationWidget implements WidgetInterface
             $link = "<a href=\"{link}\" class=\"{class}\">{number}</a>";
             $replace['{link}'] = LinkManager::link('/show', [$this->divider => $i], $this->filter);
             $replace['{number}'] = $i;
-            $replace['{class}'] = 'btn';
+            $replace['{class}'] = 'pagination-btn';
             $link = strtr($link, $replace);
             $pagination[] = $link;
         }
@@ -70,8 +70,7 @@ class PaginationWidget implements WidgetInterface
         //   $link = LinkManager::link('/show', [$this->divider => $i], $this->filter);
         //   $storageLinks[] = "<a href=\"${link}\">${i}</a>";
         // }
-
-        return ($pagination);
+        return $pagination;
     }
 
     public function getTemplate(): Template
