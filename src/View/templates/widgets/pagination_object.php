@@ -1,6 +1,7 @@
-<h3>Pagination</h3>
-<hr>
-
-<?php foreach ($pagination as $page): ?>
-  <?= $page ?>
-<?php endforeach ?>
+<ul class="pagination">
+    <?php foreach ($pagination as $page): ?>
+        <li class="page-item">
+            <?= $page ?>
+        </li>
+    <?php endforeach ?>
+</ul>

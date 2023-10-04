@@ -59,7 +59,7 @@ class AdvertController extends DefaultController
             ['adverts' => $adverts]
         ))->getTemplate();
         $content = new Template('show_widgets_adverts', 'content');
-        $layout = new Template('main', 'layouts');
+        $layout = new Template('main_flex', 'layouts');
 
         $view = (new RenderTemplateService([$layout, $content, $tableWidget, $paginationWidget, $getFormWidget, $navigationWidget]))
             ->renderFromListTemplates();
@@ -212,7 +212,7 @@ class AdvertController extends DefaultController
         $model = $hydrator->hydrate(Advent::class, $data);
 
         if ($repository->save($model)) {
-            return (new RedirectResponse(LinkManager::link('/create')))->send();
+            return (new RedirectResponse(LinkManager::link('/show')))->send();
         } else {
             // @TODO подумать куда редиректить
             return (new RedirectResponse(LinkManager::link('/create')))->send();
@@ -222,7 +222,7 @@ class AdvertController extends DefaultController
     public function update_form(): Response
     {
         $navigation = (new NavigationWidget('navigation_bootstrap'))->getTemplate();
-        $content = new Template('update', 'content');
+        $content = new Template('update_text_only', 'content');
         $layout = new Template('main', 'layouts');
 
         $template = (new RenderTemplateService([$layout, $content, $navigation]))->renderFromListTemplates();
@@ -247,10 +247,10 @@ class AdvertController extends DefaultController
         $model = (new HydratorService())->hydrate(Advent::class, $data);
 
         if ($repository->update($model)) {
-            return (new RedirectResponse(LinkManager::link('/create')))->send();
+            return (new RedirectResponse(LinkManager::link('/show')))->send();
         } else {
             // @TODO подумать куда редиректить
-            return (new RedirectResponse(LinkManager::link('/create')))->send();
+            return (new RedirectResponse(LinkManager::link('/update')))->send();
         }
     }
 

@@ -60,8 +60,8 @@ class PaginationWidget implements WidgetInterface
         for ($i = 1; $i <= $this->count(); $i++) {
             $link = "<a href=\"{link}\" class=\"{class}\">{number}</a>";
             $replace['{link}'] = LinkManager::link('/show', [$this->divider => $i], $this->filter);
+            $replace['{class}'] = 'page-link';
             $replace['{number}'] = $i;
-            $replace['{class}'] = 'pagination-btn';
             $link = strtr($link, $replace);
             $pagination[] = $link;
         }
