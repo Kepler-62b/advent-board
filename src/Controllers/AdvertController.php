@@ -11,7 +11,6 @@ use App\Service\NotFoundHttpException;
 use App\Service\Helpers\LinkManager;
 
 use App\Service\Widgets\GetFormWidget;
-use App\Service\Widgets\Pagination;
 use App\Service\Widgets\PaginationWidget;
 use App\Service\Widgets\TableWidget;
 use App\Service\Widgets\NavigationWidget;
@@ -44,9 +43,9 @@ class AdvertController extends DefaultController
             $adverts = $repository->fetchAll();
         }
 
-        $paginationWidget = (new Pagination(['totalCount' => $repository->getCount()], ['sampleLimit' => 5]))->getTemplate();
-        $navigationWidget = (new NavigationWidget())->getTemplate();
-        $getFormWidget = (new GetFormWidget())->getTemplate();
+        $paginationWidget = (new PaginationWidget('pagination_object', ['totalCount' => $repository->getCount()], ['sampleLimit' => 5]))->getTemplate();
+        $navigationWidget = (new NavigationWidget('navigation'))->getTemplate();
+        $getFormWidget = (new GetFormWidget('form_get'))->getTemplate();
         $tableWidget = (new TableWidget(
             'table_widget_array_adverts_objects',
             [
@@ -86,8 +85,8 @@ class AdvertController extends DefaultController
             return $this->apiRaw($advert);
         }
 
-        $navigationWidget = (new NavigationWidget())->getTemplate();
-        $getFormWidget = (new GetFormWidget())->getTemplate();
+        $navigationWidget = (new NavigationWidget('navigation'))->getTemplate();
+        $getFormWidget = (new GetFormWidget('form_get'))->getTemplate();
 
         $tableWidget = (
         new TableWidget(
@@ -120,9 +119,9 @@ class AdvertController extends DefaultController
         extract($param, EXTR_OVERWRITE);
         $adverts = $repository->getMin($page, $filter);
 
-        $paginationWidget = (new Pagination(['totalCount' => $repository->getCount()], ['sampleLimit' => 5]))->getTemplate();
-        $navigationWidget = (new NavigationWidget())->getTemplate();
-        $getFormWidget = (new GetFormWidget())->getTemplate();
+        $paginationWidget = (new PaginationWidget('pagination_object', ['totalCount' => $repository->getCount()], ['sampleLimit' => 5]))->getTemplate();
+        $navigationWidget = (new NavigationWidget('navigation'))->getTemplate();
+        $getFormWidget = (new GetFormWidget('form_get'))->getTemplate();
 
         $sortPriceWidget = new SortWidget('Price', 'price');
         $sortDateWidget = new SortWidget('Date', 'created_date');
@@ -157,9 +156,9 @@ class AdvertController extends DefaultController
         extract($param, EXTR_OVERWRITE);
         $adverts = $repository->getMax($page, $filter);
 
-        $paginationWidget = (new Pagination(['totalCount' => $repository->getCount()], ['sampleLimit' => 5]))->getTemplate();
-        $navigationWidget = (new NavigationWidget())->getTemplate();
-        $getFormWidget = (new GetFormWidget())->getTemplate();
+        $paginationWidget = (new PaginationWidget('pagination_object', ['totalCount' => $repository->getCount()], ['sampleLimit' => 5]))->getTemplate();
+        $navigationWidget = (new NavigationWidget('navigation'))->getTemplate();
+        $getFormWidget = (new GetFormWidget('form_get'))->getTemplate();
 
         $tableWidget = (new TableWidget(
             'table_widget_array_adverts_objects',
@@ -187,7 +186,7 @@ class AdvertController extends DefaultController
 
     public function create_form(): Response
     {
-        $navigation = (new NavigationWidget())->getTemplate();
+        $navigation = (new NavigationWidget('navigation'))->getTemplate();
         $content = new Template('create_text_only', 'content');
         $layout = new Template('main', 'layouts');
 
@@ -225,7 +224,7 @@ class AdvertController extends DefaultController
 
     public function update_form(): Response
     {
-        $navigation = (new NavigationWidget())->getTemplate();
+        $navigation = (new NavigationWidget('navigation'))->getTemplate();
         $content = new Template('update', 'content');
         $layout = new Template('main', 'layouts');
 

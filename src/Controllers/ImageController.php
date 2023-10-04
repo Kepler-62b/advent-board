@@ -11,7 +11,7 @@ use App\Service\RenderTemplateService;
 use App\Service\Template;
 use App\Service\Widgets\GetFormWidget;
 use App\Service\Widgets\NavigationWidget;
-use App\Service\Widgets\Pagination;
+use App\Service\Widgets\PaginationWidget;
 use App\Service\Widgets\SortWidget;
 use App\Service\Widgets\TableWidget;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,9 +35,8 @@ class ImageController
             $images = $repository->fetchAll();
         }
 
-        $paginationWidget = (new Pagination(['totalCount' => $repository->getCount()], ['sampleLimit' => 5]))->getTemplate();
-        $navigationWidget = (new NavigationWidget())->getTemplate();
-        $getFormWidget = (new GetFormWidget())->getTemplate();
+        $navigationWidget = (new NavigationWidget('navigation'))->getTemplate();
+        $getFormWidget = (new GetFormWidget('form_get'))->getTemplate();
         $tableWidget = (
         new TableWidget(
             'table_widget_array_image_objects',
@@ -48,7 +47,7 @@ class ImageController
         $content = new Template('show_widgets_images', 'content');
         $layout = new Template('main', 'layouts');
 
-        $view = (new RenderTemplateService([$layout, $content, $tableWidget, $paginationWidget, $getFormWidget, $navigationWidget]))->renderFromListTemplates();
+        $view = (new RenderTemplateService([$layout, $content, $tableWidget, $getFormWidget, $navigationWidget]))->renderFromListTemplates();
 
         return (new Response($view))->send();
     }
@@ -61,8 +60,8 @@ class ImageController
         $images = $repository->findByForeignKey($foregnKey) ?? throw new NotFoundHttpException("Not found images ID $foregnKey");
 
         // @TODO разобраться с пагинацией
-        $navigationWidget = (new NavigationWidget())->getTemplate();
-        $getFormWidget = (new GetFormWidget())->getTemplate();
+        $navigationWidget = (new NavigationWidget('navigation'))->getTemplate();
+        $getFormWidget = (new GetFormWidget('form_get'))->getTemplate();
         $tableWidget = (
         new TableWidget(
             'table_widget_array_image_objects',

@@ -4,7 +4,6 @@ namespace App\Service\Helpers;
 
 use App\Service\Widgets\WidgetInterface;
 use Symfony\Component\HttpFoundation\Request;
-use App\Service\Widgets\Pagination;
 
 final class LinkManager
 {

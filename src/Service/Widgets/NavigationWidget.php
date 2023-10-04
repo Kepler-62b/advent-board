@@ -10,9 +10,11 @@ use App\Service\Template;
 
 class NavigationWidget implements WidgetInterface
 {
+    private string $templateName;
 
-    public function __construct()
+    public function __construct(string $templateName)
     {
+        $this->templateName = $templateName;
     }
 
     public function __toString(): string
@@ -20,11 +22,13 @@ class NavigationWidget implements WidgetInterface
         return (new RenderTemplateService([$this->getTemplate()]))->renderFromListTemplates();
     }
 
+    // @TODO устанавливать templateName как в TableWidget (возможность выбора файла шаблона)
     public function getTemplate(): Template
     {
-        return new Template('navigation', 'widgets');
+        return new Template($this->templateName, 'widgets');
     }
 
+    /** @deprecated  */
     public function render(): RenderViewService
     {
         return new RenderViewService(['widgets' => 'navigation']);

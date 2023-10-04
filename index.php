@@ -13,6 +13,6 @@ ini_set('display_errors', 'On');
 
 $test = new TestServices();
 
-//$test->testApp();
+$test->testApp();
 
-phpinfo();
+//phpinfo();

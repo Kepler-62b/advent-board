@@ -1,3 +1,3 @@
 <?= $table_widget_array_image_objects ?>
 <?= $navigation ?>
-<?= $getForm ?>
+<?= $form_get ?>
