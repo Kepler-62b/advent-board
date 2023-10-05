@@ -1,6 +1,6 @@
 <?php use App\Service\Helpers\LinkManager; ?>
 
-<h2>Adverts</h2>
+<h3>Adverts</h3>
 <div class="table-responsive">
     <table class="table table-striped table-sm">
         <thead>
@@ -22,6 +22,7 @@
 
                 <td>
                     <a
+                            class="text-decoration-none"
                             href="<?= LinkManager::link('/images/get_relation', ['foreignKey' => $advert->getId()]) ?>">
                         <?= $advert->getItem() ?>
                     </a>

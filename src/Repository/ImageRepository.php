@@ -125,6 +125,8 @@ class ImageRepository
                             'id' => 'id',
                             'name' => 'name',
                             'item_id' => 'itemId',
+                            'created_date' => 'createdDate',
+                            'modified_date' => 'modifiedDate',
                         ]
                     );
                 }

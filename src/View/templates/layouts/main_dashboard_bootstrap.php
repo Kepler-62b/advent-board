@@ -17,7 +17,7 @@
             crossorigin="anonymous"></script>
 
     <!-- Bootstrap core CSS -->
-    <link href="./public/css/assets/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/public/css/assets/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <!--    <style>-->
 <!--        .bd-placeholder-img {-->

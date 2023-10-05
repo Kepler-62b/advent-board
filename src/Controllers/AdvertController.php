@@ -47,18 +47,18 @@ class AdvertController extends DefaultController
         $navigationWidget = (new NavigationWidget('navigation_dashboard_bootstrap'))->getTemplate();
         $getFormWidget = (new GetFormWidget('form_get_dashboard_bootstrap'))->getTemplate();
         $tableWidget = (new TableWidget(
-            'table_widget_dashboard_bootstrap',
+            'table_adverts_dashboard_bootstrap',
             [
                 'Id',
                 'Item',
                 'Description',
-                new SortWidget('sort', 'Price', 'price'),
+                new SortWidget('sort_dashboard_bootstrap', 'Price', 'price'),
                 'Image',
-                new SortWidget('sort', 'Date', 'created_date')
+                new SortWidget('sort_dashboard_bootstrap', 'Created', 'created_date')
             ],
             ['adverts' => $adverts]
         ))->getTemplate();
-        $content = new Template('show_dashboard_bootstrap', 'content');
+        $content = new Template('show_adverts_dashboard_bootstrap', 'content');
         $layout = new Template('main_dashboard_bootstrap', 'layouts');
 
         $view = (new RenderTemplateService(
@@ -90,7 +90,7 @@ class AdvertController extends DefaultController
 
         $tableWidget = (
         new TableWidget(
-            'table_widget_dashboard_bootstrap',
+            'table_adverts_dashboard_bootstrap',
             [
                 'id' => 'Id',
                 'item' => 'Item',
@@ -122,26 +122,22 @@ class AdvertController extends DefaultController
         $navigationWidget = (new NavigationWidget('navigation_dashboard_bootstrap'))->getTemplate();
         $getFormWidget = (new GetFormWidget('form_get_dashboard_bootstrap'))->getTemplate();
 
-        $sortPriceWidget = new SortWidget('sort', 'Price', 'price');
-        $sortDateWidget = new SortWidget('sort', 'Date', 'created_date');
+        $sortPriceWidget = new SortWidget('sort_dashboard_bootstrap', 'Price', 'price');
+        $sortDateWidget = new SortWidget('sort_dashboard_bootstrap', 'Created', 'created_date');
 
         $tableWidget = (new TableWidget(
-            'table_widget_dashboard_bootstrap',
+            'table_adverts_dashboard_bootstrap',
             [
                 'id' => 'Id',
                 'item' => 'Item',
                 'description' => 'Description',
-//                'price' => $sortPriceWidget,
-                new SortWidget('sort', 'Price', 'price'),
-
+                'price' => $sortPriceWidget,
                 'image' => 'Image',
-//                'created_date' => $sortDateWidget
-                new SortWidget('sort', 'Date', 'created_date')
-
+                'created_date' => $sortDateWidget
             ],
             ['adverts' => $adverts],
         ))->getTemplate();
-        $content = new Template('show_dashboard_bootstrap', 'content');
+        $content = new Template('show_adverts_dashboard_bootstrap', 'content');
         $layout = new Template('main_dashboard_bootstrap', 'layouts');
 
         $view = (new RenderTemplateService(
@@ -164,18 +160,18 @@ class AdvertController extends DefaultController
         $getFormWidget = (new GetFormWidget('form_get_dashboard_bootstrap'))->getTemplate();
 
         $tableWidget = (new TableWidget(
-            'table_widget_dashboard_bootstrap',
+            'table_adverts_dashboard_bootstrap',
             [
                 'id' => 'Id',
                 'item' => 'Item',
                 'description' => 'Description',
-                'price' => (new SortWidget('sort', 'Price', 'price')),
+                'price' => (new SortWidget('sort_dashboard_bootstrap', 'Price', 'price')),
                 'image' => 'Image',
-                'created_date' => (new SortWidget('sort', 'Date', 'created_date')),
+                'created_date' => (new SortWidget('sort_dashboard_bootstrap', 'Created', 'created_date')),
             ],
             ['adverts' => $adverts],
         ))->getTemplate();
-        $content = new Template('show_dashboard_bootstrap', 'content');
+        $content = new Template('show_adverts_dashboard_bootstrap', 'content');
         $layout = new Template('main_dashboard_bootstrap', 'layouts');
 
         $view = (new RenderTemplateService(

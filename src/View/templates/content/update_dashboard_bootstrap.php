@@ -1,8 +1,7 @@
-<?php use App\Service\Helpers\LinkManager ?>
+<?php use App\Service\Helpers\LinkManager; ?>
 
-<h1>Update</h1>
+<h2>Update</h2>
 <div class="mb-2">
-
     <form action="<?= LinkManager::link('/update_action') ?>" method="post">
         <div class="mb-3">
             <label class="form-label" for="id">id</label>
@@ -24,7 +23,7 @@
             <label class="form-label" for="image">image</label>
             <input class="form-control" type="text" name="image" value="update.jpeg" required>
         </div>
-        <button class="btn btn-primary">update</button>
+        <button class="btn btn-primary">Update</button>
     </form>
 </div>
 

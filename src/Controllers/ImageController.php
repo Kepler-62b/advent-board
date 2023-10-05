@@ -39,7 +39,7 @@ class ImageController
         $getFormWidget = (new GetFormWidget('form_get'))->getTemplate();
         $tableWidget = (
         new TableWidget(
-            'table_widget_array_image_objects',
+            'table_image_dashboard_bootstrap',
             ['Id', 'Name', 'Image'],
             ['images' => $images],
         )
@@ -60,19 +60,13 @@ class ImageController
         $images = $repository->findByForeignKey($foregnKey) ?? throw new NotFoundHttpException("Not found images ID $foregnKey");
 
         // @TODO разобраться с пагинацией
-        $navigationWidget = (new NavigationWidget('navigation_bootstrap'))->getTemplate();
-        $getFormWidget = (new GetFormWidget('form_get'))->getTemplate();
-        $tableWidget = (
-        new TableWidget(
-            'table_widget_array_image_objects',
-            ['Id', 'Name', 'Image'],
-            ['images' => $images],
-        )
-        )->getTemplate();
-        $content = new Template('show_widgets_images', 'content');
-        $layout = new Template('main', 'layouts');
+        $navigationWidget = (new NavigationWidget('navigation_dashboard_bootstrap'))->getTemplate();
+        $getFormWidget = (new GetFormWidget('form_get_dashboard_bootstrap'))->getTemplate();
 
-        $view = (new RenderTemplateService([$layout, $content, $tableWidget, $getFormWidget, $navigationWidget]))->renderFromListTemplates();
+        $content = new Template('album_image_dashboard_bootstrap', 'content', ['images' => $images]);
+        $layout = new Template('main_dashboard_bootstrap', 'layouts');
+
+        $view = (new RenderTemplateService([$layout, $content, $getFormWidget, $navigationWidget]))->renderFromListTemplates();
 
         return (new Response($view))->send();
     }

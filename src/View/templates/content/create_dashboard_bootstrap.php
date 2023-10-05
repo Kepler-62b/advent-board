@@ -1,6 +1,6 @@
-<?php use App\Service\Helpers\LinkManager ?>
+<?php use App\Service\Helpers\LinkManager; ?>
 
-<h1>Create</h1>
+<h2>Create</h2>
 <div class="mb-2">
     <form action="<?= LinkManager::link('/create_action') ?>" method="post">
         <div class="mb-3">
@@ -19,7 +19,7 @@
             <label class="form-label" for="image">image</label>
             <input class="form-control" type="text" name="image" value="create.jpeg" required>
         </div>
-        <button class="btn btn-primary">create</button>
+        <button class="btn btn-primary">Create</button>
     </form>
 </div>
 <div class="mb-2">

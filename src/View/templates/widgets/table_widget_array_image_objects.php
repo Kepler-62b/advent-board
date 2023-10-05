@@ -20,7 +20,7 @@
             </td>
             <td>
                 <img src="<?= LinkManager::linkImage('/public/img/user/', $image->getName()) ?>"
-                     alt="<?= $image->getName() ?>">
+                     alt="<?= $image->getName() ?>" >
             </td>
         </tr>
     <?php endforeach ?>
