@@ -1,11 +1,4 @@
-<?php use App\Service\Helpers\LinkManager ?>
-
-<?php
-/**
- * @var string $columnName
- * @var string $filter
- */
-?>
+<?php use App\Service\Helpers\LinkManager; ?>
 
 <span>
   <?= $columnName ?>

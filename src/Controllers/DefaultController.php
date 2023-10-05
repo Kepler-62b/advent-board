@@ -6,6 +6,7 @@ use App\Service\RenderTemplateService;
 use App\Service\RenderViewService;
 use App\Service\Template;
 use App\Service\ViewRenderService;
+use App\Service\Widgets\GetFormWidget;
 use App\Service\Widgets\NavigationWidget;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -13,10 +14,11 @@ class DefaultController
 {
     public function homePage(): Response
     {
-        $navigation = new Template('navigation_bootstrap', 'widgets');
+        $navigation = new Template('navigation_dashboard_bootstrap', 'widgets');
+        $formGet = (new GetFormWidget('form_get_dashboard_bootstrap'))->getTemplate();
         $content = new Template('home_page', 'content');
-        $layout = new Template('main', 'layouts');
-        $view = (new RenderTemplateService([$layout, $content, $navigation]))->renderFromListTemplates();
+        $layout = new Template('main_dashboard_bootstrap', 'layouts');
+        $view = (new RenderTemplateService([$layout, $content, $formGet, $navigation]))->renderFromListTemplates();
 
         return (new Response())
             ->setContent($view)

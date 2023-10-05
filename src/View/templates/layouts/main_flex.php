@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Show</title>
+    <title>Advert-board</title>
     <!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/light.css">-->
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
@@ -20,7 +20,10 @@
 <header>ADVERTS-BOARD</header>
 
 <main class="flex-box">
-    <nav class="nav"><?= $navigation_bootstrap ?></nav>
+    <nav class="nav">
+        <?= $navigation_bootstrap_flex ?>
+        <?= $form_get_flex ?>
+    </nav>
     <div class="main"><?= $content ?></div>
 </main>
 

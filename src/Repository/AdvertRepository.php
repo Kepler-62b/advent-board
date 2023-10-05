@@ -16,7 +16,9 @@ class AdvertRepository
     private PHPAdventBoardDatabase $pdo;
     private string $table = 'adverts';
     private ?int $lastInsertId;
-    public const SELECT_LIMIT = 5;
+
+    /** @var int задает количество извлекаемых строк из таблицы */
+    public const SELECT_LIMIT = 10;
 
     public function __construct(PHPAdventBoardDatabase $pdo)
     {

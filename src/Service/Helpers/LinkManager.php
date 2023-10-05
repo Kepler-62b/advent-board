@@ -57,7 +57,6 @@ final class LinkManager
                 $externalParams = '&' . $externalParams;
             }
         }
-
         // возможно нужна конечная обработка аргументов и приведение к строке
         return $request->getBasePath() . $internalURI . $bindingParams . $externalParams;
     }
@@ -104,6 +103,11 @@ final class LinkManager
             $codeBlock = strtr($codeBlock, $replace);
         }
         return $codeBlock;
+    }
+
+    public static function returnReferenceLink()
+    {
+        return self::$request->headers->get('referer');
     }
 
 }

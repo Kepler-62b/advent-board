@@ -43,26 +43,29 @@ class AdvertController extends DefaultController
             $adverts = $repository->fetchAll();
         }
 
-        $paginationWidget = (new PaginationWidget('pagination_object', ['totalCount' => $repository->getCount()], ['sampleLimit' => 5]))->getTemplate();
-        $navigationWidget = (new NavigationWidget('navigation_bootstrap'))->getTemplate();
-        $getFormWidget = (new GetFormWidget('form_get'))->getTemplate();
+        $paginationWidget = (new PaginationWidget('pagination_object', ['totalCount' => $repository->getCount()], ['sampleLimit' => 10]))->getTemplate();
+        $navigationWidget = (new NavigationWidget('navigation_dashboard_bootstrap'))->getTemplate();
+        $getFormWidget = (new GetFormWidget('form_get_dashboard_bootstrap'))->getTemplate();
         $tableWidget = (new TableWidget(
-            'table_widget_array_adverts_objects',
+            'table_widget_dashboard_bootstrap',
             [
                 'Id',
                 'Item',
                 'Description',
-                new SortWidget('Price', 'price'),
+                new SortWidget('sort', 'Price', 'price'),
                 'Image',
-                new SortWidget('Date', 'created_date')
+                new SortWidget('sort', 'Date', 'created_date')
             ],
             ['adverts' => $adverts]
         ))->getTemplate();
-        $content = new Template('show_widgets_adverts', 'content');
-        $layout = new Template('main_flex', 'layouts');
+        $content = new Template('show_dashboard_bootstrap', 'content');
+        $layout = new Template('main_dashboard_bootstrap', 'layouts');
 
-        $view = (new RenderTemplateService([$layout, $content, $tableWidget, $paginationWidget, $getFormWidget, $navigationWidget]))
-            ->renderFromListTemplates();
+        $view = (new RenderTemplateService(
+            [
+                $layout, $content, $tableWidget, $paginationWidget, $getFormWidget, $navigationWidget
+            ]
+        ))->renderFromListTemplates();
 
         return (new Response($view))->send();
     }
@@ -82,12 +85,12 @@ class AdvertController extends DefaultController
             return $this->apiRaw($advert);
         }
 
-        $navigationWidget = (new NavigationWidget('navigation_bootstrap'))->getTemplate();
-        $getFormWidget = (new GetFormWidget('form_get'))->getTemplate();
+        $navigationWidget = (new NavigationWidget('navigation_dashboard_bootstrap'))->getTemplate();
+        $getFormWidget = (new GetFormWidget('form_get_dashboard_bootstrap'))->getTemplate();
 
         $tableWidget = (
         new TableWidget(
-            'table_widget_array_adverts_objects',
+            'table_widget_dashboard_bootstrap',
             [
                 'id' => 'Id',
                 'item' => 'Item',
@@ -99,13 +102,12 @@ class AdvertController extends DefaultController
             ['adverts' => $advert],
         ))->getTemplate();
 
-        $content = new Template('get_widgets', 'content');
-        $layout = new Template('main', 'layouts');
+        $content = new Template('get_dashboard_bootstrap', 'content');
+        $layout = new Template('main_dashboard_bootstrap', 'layouts');
 
         $template =
             (new RenderTemplateService([$layout, $content, $tableWidget, $getFormWidget, $navigationWidget]))
                 ->renderFromListTemplates();
-
 
         return (new Response($template))->send();
     }
@@ -116,27 +118,31 @@ class AdvertController extends DefaultController
         extract($param, EXTR_OVERWRITE);
         $adverts = $repository->getMin($page, $filter);
 
-        $paginationWidget = (new PaginationWidget('pagination_object', ['totalCount' => $repository->getCount()], ['sampleLimit' => 5]))->getTemplate();
-        $navigationWidget = (new NavigationWidget('navigation_bootstrap'))->getTemplate();
-        $getFormWidget = (new GetFormWidget('form_get'))->getTemplate();
+        $paginationWidget = (new PaginationWidget('pagination_object', ['totalCount' => $repository->getCount()], ['sampleLimit' => 10]))->getTemplate();
+        $navigationWidget = (new NavigationWidget('navigation_dashboard_bootstrap'))->getTemplate();
+        $getFormWidget = (new GetFormWidget('form_get_dashboard_bootstrap'))->getTemplate();
 
-        $sortPriceWidget = new SortWidget('Price', 'price');
-        $sortDateWidget = new SortWidget('Date', 'created_date');
+        $sortPriceWidget = new SortWidget('sort', 'Price', 'price');
+        $sortDateWidget = new SortWidget('sort', 'Date', 'created_date');
 
         $tableWidget = (new TableWidget(
-            'table_widget_array_adverts_objects',
+            'table_widget_dashboard_bootstrap',
             [
                 'id' => 'Id',
                 'item' => 'Item',
                 'description' => 'Description',
-                'price' => $sortPriceWidget,
+//                'price' => $sortPriceWidget,
+                new SortWidget('sort', 'Price', 'price'),
+
                 'image' => 'Image',
-                'created_date' => $sortDateWidget
+//                'created_date' => $sortDateWidget
+                new SortWidget('sort', 'Date', 'created_date')
+
             ],
             ['adverts' => $adverts],
         ))->getTemplate();
-        $content = new Template('show_widgets_adverts', 'content');
-        $layout = new Template('main', 'layouts');
+        $content = new Template('show_dashboard_bootstrap', 'content');
+        $layout = new Template('main_dashboard_bootstrap', 'layouts');
 
         $view = (new RenderTemplateService(
             [
@@ -153,24 +159,24 @@ class AdvertController extends DefaultController
         extract($param, EXTR_OVERWRITE);
         $adverts = $repository->getMax($page, $filter);
 
-        $paginationWidget = (new PaginationWidget('pagination_object', ['totalCount' => $repository->getCount()], ['sampleLimit' => 5]))->getTemplate();
-        $navigationWidget = (new NavigationWidget('navigation_bootstrap'))->getTemplate();
-        $getFormWidget = (new GetFormWidget('form_get'))->getTemplate();
+        $paginationWidget = (new PaginationWidget('pagination_object', ['totalCount' => $repository->getCount()], ['sampleLimit' => 10]))->getTemplate();
+        $navigationWidget = (new NavigationWidget('navigation_dashboard_bootstrap'))->getTemplate();
+        $getFormWidget = (new GetFormWidget('form_get_dashboard_bootstrap'))->getTemplate();
 
         $tableWidget = (new TableWidget(
-            'table_widget_array_adverts_objects',
+            'table_widget_dashboard_bootstrap',
             [
                 'id' => 'Id',
                 'item' => 'Item',
                 'description' => 'Description',
-                'price' => (new SortWidget('Price', 'price')),
+                'price' => (new SortWidget('sort', 'Price', 'price')),
                 'image' => 'Image',
-                'created_date' => (new SortWidget('Date', 'created_date')),
+                'created_date' => (new SortWidget('sort', 'Date', 'created_date')),
             ],
             ['adverts' => $adverts],
         ))->getTemplate();
-        $content = new Template('show_widgets_adverts', 'content');
-        $layout = new Template('main', 'layouts');
+        $content = new Template('show_dashboard_bootstrap', 'content');
+        $layout = new Template('main_dashboard_bootstrap', 'layouts');
 
         $view = (new RenderTemplateService(
             [
@@ -183,11 +189,12 @@ class AdvertController extends DefaultController
 
     public function create_form(): Response
     {
-        $navigation = (new NavigationWidget('navigation_bootstrap'))->getTemplate();
-        $content = new Template('create_text_only', 'content');
-        $layout = new Template('main', 'layouts');
+        $navigation = (new NavigationWidget('navigation_dashboard_bootstrap'))->getTemplate();
+        $formGet = (new GetFormWidget('form_get_dashboard_bootstrap'))->getTemplate();
+        $content = new Template('create_dashboard_bootstrap', 'content');
+        $layout = new Template('main_dashboard_bootstrap', 'layouts');
 
-        $view = (new RenderTemplateService([$layout, $content, $navigation]))->renderFromListTemplates();
+        $view = (new RenderTemplateService([$layout, $content, $formGet, $navigation]))->renderFromListTemplates();
 
         return (new Response($view))->send();
     }
@@ -221,11 +228,12 @@ class AdvertController extends DefaultController
 
     public function update_form(): Response
     {
-        $navigation = (new NavigationWidget('navigation_bootstrap'))->getTemplate();
-        $content = new Template('update_text_only', 'content');
-        $layout = new Template('main', 'layouts');
+        $navigation = (new NavigationWidget('navigation_dashboard_bootstrap'))->getTemplate();
+        $formGet = (new GetFormWidget('form_get_dashboard_bootstrap'))->getTemplate();
+        $content = new Template('update_dashboard_bootstrap', 'content');
+        $layout = new Template('main_dashboard_bootstrap', 'layouts');
 
-        $template = (new RenderTemplateService([$layout, $content, $navigation]))->renderFromListTemplates();
+        $template = (new RenderTemplateService([$layout, $content, $formGet, $navigation]))->renderFromListTemplates();
 
         return (new Response($template))->send();
     }
@@ -256,9 +264,9 @@ class AdvertController extends DefaultController
 
     public function notFound(): Response
     {
-        $navigationWidget = new Template('navigation_bootstrap', 'widgets');
+        $navigationWidget = new Template('navigation_dashboard_bootstrap', 'widgets');
         $content = new Template('not_found_page_advert_controller', 'content', ['navigation']);
-        $layout = new Template('main', 'layouts', ['content']);
+        $layout = new Template('main_dashboard_bootstrap', 'layouts', ['content']);
         $view = (new RenderTemplateService([$layout, $content, $navigationWidget]))->renderFromListTemplates();
 
         return (new Response())

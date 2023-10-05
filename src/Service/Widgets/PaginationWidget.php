@@ -17,7 +17,7 @@ class PaginationWidget implements WidgetInterface
     private string $divider = 'page';
 
     // @TODO подумать как пробрасывать пустой массив в LinkManager
-    private array $filter = ['pagination'];
+    private array $filter = ['filter'];
     private int $totalCount;
     private int $sampleLimit;
 
@@ -59,7 +59,7 @@ class PaginationWidget implements WidgetInterface
 
         for ($i = 1; $i <= $this->count(); $i++) {
             $link = "<a href=\"{link}\" class=\"{class}\">{number}</a>";
-            $replace['{link}'] = LinkManager::link('/show', [$this->divider => $i], $this->filter);
+            $replace['{link}'] = LinkManager::link(null, [$this->divider => $i], $this->filter);
             $replace['{class}'] = 'page-link';
             $replace['{number}'] = $i;
             $link = strtr($link, $replace);

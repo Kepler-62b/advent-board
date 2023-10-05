@@ -19,7 +19,7 @@
                 <?= $advert->getId() ?>
             </td>
             <td>
-                <a href="<?= LinkManager::link('/images/get_relation', ['foreignKey' => $advert->getId()]) ?>"><?= $advert->getItem() ?></a>
+                <a class="table-link" href="<?= LinkManager::link('/images/get_relation', ['foreignKey' => $advert->getId()]) ?>"><?= $advert->getItem() ?></a>
             </td>
             <td>
                 <?= $advert->getDescription() ?>
