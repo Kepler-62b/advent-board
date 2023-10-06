@@ -28,7 +28,7 @@ services:
     networks:
       - adverts-board
   adverts-mysql:
-    container_name: advert-mysql
+    container_name: adverts-mysql
     image: mysql
     restart: always
     ports:

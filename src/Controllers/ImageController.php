@@ -60,11 +60,11 @@ class ImageController
         $images = $repository->findByForeignKey($foregnKey) ?? throw new NotFoundHttpException("Not found images ID $foregnKey");
 
         // @TODO разобраться с пагинацией
-        $navigationWidget = (new NavigationWidget('navigation_dashboard_bootstrap'))->getTemplate();
-        $getFormWidget = (new GetFormWidget('form_get_dashboard_bootstrap'))->getTemplate();
+        $navigationWidget = (new NavigationWidget('w_navigation_bootstrap'))->getTemplate();
+        $getFormWidget = (new GetFormWidget('w_form_get_bootstrap'))->getTemplate();
 
-        $content = new Template('album_image_dashboard_bootstrap', 'content', ['images' => $images]);
-        $layout = new Template('main_dashboard_bootstrap', 'layouts');
+        $content = new Template('c_album_images_bootstrap', 'content', ['images' => $images]);
+        $layout = new Template('l_main_page_dashboard_bootstrap', 'layouts');
 
         $view = (new RenderTemplateService([$layout, $content, $getFormWidget, $navigationWidget]))->renderFromListTemplates();
 

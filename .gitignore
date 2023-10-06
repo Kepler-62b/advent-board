@@ -17,7 +17,7 @@ psalm_baseline.xml
 ###< psalm ###
 
 ###> docker data ###
-/docker/database/mysql-5.7.16/data
+/docker/database/mysql/data
 /docker/database/postgres/data
 ###< docker data ###
 

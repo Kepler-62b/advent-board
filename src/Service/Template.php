@@ -7,14 +7,14 @@ class Template
     private const VIEW_PATH_MAP = [
         'layouts' => 'src/View/templates/layouts/',
         'content' => 'src/View/templates/content/',
-        'exceptions' => 'src/View/templates/exceptions/',
+        'content/exceptions' => 'src/View/templates/content/exceptions/',
         'widgets' => 'src/View/templates/widgets/',
     ];
 
     public string $templateName;
     public string $templateType;
     public string $templateDirectory;
-    public string $templateExtantion = '.php';
+    public string $templateExtension = '.php';
     public ?array $templateParams;
 
     /**

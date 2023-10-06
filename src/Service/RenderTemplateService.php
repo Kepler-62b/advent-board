@@ -41,6 +41,7 @@ class RenderTemplateService
         krsort($this->templateObjectsStorage, SORT_REGULAR);
         foreach ($this->templateObjectsStorage as $templateObject) {
             // @TODO разобраться с проверкой
+            // @TODO обрабатывать подпапки в директории
             if ($templateObject->templateType === 'widgets') {
                 $template = $templateObject->templateName;
             } else {
@@ -52,7 +53,7 @@ class RenderTemplateService
             }
             ob_start();
 
-            require $templateObject->templateDirectory . $templateObject->templateName . $templateObject->templateExtantion;
+            require $templateObject->templateDirectory . $templateObject->templateName . $templateObject->templateExtension;
             $$template = ob_get_clean();
         }
         return $$template;
