@@ -56,7 +56,7 @@ class PaginationWidget implements WidgetInterface
     private function create(): array
     {
         $pagination = [];
-
+        // @TODO внимательно изучить работу цикла
         for ($i = 1; $i <= $this->count(); $i++) {
             $link = "<a href=\"{link}\" class=\"{class}\">{number}</a>";
             $replace['{link}'] = LinkManager::link(null, [$this->divider => $i], $this->filter);

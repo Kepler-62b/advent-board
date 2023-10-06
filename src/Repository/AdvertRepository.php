@@ -2,24 +2,21 @@
 
 namespace App\Repository;
 
-use App\Service\MySQLAdvertsBoard;
-use App\Service\HydratorService;
-
 use App\Models\Advert;
-
+use App\Service\HydratorService;
 use App\Service\NoDBConnectionException;
 use App\Service\Relation;
 
 class AdvertRepository
 {
-    private MySQLAdvertsBoard $pdo;
+    private \PDO $pdo;
     private string $table = 'adverts';
     private ?int $lastInsertId;
 
     /** @var int задает количество извлекаемых строк из таблицы */
     public const SELECT_LIMIT = 10;
 
-    public function __construct(MySQLAdvertsBoard $pdo)
+    public function __construct(\PDO $pdo)
     {
         $this->pdo = $pdo;
     }

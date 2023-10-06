@@ -1,0 +1,18 @@
+{
+  "PDO_driver_param": "PostgreSQL",
+  "PostgreSQL": {
+    "Driver": "pgsql",
+    "Host": "adverts-postgres",
+    "Port": "5432",
+    "Database": "adverts-board",
+    "User": "postgres",
+    "Password": "secret"
+  },
+  "MySQL": {
+    "Driver": "mysql",
+    "Host": "adverts-postgres",
+    "Database": "adverts-board",
+    "User": "root",
+    "Password": "secret"
+  }
+}

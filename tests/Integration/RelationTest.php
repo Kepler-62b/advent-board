@@ -14,7 +14,7 @@ final class RelationTest extends TestCase
         return
             [
                 'ImageModel' => [
-                    'databaseName' => 'App\Service\MySQLAdvertsBoard',
+                    'databaseName' => 'Dev\trash\MySQLAdvertsBoard',
                     'repositoryName' => 'App\Repository\ImageRepository',
                     'modelName' => 'App\Models\Image',
                     'imageId' => 27,
@@ -22,7 +22,7 @@ final class RelationTest extends TestCase
                     'relationType' => 'App\Service\OneToManyRelation'
                 ],
                 'Advert' => [
-                    'databaseName' => 'App\Service\MySQLAdvertsBoard',
+                    'databaseName' => 'Dev\trash\MySQLAdvertsBoard',
                     'repositoryName' => 'App\Repository\AdvertRepository',
                     'modelName' => 'App\Models\Advert',
                     'advertId' => 1,

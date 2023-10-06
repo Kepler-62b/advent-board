@@ -3,7 +3,7 @@
 namespace Tests\Unit;
 
 use App\Repository\AdvertRepository;
-use App\Service\MySQLAdvertsBoard;
+use Dev\trash\MySQLAdvertsBoard;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

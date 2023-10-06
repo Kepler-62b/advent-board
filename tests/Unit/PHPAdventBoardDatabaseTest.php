@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Service\MySQLAdvertsBoard;
+use Dev\trash\MySQLAdvertsBoard;
 use PHPUnit\Framework\TestCase;
 
 class PHPAdventBoardDatabaseTest extends TestCase

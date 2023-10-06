@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use App\Service\MySQLAdvertsBoard;
 use App\Models\Image;
 use App\Service\HydratorService;
 use ReflectionException;
@@ -10,11 +9,11 @@ use ReflectionException;
 class ImageRepository
 {
     // @TODO подумать над названием свойства
-    private MySQLAdvertsBoard $pdo;
+    private \PDO $pdo;
     private string $table = 'images';
     public const SELECT_LIMIT = 5;
 
-    public function __construct(MySQLAdvertsBoard $pdo)
+    public function __construct(\PDO $pdo)
     {
         $this->pdo = $pdo;
     }
