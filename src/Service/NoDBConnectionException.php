@@ -6,7 +6,7 @@ use App\Service\Widgets\NavigationWidget;
 use App\Service\Widgets\GetFormWidget;
 use Symfony\Component\HttpFoundation\Response;
 
-class NotFoundHttpException extends \Exception
+class NoDBConnectionException extends \Exception
 {
     private ?string $params;
 
@@ -17,11 +17,11 @@ class NotFoundHttpException extends \Exception
     {
         parent::__construct($message . ' ' . $params);
         $this->params = $params;
-        $this->notFound();
+        $this->noConnection();
     }
 
     /** @TODO настраивать надпись в шаблоне */
-    public function notFound(): Response
+    public function noConnection(): Response
     {
         // @TODO подумать, куда это убрать (в отдельный класс с конфигами?) или устанавливать константой
         ini_set('display_errors', 'Off');
@@ -29,7 +29,7 @@ class NotFoundHttpException extends \Exception
         $navigationWidget = (new NavigationWidget('w_navigation_bootstrap'))->getTemplate();
         $getFormWidget = (new GetFormWidget('w_form_get_bootstrap'))->getTemplate();
 
-        $contentException = new Template('ce_page_not_found', 'content');
+        $contentException = new Template('ce_no_db_connection', 'content/exceptions');
         $layout = new Template('l_main_page_dashboard_bootstrap', 'layouts');
 
         $view = (new RenderTemplateService([$layout, $contentException, $getFormWidget, $navigationWidget]))->renderFromListTemplates();
@@ -39,6 +39,4 @@ class NotFoundHttpException extends \Exception
             ->setStatusCode(Response::HTTP_NOT_FOUND)
             ->send();
     }
-
-
 }

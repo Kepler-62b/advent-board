@@ -23,15 +23,13 @@ class DefaultController
             ->send();
     }
 
-    /**
-     * @todo добавить картинку в контент страницы
-     */
     public function notFound(): Response
     {
-        $navigation = new Template('navigation_bootstrap', 'widgets');
-        $content = new Template('not_found_page', 'content');
-        $layout = new Template('main', 'layouts');
-        $view = (new RenderTemplateService([$layout, $content, $navigation]))->renderFromListTemplates();
+        $navigationWidget = new Template('w_navigation_bootstrap', 'widgets');
+        $formGetWidget = (new GetFormWidget('w_form_get_bootstrap'))->getTemplate();
+        $content = new Template('ce_not_found_page', 'content');
+        $layout = new Template('l_main_page_dashboard_bootstrap', 'layouts');
+        $view = (new RenderTemplateService([$layout, $content, $formGetWidget, $navigationWidget]))->renderFromListTemplates();
 
         return (new Response())
             ->setContent($view)

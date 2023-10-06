@@ -40,10 +40,12 @@ class RenderTemplateService
     {
         krsort($this->templateObjectsStorage, SORT_REGULAR);
         foreach ($this->templateObjectsStorage as $templateObject) {
-            // @TODO разобраться с проверкой
-            // @TODO обрабатывать подпапки в директории
+            // @TODO разобраться с проверками условий
             if ($templateObject->templateType === 'widgets') {
                 $template = $templateObject->templateName;
+                // @TODO сделать нормальную проверку и присвоение результата
+            } elseif ($templateObject->templateType === 'content/exceptions') {
+                $template = 'content';
             } else {
                 $template = $templateObject->templateType;
             }

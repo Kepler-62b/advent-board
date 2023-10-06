@@ -5,7 +5,7 @@ namespace Tests\Unit;
 use App\Models\Image;
 use App\Repository\ImageRepository;
 use App\Service\DependencyContainer;
-use App\Service\PHPAdventBoardDatabase;
+use App\Service\MySQLAdvertsBoard;
 use PHPUnit\Framework\TestCase;
 
 class DependencyContainerTest extends TestCase
@@ -21,7 +21,7 @@ class DependencyContainerTest extends TestCase
     {
         return [
             'RepositoryInstance' => ['className' => Image::class, 'instanceExpected' => ImageRepository::class],
-            'PDOConnectionInstance' => ['className' => PHPAdventBoardDatabase::class, 'instanceExpected' => PHPAdventBoardDatabase::class],
+            'PDOConnectionInstance' => ['className' => MySQLAdvertsBoard::class, 'instanceExpected' => MySQLAdvertsBoard::class],
         ];
     }
 

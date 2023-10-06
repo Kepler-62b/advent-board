@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-class PostgresAdvertsBoard extends PHPAdventBoardDatabase
+class PostgresAdvertsBoard extends MySQLAdvertsBoard
 {
     protected string $dsn = "pgsql:host=adverts-postgres;dbname=adverts-board";
     protected string $user = "postgres";

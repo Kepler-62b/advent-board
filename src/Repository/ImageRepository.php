@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Service\PHPAdventBoardDatabase;
+use App\Service\MySQLAdvertsBoard;
 use App\Models\Image;
 use App\Service\HydratorService;
 use ReflectionException;
@@ -10,11 +10,11 @@ use ReflectionException;
 class ImageRepository
 {
     // @TODO подумать над названием свойства
-    private PHPAdventBoardDatabase $pdo;
+    private MySQLAdvertsBoard $pdo;
     private string $table = 'images';
     public const SELECT_LIMIT = 5;
 
-    public function __construct(PHPAdventBoardDatabase $pdo)
+    public function __construct(MySQLAdvertsBoard $pdo)
     {
         $this->pdo = $pdo;
     }

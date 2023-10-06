@@ -24,21 +24,18 @@ class DependencyContainer
         $this->objects = [
             // @TODO создание объекта при каждом подключении
             /** база данных */
-//            'App\Service\PHPAdventBoardDatabase' => fn() => new PHPAdventBoardDatabase(),
-//            'App\Service\PHPAdventBoardDatabase' => fn() => PHPAdventBoardDatabase::getInstance(),
-            'App\Service\PHPAdventBoardDatabase' => fn() => PostgresAdvertsBoard::getInstance(),
+//            'App\Service\MySQLAdvertsBoard' => fn() => new MySQLAdvertsBoard(),
+//            'App\Service\MySQLAdvertsBoard' => fn() => MySQLAdvertsBoard::getInstance(),
+            'App\Service\MySQLAdvertsBoard' => fn() => PostgresAdvertsBoard::getInstance(),
             /** репозитории */
-            'App\Repository\AdventRepository' => fn() => new AdventRepository($this->get('App\Service\PHPAdventBoardDatabase')),
-            'App\Repository\AdvertRepository' => fn() => new AdvertRepository($this->get('App\Service\PHPAdventBoardDatabase')),
-            'App\Repository\ImageRepository' => fn() => new ImageRepository($this->get('App\Service\PHPAdventBoardDatabase')),
+            'App\Repository\AdvertRepository' => fn() => new AdvertRepository($this->get('App\Service\MySQLAdvertsBoard')),
+            'App\Repository\ImageRepository' => fn() => new ImageRepository($this->get('App\Service\MySQLAdvertsBoard')),
             /** контроллеры */
-            'App\Controllers\AdventController' => fn() => new AdventController($this->get('App\Repository\AdventRepository')),
             'App\Controllers\AdvertController' => fn() => new AdvertController($this->get('App\Repository\AdvertRepository')),
             'App\Controllers\ImageController' => fn() => new ImageController($this->get('App\Repository\ImageRepository')),
             /** модели */
-            'App\Models\Image' => fn(): ImageRepository => new ImageRepository($this->get('App\Service\PHPAdventBoardDatabase')),
-            'App\Models\Advent' => fn(): AdventRepository => new AdventRepository($this->get('App\Service\PHPAdventBoardDatabase')),
-            'App\Models\Advert' => fn(): AdvertRepository => new AdvertRepository($this->get('App\Service\PHPAdventBoardDatabase')),
+            'App\Models\Image' => fn(): ImageRepository => new ImageRepository($this->get('App\Service\MySQLAdvertsBoard')),
+            'App\Models\Advert' => fn(): AdvertRepository => new AdvertRepository($this->get('App\Service\MySQLAdvertsBoard')),
             // @TODO вторая БД - подумать, как отделить маппинг для других БД
             'App\Service\PostgresAdvertsBoard' => fn() => PostgresAdvertsBoard::getInstance(),
             /** разные службы */

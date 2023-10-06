@@ -5,7 +5,7 @@ namespace App\Service;
 use App\Service\SingletonTrait;
 
 // @TODO подумать над универсальной оберткой для наследования от нее всех подключений
-class PHPAdventBoardDatabase extends \PDO
+class MySQLAdvertsBoard extends \PDO
 {
 
     use SingletonTrait;

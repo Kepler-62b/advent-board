@@ -35,6 +35,8 @@ class AdvertController extends DefaultController
     public function showAll(): Response
     {
         $repository = $this->repository;
+
+
         if ($page = filter_input(INPUT_GET, 'page')) {
             $adverts = $repository->fetchAll($page);
         } else {
