@@ -8,10 +8,10 @@ use App\Service\Attributes\RelationAttribute;
 class Image
 {
     private ?int $id = null;
-
     private ?string $name = null;
-
     private ?int $itemId = null;
+    private ?\DateTimeImmutable $createdDate = null;
+    private ?\DateTimeImmutable $modifiedDate = null;
     #[RelationAttribute(relationModel: Advert::class)]
     private ?OneToManyRelation $relationModel = null;
 
@@ -46,6 +46,16 @@ class Image
     public function getItemId(): ?int
     {
         return $this->itemId;
+    }
+
+    public function getCreatedDate(): ?\DateTimeImmutable
+    {
+        return $this->createdDate;
+    }
+
+    public function getModifiedDate(): ?\DateTimeImmutable
+    {
+        return $this->modifiedDate;
     }
 
     public function getRelation(): ?OneToManyRelation

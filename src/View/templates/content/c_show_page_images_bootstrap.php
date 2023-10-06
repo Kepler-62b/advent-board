@@ -1,0 +1,1 @@
+<?= $table_image_dashboard_bootstrap ?>

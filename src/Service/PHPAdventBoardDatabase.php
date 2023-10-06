@@ -11,13 +11,13 @@ class PHPAdventBoardDatabase extends \PDO
     use SingletonTrait;
 
     // @TODO принимать параметры подключения из файла
-    protected string $dbname = "php_advent_board";
+    protected string $dsn = "mysql:host=adverts-mysql;dbname=adverts-board";
     protected string $user = "root";
     protected string $pass = "";
 
     protected function __construct()
     {
-        parent::__construct("mysql:host=localhost;dbname=$this->dbname", $this->user, $this->pass);
+        parent::__construct($this->dsn, $this->user, $this->pass);
 //        var_dump(debug_backtrace());
     }
 

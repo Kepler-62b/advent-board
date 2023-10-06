@@ -11,7 +11,7 @@ class ImageRepository
 {
     // @TODO подумать над названием свойства
     private PHPAdventBoardDatabase $pdo;
-    private string $table = 'images_dev';
+    private string $table = 'images';
     public const SELECT_LIMIT = 5;
 
     public function __construct(PHPAdventBoardDatabase $pdo)
@@ -125,6 +125,8 @@ class ImageRepository
                             'id' => 'id',
                             'name' => 'name',
                             'item_id' => 'itemId',
+                            'created_date' => 'createdDate',
+                            'modified_date' => 'modifiedDate',
                         ]
                     );
                 }

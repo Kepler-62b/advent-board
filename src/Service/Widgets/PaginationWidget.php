@@ -4,50 +4,90 @@ namespace App\Service\Widgets;
 
 use App\Service\RenderTemplateService;
 use App\Service\RenderViewService;
-use App\Service\DependencyContainer;
-use Dev\Tests\Services\TemplateNavigator;
+use App\Service\Helpers\LinkManager;
+use App\Service\Template;
 
 
-/** 
- * @todo соеденить пагинацию с таблицей
+/**
+ * @todo может соеденить пагинацию с таблицей
  */
-
-
 class PaginationWidget implements WidgetInterface
 {
-  private const REPOSITORY = 'App\Repository\AdventRepository';
-  private int $count;
+    private string $templateName;
+    private string $divider = 'page';
 
-  public function __construct()
-  {
-    $this->count = $this->countRow();
-  }
+    // @TODO подумать как пробрасывать пустой массив в LinkManager
+    private array $filter = ['filter'];
+    private int $totalCount;
+    private int $sampleLimit;
 
-  public function __toString(): string
-  {
-    return (new RenderTemplateService([$this->getTemplate()]))->renderFromListTemplates();
+    public function __construct(string $templateName, $totalCount, array $sampleLimit = ['sampleLimit' => 2])
+    {
+        $this->templateName = $templateName;
+        $this->totalCount = $totalCount['totalCount'];
+        $this->sampleLimit = $sampleLimit['sampleLimit'];
+    }
 
-    // $template = $this->render();
-    // return $template->renderView();
-  }
+    public function __toString()
+    {
+        return (new RenderTemplateService([$this->getTemplate()]))->renderFromListTemplates();
+    }
 
-  private function countRow()
-  {
-    $repository = (new DependencyContainer())->get(self::REPOSITORY);
-    return ceil($repository->getCount()/$repository::SELECT_LIMIT);
-  }
+    public function setDivider(string $divider): self
+    {
+        $this->divider = $divider;
+        return $this;
+    }
 
-  public function render(): RenderViewService
-  {
-    return new RenderViewService(['widgets' => 'pagination'], ['count' => $this->count]);
-  }
+    public function setFilter(array $filter): self
+    {
+        $this->filter = $filter;
+        return $this;
+    }
 
-  public function getTemplate(): TemplateNavigator
-  {
-   return new TemplateNavigator('pagination', 'widgets', ['count' => $this->count]);
-  }
+    private function count(): float
+    {
+        return ceil($this->totalCount / $this->sampleLimit);
+    }
 
+    /**
+     * returns an array of rendered links with each page number
+     */
+    private function create(): array
+    {
+        $pagination = [];
 
-  
+        for ($i = 1; $i <= $this->count(); $i++) {
+            $link = "<a href=\"{link}\" class=\"{class}\">{number}</a>";
+            $replace['{link}'] = LinkManager::link(null, [$this->divider => $i], $this->filter);
+            $replace['{class}'] = 'page-link';
+            $replace['{number}'] = $i;
+            $link = strtr($link, $replace);
+            $pagination[] = $link;
+        }
+
+        // for ($i = 1; $i <= $this->count(); $i++) {
+        //   $link = LinkManager::link('/show', [$this->divider => $i], $this->filter);
+        //   $storageLinks[] = "<a href=\"${link}\">${i}</a>";
+        // }
+        return $pagination;
+    }
+
+    public function getTemplate(): Template
+    {
+        return new Template($this->templateName, 'widgets', ['pagination' => $this->create()]);
+    }
+
+    /** @deprecated */
+    public function render(): RenderViewService
+    {
+        return new RenderViewService(
+            ['widgets' => 'pagination_object'],
+            [
+                'pagination' => $this->create(),
+            ]
+        );
+    }
+
 
 }

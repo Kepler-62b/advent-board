@@ -9,25 +9,27 @@ use App\Service\RenderViewService;
 
 class GetFormWidget implements WidgetInterface
 {
+    private string $templateName;
 
-  public function __construct()
+  public function __construct(string $templateName)
   {
-    // empty
+      $this->templateName = $templateName;
   }
 
   public function __toString(): string
   {
    return (new RenderTemplateService([$this->getTemplate()]))->renderFromListTemplates();
   }
+  public function getTemplate(): Template
+  {
+   return new Template($this->templateName, 'widgets');
+  }
 
+  /** @deprecated */
   public function render(): RenderViewService
   {
     return new RenderViewService(['widgets' => 'form_get']);
   }
 
-  public function getTemplate(): Template
-  {
-   return new Template('getForm', 'widgets');
-  }
 
 }

@@ -20,7 +20,7 @@ class RouteService
     {
         $matchURL = $this->parseURL->matchURL;
 
-        var_dump($matchURL);
+//        dump($matchURL);
 
         $interface = $matchURL['interface'];
         $controller = $matchURL['controller'];

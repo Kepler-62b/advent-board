@@ -3,20 +3,19 @@
 namespace App\Controllers;
 
 use App\Service\RenderTemplateService;
-use App\Service\RenderViewService;
 use App\Service\Template;
-use App\Service\ViewRenderService;
-use App\Service\Widgets\NavigationWidget;
+use App\Service\Widgets\GetFormWidget;
 use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController
 {
     public function homePage(): Response
     {
-        $navigationWidget = new Template('navigation', 'widgets');
-        $content = new Template('home_page', 'content', ['navigation']);
-        $layout = new Template('main', 'layouts', ['content']);
-        $view = (new RenderTemplateService([$layout, $content, $navigationWidget]))->renderFromListTemplates();
+        $navigationWidget = new Template('w_navigation_bootstrap', 'widgets');
+        $formGetWidget = (new GetFormWidget('w_form_get_bootstrap'))->getTemplate();
+        $content = new Template('c_home_page', 'content');
+        $layout = new Template('l_main_page_dashboard_bootstrap', 'layouts');
+        $view = (new RenderTemplateService([$layout, $content, $formGetWidget, $navigationWidget]))->renderFromListTemplates();
 
         return (new Response())
             ->setContent($view)
@@ -29,10 +28,10 @@ class DefaultController
      */
     public function notFound(): Response
     {
-        $navigationWidget = new Template('navigation', 'widgets');
-        $content = new Template('not_found_page', 'content', ['navigation']);
-        $layout = new Template('main', 'layouts', ['content']);
-        $view = (new RenderTemplateService([$layout, $content, $navigationWidget]))->renderFromListTemplates();
+        $navigation = new Template('navigation_bootstrap', 'widgets');
+        $content = new Template('not_found_page', 'content');
+        $layout = new Template('main', 'layouts');
+        $view = (new RenderTemplateService([$layout, $content, $navigation]))->renderFromListTemplates();
 
         return (new Response())
             ->setContent($view)

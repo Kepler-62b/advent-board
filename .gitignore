@@ -13,8 +13,13 @@
 
 ###> psalm ###
 /.idea/
-psalm-baseline.xml
+psalm_baseline.xml
 ###< psalm ###
+
+###> docker data ###
+/docker/database/mysql/data
+/docker/database/postgres/data
+###< docker data ###
 
 ###> phpunit cahe ###
 /.phpunit.result.cache

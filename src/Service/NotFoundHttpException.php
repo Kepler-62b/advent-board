@@ -26,11 +26,13 @@ class NotFoundHttpException extends \Exception
         // @TODO подумать, куда это убрать (в отдельный класс с конфигами?) или устанавливать константой
         ini_set('display_errors', 'Off');
 
-        $navigationWidget = (new NavigationWidget())->getTemplate();
-        $getFormWidget = new Template('getForm', 'widgets');
-        $content = new Template('not_found_data_exception', 'content', ['id' => $this->params]);
-        $layout = new Template('main', 'layouts');
-        $view = (new RenderTemplateService([$layout, $content, $navigationWidget, $getFormWidget]))->renderFromListTemplates();
+        $navigationWidget = (new NavigationWidget('w_navigation_bootstrap'))->getTemplate();
+        $getFormWidget = (new GetFormWidget('w_form_get_bootstrap'))->getTemplate();
+
+        $contentException = new Template('ce_page_not_found', 'content');
+        $layout = new Template('l_main_page_dashboard_bootstrap', 'layouts');
+
+        $view = (new RenderTemplateService([$layout, $contentException, $getFormWidget, $navigationWidget]))->renderFromListTemplates();
 
         return (new Response())
             ->setContent($view)

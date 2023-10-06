@@ -25,7 +25,8 @@ class DependencyContainer
             // @TODO создание объекта при каждом подключении
             /** база данных */
 //            'App\Service\PHPAdventBoardDatabase' => fn() => new PHPAdventBoardDatabase(),
-            'App\Service\PHPAdventBoardDatabase' => fn() => PHPAdventBoardDatabase::getInstance(),
+//            'App\Service\PHPAdventBoardDatabase' => fn() => PHPAdventBoardDatabase::getInstance(),
+            'App\Service\PHPAdventBoardDatabase' => fn() => PostgresAdvertsBoard::getInstance(),
             /** репозитории */
             'App\Repository\AdventRepository' => fn() => new AdventRepository($this->get('App\Service\PHPAdventBoardDatabase')),
             'App\Repository\AdvertRepository' => fn() => new AdvertRepository($this->get('App\Service\PHPAdventBoardDatabase')),
@@ -39,13 +40,9 @@ class DependencyContainer
             'App\Models\Advent' => fn(): AdventRepository => new AdventRepository($this->get('App\Service\PHPAdventBoardDatabase')),
             'App\Models\Advert' => fn(): AdvertRepository => new AdvertRepository($this->get('App\Service\PHPAdventBoardDatabase')),
             // @TODO вторая БД - подумать, как отделить маппинг для других БД
-            'App\Service\LaravelDatabase' => fn() => LaravelDatabase::getInstance(),
-            'App\Repository\CityRepository' => fn() => new CityRepository($this->get('App\Service\LaravelDatabase')),
-            'App\Models\City' => fn() => new CityRepository($this->get('App\Service\LaravelDatabase')),
+            'App\Service\PostgresAdvertsBoard' => fn() => PostgresAdvertsBoard::getInstance(),
             /** разные службы */
             'App\Controllers\DefaultController' => fn() => new DefaultController(),
-
-
         ];
     }
 
@@ -54,6 +51,10 @@ class DependencyContainer
         return isset($this->objects[$id]);
     }
 
+    /**
+     * @param class-string $id
+     * @throws \Exception
+     */
     public function get(string $id): mixed
     {
         // @TODO обрабатывать несуществующие id - будет выбрашено Error
