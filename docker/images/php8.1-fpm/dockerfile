@@ -11,6 +11,6 @@ RUN docker-php-ext-install pdo pdo_pgsql pgsql \
 RUN pecl install xdebug \
     && docker-php-ext-enable xdebug
 
-WORKDIR /var/app/adverts-board
+WORKDIR /app
 
 ENTRYPOINT [ "php-fpm" ]

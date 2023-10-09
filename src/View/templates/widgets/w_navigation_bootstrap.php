@@ -20,7 +20,6 @@
                     Create
                 </a>
             </li>
-
             <li class="nav-item">
                 <a class="nav-link <?= str_contains(Request::createFromGlobals()->getPathInfo(), '/update') ? "active" : ""; ?>" href="<?= LinkManager::link('/update') ?>">
                     <span data-feather="edit"></span>
