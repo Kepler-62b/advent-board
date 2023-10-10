@@ -13,7 +13,7 @@
 
 ###> psalm ###
 /.idea/
-psalm_baseline.xml
+/psalm_baseline.xml
 ###< psalm ###
 
 ###> docker data ###
