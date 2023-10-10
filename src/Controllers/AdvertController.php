@@ -14,7 +14,7 @@ use App\Service\Widgets\TableWidget;
 use App\Service\Widgets\NavigationWidget;
 use App\Service\Widgets\SortWidget;
 
-use App\Models\Advent;
+use App\Models\Advert;
 use App\Repository\AdvertRepository;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -139,7 +139,7 @@ class AdvertController extends DefaultController
         ))->getTemplate();
 
         $content = new Template('c_show_page_adverts_bootstrap', 'content');
-        $layout = new Template('l_main_dashboard_bootstrap', 'layouts');
+        $layout = new Template('l_main_page_dashboard_bootstrap', 'layouts');
 
         $view = (new RenderTemplateService(
             [
@@ -173,7 +173,7 @@ class AdvertController extends DefaultController
             ['adverts' => $adverts],
         ))->getTemplate();
         $content = new Template('c_show_page_adverts_bootstrap', 'content');
-        $layout = new Template('l_main_dashboard_bootstrap', 'layouts');
+        $layout = new Template('l_main_page_dashboard_bootstrap', 'layouts');
 
         $view = (new RenderTemplateService(
             [
@@ -213,7 +213,7 @@ class AdvertController extends DefaultController
         );
 
         $hydrator = new HydratorService();
-        $model = $hydrator->hydrate(Advent::class, $data);
+        $model = $hydrator->hydrate(Advert::class, $data);
 
         if ($repository->save($model)) {
             return (new RedirectResponse(LinkManager::link('/show')))->send();
@@ -249,7 +249,7 @@ class AdvertController extends DefaultController
             ]
         );
 
-        $model = (new HydratorService())->hydrate(Advent::class, $data);
+        $model = (new HydratorService())->hydrate(Advert::class, $data);
 
         if ($repository->update($model)) {
             return (new RedirectResponse(LinkManager::link('/show')))->send();

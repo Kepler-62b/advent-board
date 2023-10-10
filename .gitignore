@@ -29,7 +29,6 @@ psalm_baseline.xml
 /.php-cs-fixer.cache
 ###< php-cs-fixer cache ###
 
-
-
-
-
+###> macOS trash ###
+.DS_Store
+###< macOS trash ###
