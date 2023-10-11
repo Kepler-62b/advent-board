@@ -9,7 +9,7 @@ class ParseURLService
 {
     private const APP_MAP = 'config/app_route_map.json';
     private const API_MAP = 'config/api_route_map.json';
-    public array $matchURL;
+    public array $matchURL = [];
     private array $parseURL = [];
 
 
@@ -92,20 +92,9 @@ class ParseURLService
                         ],
                     ];
 
-//                 var_dump($this->matchURL);
                 return $this->matchURL;
             }
         }
     }
-
-    public function parseRoute(string $incomingURL)
-    {
-        preg_match_all("/{(\w*)}/", $incomingURL, $matches, PREG_PATTERN_ORDER);
-
-        $this->parseURL = $matches;
-
-        return $this->parseURL;
-    }
-
 
 }

@@ -1,9 +1,0 @@
-<?php
-
-namespace Dev;
-
-require 'vendor/autoload.php';
-
-require_once 'test.php';
-
-echo "TEST DOCKER FROM PHP FILE";

@@ -18,8 +18,8 @@ class DatabaseConnection extends \PDO
 
     private function getConfigMap(): array
     {
-        $resourse = fopen('./config/database_config.json', "r+");
-        $configMap = json_decode(file_get_contents('./config/database_config.json'), JSON_OBJECT_AS_ARRAY);
+        $resourse = fopen('config/database_config.json', "r+");
+        $configMap = json_decode(file_get_contents('config/database_config.json'), JSON_OBJECT_AS_ARRAY);
         fclose($resourse);
         return $configMap;
     }
