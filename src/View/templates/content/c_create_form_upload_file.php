@@ -1,4 +1,4 @@
-<?php use App\Service\Helpers\LinkManager; ?>
+<?php use Framework\Services\Helpers\LinkManager; ?>
 
 <body>
   <h1>Create</h1>

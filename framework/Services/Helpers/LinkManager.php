@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Service\Helpers;
+namespace Framework\Services\Helpers;
 
-use App\Service\Widgets\WidgetInterface;
+use Framework\Services\Widgets\WidgetInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 final class LinkManager

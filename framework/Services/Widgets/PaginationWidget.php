@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Service\Widgets;
+namespace Framework\Services\Widgets;
 
-use App\Service\RenderTemplateService;
-use App\Service\RenderViewService;
-use App\Service\Helpers\LinkManager;
-use App\Service\Template;
+use Framework\Services\Helpers\LinkManager;
+use Framework\Services\RenderTemplateService;
+use Framework\Services\RenderViewService;
+use Framework\Services\Template;
 
 
 /**

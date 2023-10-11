@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace Framework\Services;
 
 class DatabaseConnection extends \PDO
 {

@@ -3,9 +3,9 @@
 namespace App\Repository;
 
 use App\Models\Advert;
-use App\Service\HydratorService;
-use App\Service\NoDBConnectionException;
-use App\Service\Relation;
+use Framework\Services\HydratorService;
+use Framework\Services\NoDBConnectionException;
+use Framework\Services\Relation;
 
 class AdvertRepository
 {

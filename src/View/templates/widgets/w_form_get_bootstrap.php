@@ -1,4 +1,4 @@
-<?php use App\Service\Helpers\LinkManager; ?>
+<?php use Framework\Services\Helpers\LinkManager; ?>
 
 <div class="container-fluid">
     <form action="<?= LinkManager::link('/get') ?>" id="get" method="get">

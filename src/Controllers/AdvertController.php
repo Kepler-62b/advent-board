@@ -2,23 +2,20 @@
 
 namespace App\Controllers;
 
-use App\Service\HydratorService;
-use App\Service\RenderTemplateService;
-use App\Service\Template;
-use App\Service\NotFoundHttpException;
-use App\Service\Helpers\LinkManager;
-
-use App\Service\Widgets\GetFormWidget;
-use App\Service\Widgets\PaginationWidget;
-use App\Service\Widgets\TableWidget;
-use App\Service\Widgets\NavigationWidget;
-use App\Service\Widgets\SortWidget;
-
 use App\Models\Advert;
 use App\Repository\AdvertRepository;
-
-use Symfony\Component\HttpFoundation\Response;
+use Framework\Services\Helpers\LinkManager;
+use Framework\Services\HydratorService;
+use Framework\Services\NotFoundHttpException;
+use Framework\Services\RenderTemplateService;
+use Framework\Services\Template;
+use Framework\Services\Widgets\GetFormWidget;
+use Framework\Services\Widgets\NavigationWidget;
+use Framework\Services\Widgets\PaginationWidget;
+use Framework\Services\Widgets\SortWidget;
+use Framework\Services\Widgets\TableWidget;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class AdvertController extends DefaultController
 {

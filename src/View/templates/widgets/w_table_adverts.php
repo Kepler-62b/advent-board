@@ -1,4 +1,4 @@
-<?php use App\Service\Helpers\LinkManager; ?>
+<?php use Framework\Services\Helpers\LinkManager; ?>
 
 <table class="table table-hover table-bordered table-sm align-middle caption-top">
     <caption>Adverts</caption>

@@ -6,7 +6,7 @@ namespace Tests\Unit;
 use App\Models\Advent;
 use App\Models\Advert;
 use App\Models\Image;
-use App\Service\HydratorService;
+use Framework\Services\HydratorService;
 use PHPUnit\Framework\TestCase;
 
 final class HydratorServiceTest extends TestCase

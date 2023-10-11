@@ -1,10 +1,6 @@
 <?php
 
-namespace App\Service;
-
-use Symfony\Component\HttpFoundation\Request;
-
-use App\Service\ParseURLService;
+namespace Framework\Services;
 
 class RouteService
 {

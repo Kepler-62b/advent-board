@@ -4,8 +4,8 @@ namespace Tests\Unit;
 
 use App\Models\Image;
 use App\Repository\ImageRepository;
-use App\Service\DependencyContainer;
 use Dev\trash\MySQLAdvertsBoard;
+use Framework\Services\DependencyContainer;
 use PHPUnit\Framework\TestCase;
 
 class DependencyContainerTest extends TestCase

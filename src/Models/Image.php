@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Service\OneToManyRelation;
-use App\Service\Attributes\RelationAttribute;
+use Framework\Services\Attributes\RelationAttribute;
+use Framework\Services\OneToManyRelation;
 
 class Image
 {

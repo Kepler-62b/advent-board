@@ -2,9 +2,9 @@
 
 namespace App\Controllers;
 
-use App\Service\RenderTemplateService;
-use App\Service\Template;
-use App\Service\Widgets\GetFormWidget;
+use Framework\Services\RenderTemplateService;
+use Framework\Services\Template;
+use Framework\Services\Widgets\GetFormWidget;
 use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration;
 
-use App\Service\Relation;
+use Framework\Services\Relation;
 use PHPUnit\Framework\TestCase;
 
 final class RelationTest extends TestCase
@@ -19,7 +19,7 @@ final class RelationTest extends TestCase
                     'modelName' => 'App\Models\Image',
                     'imageId' => 27,
                     'relationColumn' => 'itemId',
-                    'relationType' => 'App\Service\OneToManyRelation'
+                    'relationType' => 'Framework\Service\OneToManyRelation'
                 ],
                 'Advert' => [
                     'databaseName' => 'Dev\trash\MySQLAdvertsBoard',
@@ -27,7 +27,7 @@ final class RelationTest extends TestCase
                     'modelName' => 'App\Models\Advert',
                     'advertId' => 1,
                     'relationColumn' => 'id',
-                    'relationType' => 'App\Service\ManyToOneRelation'
+                    'relationType' => 'Framework\Service\ManyToOneRelation'
                 ],
             ];
     }

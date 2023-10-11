@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Attributes;
+namespace Framework\Services\Attributes;
 
 #[\Attribute]
 class RelationAttribute

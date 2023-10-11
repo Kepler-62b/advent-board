@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Service\Widgets;
+namespace Framework\Services\Widgets;
 
-use App\Service\RenderTemplateService;
-use App\Service\Template;
-use App\Service\ViewRenderService;
+use Framework\Services\RenderTemplateService;
+use Framework\Services\Template;
+use Framework\Services\ViewRenderService;
 
 class TableWidget implements WidgetInterface
 {

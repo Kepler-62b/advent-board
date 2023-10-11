@@ -1,17 +1,15 @@
 <?php
 
-namespace App\Service;
+namespace Framework\Services;
 
 use App\Controllers\AdventController;
 use App\Controllers\AdvertController;
-use App\Controllers\DefaultController;
 use App\Controllers\ImageController;
 use App\Models\Advent;
 use App\Repository\AdventRepository;
 use App\Repository\AdvertRepository;
 use App\Repository\CityRepository;
 use App\Repository\ImageRepository;
-use Dev\trash\PostgresAdvertsBoard;
 
 class DependencyContainer
 {
@@ -24,16 +22,16 @@ class DependencyContainer
             // @TODO создание объекта при каждом подключении
             /** база данных */
 //            'App\Service\MySQLAdvertsBoard' => fn() => new DatabaseConnection(),
-            'App\Service\DatabaseConnection' => fn() => DatabaseConnection::getInstance(),
+            'Framework\Service\DatabaseConnection' => fn() => DatabaseConnection::getInstance(),
             /** репозитории */
-            'App\Repository\AdvertRepository' => fn() => new AdvertRepository($this->get('App\Service\DatabaseConnection')),
-            'App\Repository\ImageRepository' => fn() => new ImageRepository($this->get('App\Service\DatabaseConnection')),
+            'App\Repository\AdvertRepository' => fn() => new AdvertRepository($this->get('Framework\Service\DatabaseConnection')),
+            'App\Repository\ImageRepository' => fn() => new ImageRepository($this->get('Framework\Service\DatabaseConnection')),
             /** контроллеры */
             'App\Controllers\AdvertController' => fn() => new AdvertController($this->get('App\Repository\AdvertRepository')),
             'App\Controllers\ImageController' => fn() => new ImageController($this->get('App\Repository\ImageRepository')),
             /** модели */
-            'App\Models\Image' => fn(): ImageRepository => new ImageRepository($this->get('App\Service\DatabaseConnection')),
-            'App\Models\Advert' => fn(): AdvertRepository => new AdvertRepository($this->get('App\Service\DatabaseConnection')),
+            'App\Models\Image' => fn(): ImageRepository => new ImageRepository($this->get('Framework\Service\DatabaseConnection')),
+            'App\Models\Advert' => fn(): AdvertRepository => new AdvertRepository($this->get('Framework\Service\DatabaseConnection')),
         ];
     }
 

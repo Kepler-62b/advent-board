@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Models\Image;
-use App\Service\HydratorService;
+use Framework\Services\HydratorService;
 use ReflectionException;
 
 class ImageRepository

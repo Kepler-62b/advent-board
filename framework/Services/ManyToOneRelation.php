@@ -1,9 +1,6 @@
 <?php
 
-namespace App\Service;
-
-use App\Repository\AdvertRepository;
-use App\Repository\ImageRepository;
+namespace Framework\Services;
 
 class ManyToOneRelation
 {

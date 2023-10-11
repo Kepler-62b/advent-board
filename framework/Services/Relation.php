@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Service;
+namespace Framework\Services;
 
 // @TODO подумать над названием класса
+
 class Relation
 {
     private object $model;

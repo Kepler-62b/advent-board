@@ -3,7 +3,7 @@
 namespace Tests\Unit;
 
 use App\Models\Image;
-use App\Service\ManyToOneRelation;
+use Framework\Services\ManyToOneRelation;
 use PHPUnit\Framework\TestCase;
 
 final class ManyToOneRelationTest extends TestCase

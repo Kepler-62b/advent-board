@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace Framework\Services;
 
 //@TODO подумать над названием класса и методов в нем
 

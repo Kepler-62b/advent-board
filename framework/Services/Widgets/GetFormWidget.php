@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Service\Widgets;
+namespace Framework\Services\Widgets;
 
-use App\Service\RenderTemplateService;
-use App\Service\Template;
-use App\Service\ViewRenderService;
-use App\Service\RenderViewService;
+use Framework\Services\RenderTemplateService;
+use Framework\Services\RenderViewService;
+use Framework\Services\Template;
 
 class GetFormWidget implements WidgetInterface
 {

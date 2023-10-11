@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Service\Widgets;
+namespace Framework\Services\Widgets;
 
-use App\Service\RenderTemplateService;
-use App\Service\RenderViewService;
-use App\Service\Template;
+use Framework\Services\RenderTemplateService;
+use Framework\Services\RenderViewService;
+use Framework\Services\Template;
 
 class SortWidget implements WidgetInterface
 {

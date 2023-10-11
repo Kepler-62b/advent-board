@@ -1,5 +1,6 @@
-<?php use App\Service\Helpers\LinkManager; ?>
-<?php use Symfony\Component\HttpFoundation\Request; ?>
+<?php use Framework\Services\Helpers\LinkManager;
+use Symfony\Component\HttpFoundation\Request; ?>
+<?php ?>
 
         <ul class="nav flex-column">
             <li class="nav-item">

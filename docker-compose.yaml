@@ -24,9 +24,9 @@ services:
       - ./:/app
       - ./docker/modules/Xdebug/zzz-xdebug.ini:/usr/local/etc/php/conf.d/zzz-xdebug.ini
       # - ./docker/images/php8.1-fpm/php-fpm.d/domain.conf:/usr/local/etc/php-fpm.d/domain.conf
-    cap_add:
-      - SYS_NICE
-      - DAC_READ_SEARCH
+#    cap_add:
+#      - SYS_NICE
+#      - DAC_READ_SEARCH
     environment:
       - XDEBUG_CONFIG=discover_client_host=true client_host=host.docker.internal log_level=0
     networks:

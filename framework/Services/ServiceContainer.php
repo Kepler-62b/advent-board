@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Service;
+namespace Framework\Services;
 
-use App\Repository\AdventRepository;
 use App\Controllers\AdventController;
+use App\Repository\AdventRepository;
 
 
 class ServiceContainer
@@ -12,8 +12,8 @@ class ServiceContainer
   public function __construct()
   {
     $this->objects = [
-      'App\Service\LinkRender' => fn() => new LinkRender(),
-      'App\Service\RenderViewService' => fn() => new RenderViewService($this->get('App\Service\LinkRender'))
+      'Framework\Service\LinkRender' => fn() => new LinkRender(),
+      'Framework\Service\RenderViewService' => fn() => new RenderViewService($this->get('Framework\Service\LinkRender'))
     ];
   }
 

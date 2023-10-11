@@ -1,4 +1,4 @@
-<?php use App\Service\Helpers\LinkManager ?>
+<?php use Framework\Services\Helpers\LinkManager; ?>
 <h1>Images</h1>
 <h2>Advert <?= $images[0]->getItemId() ?></h2>
 
