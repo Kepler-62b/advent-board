@@ -18,7 +18,7 @@
                 <div class="col">
                     <div class="card shadow-sm">
                         <img class="rounded mx-auto d-block"
-                             src="<?= LinkManager::linkImage('/public/img/user/', $image->getName()) ?>"
+                             src="<?= LinkManager::linkImage('/img/user/', $image->getName()) ?>"
                              alt="<?= $image->getName() ?>" width="100" height="100">
                         <div class="card-body">
                             <p class="card-text"><?= $image->getName() ?></p>

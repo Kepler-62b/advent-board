@@ -38,7 +38,7 @@
                 </td>
 
                 <td>
-                    <img src="<?= LinkManager::linkImage('/public/img/user/', $advert->getImage()) ?>"
+                    <img src="<?= LinkManager::linkImage('/img/user/', $advert->getImage()) ?>"
                          alt="<?= $advert->getImage() ?>" width="50" height="50">
                 </td>
 
