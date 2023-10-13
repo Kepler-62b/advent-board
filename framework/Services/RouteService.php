@@ -16,7 +16,7 @@ class RouteService
     {
         $matchURL = $this->parseURL->matchURL;
 
-//        dump($matchURL);
+        dump($matchURL);
 
         $interface = $matchURL['interface'];
         $controller = $matchURL['controller'];
@@ -24,7 +24,6 @@ class RouteService
         $actionParams = $matchURL['action_params'];
 
         if (empty($actionParams)) {
-//            var_dump((new DependencyContainer())->get($controller));
             (new DependencyContainer())->get($controller)->$action();
         } else {
             (new DependencyContainer())->get($controller)->$action($actionParams, $interface);

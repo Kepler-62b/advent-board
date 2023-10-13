@@ -47,7 +47,12 @@ class DefaultController
             ['content-type' => 'application/json']
         );
         return $response->send();
+    }
 
+    /** принимает данные из модели */
+    public function render()
+    {
+        
     }
 
 }

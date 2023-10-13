@@ -14,6 +14,7 @@ class Template
     public string $templateName;
     public string $templateType;
     public string $templateDirectory;
+    // @TODO убрать зависимость от конкретного расширения
     public string $templateExtension = '.php';
     public ?array $templateParams;
 

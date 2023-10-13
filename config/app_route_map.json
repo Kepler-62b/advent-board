@@ -24,19 +24,19 @@
     "controller": "App\\Controllers\\AdvertController"
   },
   "/create": {
-    "action": "create_form",
+    "action": "createForm",
     "controller": "App\\Controllers\\AdvertController"
   },
   "/create_action": {
-    "action": "create_action",
+    "action": "createAction",
     "controller": "App\\Controllers\\AdvertController"
   },
   "/update": {
-    "action": "update_form",
+    "action": "updateForm",
     "controller": "App\\Controllers\\AdvertController"
   },
   "/update_action": {
-    "action": "update_action",
+    "action": "updateAction",
     "controller": "App\\Controllers\\AdvertController"
   },
   "/images/show": {
