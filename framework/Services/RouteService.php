@@ -2,6 +2,8 @@
 
 namespace Framework\Services;
 
+use Dev\Service\ActionParamsValidation;
+
 class RouteService
 {
     private ParseURLService $parseURL;
@@ -21,7 +23,8 @@ class RouteService
         $interface = $matchURL['interface'];
         $controller = $matchURL['controller'];
         $action = $matchURL['action'];
-        $actionParams = $matchURL['action_params'];
+//        $actionParams = $matchURL['action_params'];
+        $actionParams = new ActionParamsValidation($matchURL['action_params']);
 
         if (empty($actionParams)) {
             (new DependencyContainer())->get($controller)->$action();

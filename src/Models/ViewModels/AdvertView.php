@@ -74,7 +74,6 @@ class AdvertView
 
     public function displayForm(string $formTemplateName): string
     {
-
         $navigationWidget = (new NavigationWidget('w_navigation_bootstrap'))->getTemplate();
         $formGetWidget = (new GetFormWidget('w_form_get_bootstrap'))->getTemplate();
         $content = new Template($formTemplateName, 'content');

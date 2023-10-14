@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\Advert;
 use App\Models\ViewModels\AdvertView;
 use App\Repository\AdvertRepository;
+use Dev\Service\ActionParamsValidation;
 use Framework\Services\Helpers\LinkManager;
 use Framework\Services\HydratorService;
 use Framework\Services\NotFoundHttpException;
@@ -15,6 +16,7 @@ use Framework\Services\Widgets\NavigationWidget;
 use Framework\Services\Widgets\PaginationWidget;
 use Framework\Services\Widgets\SortWidget;
 use Framework\Services\Widgets\TableWidget;
+use http\Exception\InvalidArgumentException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -49,13 +51,14 @@ class AdvertController extends DefaultController
     }
 
     /**
+     * @param ActionParamsValidation $actionParams
      * @TODO принимать не весь массив из query string, а указанное значение в аргументе
      * @throws NotFoundHttpException
      */
-    public function showById(array $actionParams): Response
+    public function showById(ActionParamsValidation $actionParams): Response
     {
         // какая-то валидация
-        $id = $actionParams['id'];
+        $id = (int)$actionParams->validateKey('id');
         $repository = $this->repository;
 
         $advert = $repository->findById($id) ?? throw new NotFoundHttpException('Not found item ID ', $id);
@@ -65,10 +68,16 @@ class AdvertController extends DefaultController
         return (new Response($view))->send();
     }
 
-    public function showByMin(array $actionParams): Response
+    /**
+     * @param ActionParamsValidation $actionParams
+     */
+    public function showByMin(ActionParamsValidation $actionParams): Response
     {
         $repository = $this->repository;
-        extract($actionParams, EXTR_OVERWRITE);
+//        extract($actionParams, EXTR_OVERWRITE);
+
+        $page = $actionParams->validateKey('page');
+        $filter = $actionParams->validateKey('filter');
 
         $adverts = $repository->getMin($page, $filter);
 
@@ -80,10 +89,13 @@ class AdvertController extends DefaultController
         return (new Response($view))->send();
     }
 
-    public function showByMax(array $actionParams): Response
+    public function showByMax(ActionParamsValidation $actionParams): Response
     {
         $repository = $this->repository;
-        extract($actionParams, EXTR_OVERWRITE);
+//        extract($actionParams, EXTR_OVERWRITE);
+
+        $page = $actionParams->validateKey('page');
+        $filter = $actionParams->validateKey('filter');
         $adverts = $repository->getMax($page, $filter);
 
         $view = (new AdvertView())->displayAll([
