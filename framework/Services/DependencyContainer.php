@@ -5,11 +5,11 @@ namespace Framework\Services;
 use App\Controllers\AdventController;
 use App\Controllers\AdvertController;
 use App\Controllers\ImageController;
-use App\Models\Advent;
 use App\Repository\AdventRepository;
 use App\Repository\AdvertRepository;
 use App\Repository\CityRepository;
 use App\Repository\ImageRepository;
+use Framework\Services\Database\PDOConnection;
 
 class DependencyContainer
 {
@@ -22,16 +22,16 @@ class DependencyContainer
             // @TODO создание объекта при каждом подключении
             /** база данных */
 //            'App\Service\MySQLAdvertsBoard' => fn() => new DatabaseConnection(),
-            'Framework\Service\DatabaseConnection' => fn() => DatabaseConnection::getInstance(),
+            'Framework\Service\Database\PDOConnection' => fn() => PDOConnection::getInstance(),
             /** репозитории */
-            'App\Repository\AdvertRepository' => fn() => new AdvertRepository($this->get('Framework\Service\DatabaseConnection')),
-            'App\Repository\ImageRepository' => fn() => new ImageRepository($this->get('Framework\Service\DatabaseConnection')),
+            'App\Repository\AdvertRepository' => fn() => new AdvertRepository($this->get('Framework\Service\Database\PDOConnection')),
+            'App\Repository\ImageRepository' => fn() => new ImageRepository($this->get('Framework\Service\Database\PDOConnection')),
             /** контроллеры */
             'App\Controllers\AdvertController' => fn() => new AdvertController($this->get('App\Repository\AdvertRepository')),
             'App\Controllers\ImageController' => fn() => new ImageController($this->get('App\Repository\ImageRepository')),
             /** модели */
-            'App\Models\Image' => fn(): ImageRepository => new ImageRepository($this->get('Framework\Service\DatabaseConnection')),
-            'App\Models\Advert' => fn(): AdvertRepository => new AdvertRepository($this->get('Framework\Service\DatabaseConnection')),
+            'App\Models\Image' => fn(): ImageRepository => new ImageRepository($this->get('Framework\Service\Database\PDOConnection')),
+            'App\Models\Advert' => fn(): AdvertRepository => new AdvertRepository($this->get('Framework\Service\Database\PDOConnection')),
         ];
     }
 

@@ -1,8 +1,10 @@
 <?php
 
-namespace Framework\Services;
+namespace Framework\Services\Database;
 
-class DatabaseConnection extends \PDO
+use Framework\Services\SingletonTrait;
+
+class PDOConnection extends \PDO
 {
     use SingletonTrait;
 
@@ -18,10 +20,7 @@ class DatabaseConnection extends \PDO
 
     private function getConfigMap(): array
     {
-        $resourse = fopen('config/database_config.json', "r+");
-        $configMap = json_decode(file_get_contents('config/database_config.json'), JSON_OBJECT_AS_ARRAY);
-        fclose($resourse);
-        return $configMap;
+        return json_decode(file_get_contents('config/database_config.json'), JSON_OBJECT_AS_ARRAY);
     }
 
     private function initPDOParams(): void
@@ -39,6 +38,4 @@ class DatabaseConnection extends \PDO
         $this->user = $mapParams['User'];
         $this->pass = $mapParams['Password'];
     }
-
-
 }

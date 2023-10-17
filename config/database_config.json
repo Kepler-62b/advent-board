@@ -10,7 +10,7 @@
   },
   "MySQL": {
     "Driver": "mysql",
-    "Host": "adverts-postgres",
+    "Host": "adverts-mysql",
     "Database": "adverts-board",
     "User": "root",
     "Password": "secret"

@@ -86,46 +86,6 @@ class AdvertRepository
      * @return ?Advert[]
      * @throws \PDOException|\ReflectionException
      */
-    public function findById(int $id): ?array
-    {
-        $connection = $this->pdo;
-        $table = $this->table;
-
-        $sql = "SELECT * FROM $table WHERE id = :id";
-
-        $pdo_statement = $connection->prepare($sql);
-
-        try {
-            $pdo_statement->bindValue("id", $id, \PDO::PARAM_INT);
-            $pdo_statement->execute();
-
-            if ($result = $pdo_statement->fetch(\PDO::FETCH_ASSOC)) {
-                // @TODO выбрасывать fatch === false
-//                throw new \Exception("row with id {$id} not found in '{$this->table}' table");
-
-                $hydrator = new HydratorService();
-
-                $model[] = $hydrator->hydrate(
-                    Advert::class,
-                    $result,
-                    [
-                        'id' => 'id',
-                        'item' => 'item',
-                        'description' => 'description',
-                        'price' => 'price',
-                        'image' => 'image',
-                        'created_date' => 'createdDate',
-                        'modified_date' => 'modifiedDate',
-                    ]
-                );
-                return $model;
-            } else {
-                return NULL;
-            }
-        } catch (\PDOException $exception) {
-            throw new \PDOException('Ошибка: ' . $exception->getMessage());
-        }
-    }
 
     public function save(object $model): bool
     {
