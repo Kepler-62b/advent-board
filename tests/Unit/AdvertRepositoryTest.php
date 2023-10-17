@@ -3,7 +3,7 @@
 namespace Tests\Unit;
 
 use App\Repository\AdvertRepository;
-use App\Service\PHPAdventBoardDatabase;
+use Dev\trash\MySQLAdvertsBoard;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -16,7 +16,7 @@ class AdvertRepositoryTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->adventBoardDatabase = $this->createMock(PHPAdventBoardDatabase::class);
+        $this->adventBoardDatabase = $this->createMock(MySQLAdvertsBoard::class);
         $this->advertRepository = new AdvertRepository($this->adventBoardDatabase);
     }
 

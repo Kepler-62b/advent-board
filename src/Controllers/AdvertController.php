@@ -2,23 +2,23 @@
 
 namespace App\Controllers;
 
-use App\Service\HydratorService;
-use App\Service\RenderTemplateService;
-use App\Service\Template;
-use App\Service\NotFoundHttpException;
-use App\Service\Helpers\LinkManager;
-
-use App\Service\Widgets\GetFormWidget;
-use App\Service\Widgets\PaginationWidget;
-use App\Service\Widgets\TableWidget;
-use App\Service\Widgets\NavigationWidget;
-use App\Service\Widgets\SortWidget;
-
-use App\Models\Advent;
+use App\Models\Advert;
+use App\Models\ViewModels\AdvertView;
 use App\Repository\AdvertRepository;
-
-use Symfony\Component\HttpFoundation\Response;
+use Dev\Service\ActionParamsValidation;
+use Framework\Services\Helpers\LinkManager;
+use Framework\Services\HydratorService;
+use Framework\Services\NotFoundHttpException;
+use Framework\Services\RenderTemplateService;
+use Framework\Services\Template;
+use Framework\Services\Widgets\GetFormWidget;
+use Framework\Services\Widgets\NavigationWidget;
+use Framework\Services\Widgets\PaginationWidget;
+use Framework\Services\Widgets\SortWidget;
+use Framework\Services\Widgets\TableWidget;
+use http\Exception\InvalidArgumentException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class AdvertController extends DefaultController
 {
@@ -35,169 +35,86 @@ class AdvertController extends DefaultController
     public function showAll(): Response
     {
         $repository = $this->repository;
+
         if ($page = filter_input(INPUT_GET, 'page')) {
             $adverts = $repository->fetchAll($page);
         } else {
             $adverts = $repository->fetchAll();
         }
 
-        $navigationWidget = (new NavigationWidget('w_navigation_bootstrap'))->getTemplate();
-        $getFormWidget = (new GetFormWidget('w_form_get_bootstrap'))->getTemplate();
-        $paginationWidget = (new PaginationWidget('w_pagination_array_bootstrap', ['totalCount' => $repository->getCount()], ['sampleLimit' => 10]))->getTemplate();
-        $tableWidget = (new TableWidget(
-            'w_table_adverts_bootstrap',
-            [
-                'Id',
-                'Item',
-                'Description',
-                new SortWidget('w_sort_bootstrap', 'Price', 'price'),
-                'Image',
-                new SortWidget('w_sort_bootstrap', 'Created', 'created_date')
-            ],
-            ['adverts' => $adverts]
-        ))->getTemplate();
-
-        $content = new Template('c_show_page_adverts_bootstrap', 'content');
-        $layout = new Template('l_main_page_dashboard_bootstrap', 'layouts');
-
-        $view = (new RenderTemplateService(
-            [
-                $layout, $content, $tableWidget, $paginationWidget, $getFormWidget, $navigationWidget
-            ]
-        ))->renderFromListTemplates();
+        $view = (new AdvertView())->displayAll([
+            'data' => $adverts,
+            'count' => $repository->getCount()
+        ]);
 
         return (new Response($view))->send();
     }
 
     /**
+     * @param ActionParamsValidation $actionParams
      * @TODO принимать не весь массив из query string, а указанное значение в аргументе
      * @throws NotFoundHttpException
      */
-    public function showById(array $actionParams = null, $interface = null): Response
+    public function showById(ActionParamsValidation $actionParams): Response
     {
-        $id = $actionParams['id'];
+        // какая-то валидация
+        $id = (int)$actionParams->validateKey('id');
         $repository = $this->repository;
 
         $advert = $repository->findById($id) ?? throw new NotFoundHttpException('Not found item ID ', $id);
 
-        if (isset($interface)) {
-            return $this->apiRaw($advert);
-        }
+        $view = (new AdvertView())->displayById(['data' => $advert]);
 
-        $navigationWidget = (new NavigationWidget('w_navigation_bootstrap'))->getTemplate();
-        $getFormWidget = (new GetFormWidget('w_form_get_bootstrap'))->getTemplate();
-
-        $tableWidget = (
-        new TableWidget(
-            'w_table_adverts_bootstrap',
-            [
-                'id' => 'Id',
-                'item' => 'Item',
-                'description' => 'Description',
-                'price' => 'Price',
-                'image' => 'Image',
-                'created_date' => 'Date'
-            ],
-            ['adverts' => $advert],
-        ))->getTemplate();
-
-        $content = new Template('c_get_page_bootstrap', 'content');
-        $layout = new Template('l_main_page_dashboard_bootstrap', 'layouts');
-
-        $template =
-            (new RenderTemplateService([$layout, $content, $tableWidget, $getFormWidget, $navigationWidget]))
-                ->renderFromListTemplates();
-
-        return (new Response($template))->send();
+        return (new Response($view))->send();
     }
 
-    public function showByMin(array $param): Response
+    /**
+     * @param ActionParamsValidation $actionParams
+     */
+    public function showByMin(ActionParamsValidation $actionParams): Response
     {
         $repository = $this->repository;
-        extract($param, EXTR_OVERWRITE);
+//        extract($actionParams, EXTR_OVERWRITE);
+
+        $page = $actionParams->validateKey('page');
+        $filter = $actionParams->validateKey('filter');
+
         $adverts = $repository->getMin($page, $filter);
 
-        $navigationWidget = (new NavigationWidget('w_navigation_bootstrap'))->getTemplate();
-        $getFormWidget = (new GetFormWidget('w_form_get_bootstrap'))->getTemplate();
-
-        $paginationWidget = (new PaginationWidget('w_pagination_array_bootstrap', ['totalCount' => $repository->getCount()], ['sampleLimit' => 10]))->getTemplate();
-        $sortPriceWidget = new SortWidget('w_sort_bootstrap', 'Price', 'price');
-        $sortDateWidget = new SortWidget('w_sort_bootstrap', 'Created', 'created_date');
-        $tableWidget = (new TableWidget(
-            'w_table_adverts_bootstrap',
-            [
-                'id' => 'Id',
-                'item' => 'Item',
-                'description' => 'Description',
-                'price' => $sortPriceWidget,
-                'image' => 'Image',
-                'created_date' => $sortDateWidget
-            ],
-            ['adverts' => $adverts],
-        ))->getTemplate();
-
-        $content = new Template('c_show_page_adverts_bootstrap', 'content');
-        $layout = new Template('l_main_dashboard_bootstrap', 'layouts');
-
-        $view = (new RenderTemplateService(
-            [
-                $layout, $content, $tableWidget, $paginationWidget, $getFormWidget, $navigationWidget
-            ]
-        ))->renderFromListTemplates();
+        $view = (new AdvertView())->displayAll([
+            'data' => $adverts,
+            'count' => $repository->getCount()
+        ]);
 
         return (new Response($view))->send();
     }
 
-    public function showByMax(array $param): Response
+    public function showByMax(ActionParamsValidation $actionParams): Response
     {
         $repository = $this->repository;
-        extract($param, EXTR_OVERWRITE);
+//        extract($actionParams, EXTR_OVERWRITE);
+
+        $page = $actionParams->validateKey('page');
+        $filter = $actionParams->validateKey('filter');
         $adverts = $repository->getMax($page, $filter);
 
-        $paginationWidget = (new PaginationWidget('w_pagination_array_bootstrap', ['totalCount' => $repository->getCount()], ['sampleLimit' => 10]))->getTemplate();
-        $navigationWidget = (new NavigationWidget('w_navigation_bootstrap'))->getTemplate();
-        $getFormWidget = (new GetFormWidget('w_form_get_bootstrap'))->getTemplate();
-
-        $tableWidget = (new TableWidget(
-            'w_table_adverts_bootstrap',
-            [
-                'id' => 'Id',
-                'item' => 'Item',
-                'description' => 'Description',
-                'price' => (new SortWidget('w_sort_bootstrap', 'Price', 'price')),
-                'image' => 'Image',
-                'created_date' => (new SortWidget('w_sort_bootstrap', 'Created', 'created_date')),
-            ],
-            ['adverts' => $adverts],
-        ))->getTemplate();
-        $content = new Template('c_show_page_adverts_bootstrap', 'content');
-        $layout = new Template('l_main_dashboard_bootstrap', 'layouts');
-
-        $view = (new RenderTemplateService(
-            [
-                $layout, $content, $tableWidget, $paginationWidget, $getFormWidget, $navigationWidget
-            ]
-        ))->renderFromListTemplates();
+        $view = (new AdvertView())->displayAll([
+            'data' => $adverts,
+            'count' => $repository->getCount()
+        ]);
 
         return (new Response($view))->send();
     }
 
-    public function create_form(): Response
+    public function createForm(): Response
     {
-        $navigationWidget = (new NavigationWidget('w_navigation_bootstrap'))->getTemplate();
-        $formGetWidget = (new GetFormWidget('w_form_get_bootstrap'))->getTemplate();
-        $content = new Template('c_create_form_bootstrap', 'content');
-        $layout = new Template('l_main_page_dashboard_bootstrap', 'layouts');
-
-        $view = (new RenderTemplateService([$layout, $content, $formGetWidget, $navigationWidget]))->renderFromListTemplates();
+        $view = (new AdvertView())->displayForm('c_create_form_bootstrap');
 
         return (new Response($view))->send();
     }
 
-    public function create_action(): Response
+    public function createAction(): Response
     {
-        // $request = Request::createFromGlobals();
-        // $files = $request->files;
         $repository = $this->repository;
 
         $data = filter_input_array(
@@ -211,7 +128,7 @@ class AdvertController extends DefaultController
         );
 
         $hydrator = new HydratorService();
-        $model = $hydrator->hydrate(Advent::class, $data);
+        $model = $hydrator->hydrate(Advert::class, $data);
 
         if ($repository->save($model)) {
             return (new RedirectResponse(LinkManager::link('/show')))->send();
@@ -221,16 +138,11 @@ class AdvertController extends DefaultController
         }
     }
 
-    public function update_form(): Response
+    public function updateForm(): Response
     {
-        $navigationWidget = (new NavigationWidget('w_navigation_bootstrap'))->getTemplate();
-        $formGetWidget = (new GetFormWidget('w_form_get_bootstrap'))->getTemplate();
-        $content = new Template('c_update_form_bootstrap', 'content');
-        $layout = new Template('l_main_page_dashboard_bootstrap', 'layouts');
+        $view = (new AdvertView())->displayForm('c_update_form_bootstrap');
 
-        $template = (new RenderTemplateService([$layout, $content, $formGetWidget, $navigationWidget]))->renderFromListTemplates();
-
-        return (new Response($template))->send();
+        return (new Response($view))->send();
     }
 
     public function update_action(): Response
@@ -247,7 +159,7 @@ class AdvertController extends DefaultController
             ]
         );
 
-        $model = (new HydratorService())->hydrate(Advent::class, $data);
+        $model = (new HydratorService())->hydrate(Advert::class, $data);
 
         if ($repository->update($model)) {
             return (new RedirectResponse(LinkManager::link('/show')))->send();

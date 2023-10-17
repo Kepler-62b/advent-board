@@ -1,4 +1,4 @@
-<?php use App\Service\Helpers\LinkManager; ?>
+<?php use Framework\Services\Helpers\LinkManager; ?>
 
 <section class="py-5 text-center container">
     <div class="row py-lg-5">
@@ -18,7 +18,7 @@
                 <div class="col">
                     <div class="card shadow-sm">
                         <img class="rounded mx-auto d-block"
-                             src="<?= LinkManager::linkImage('/public/img/user/', $image->getName()) ?>"
+                             src="<?= LinkManager::linkImage('/img/user/', $image->getName()) ?>"
                              alt="<?= $image->getName() ?>" width="100" height="100">
                         <div class="card-body">
                             <p class="card-text"><?= $image->getName() ?></p>

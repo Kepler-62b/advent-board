@@ -1,35 +1,15 @@
-
-###> symfony ###
+# Directory
 /vendor/
-###< symfony ###
-
-###> tests ###
 /dev/
-###< tests ###
-
-###> vscode ###
 /.vscode/
-###< vscode ###
-
-###> psalm ###
 /.idea/
-psalm_baseline.xml
-###< psalm ###
-
-###> docker data ###
-/docker/database/mysql/data
 /docker/database/postgres/data
-###< docker data ###
+/docker/database/mysql/data
 
-###> phpunit cahe ###
-/.phpunit.result.cache
-###< phpunit cahe ###
-
-###> php-cs-fixer cache ###
-/.php-cs-fixer.cache
-###< php-cs-fixer cache ###
-
-
-
-
-
+# Files
+.*
+index.php
+psalm_baseline.xml
+.phpunit.result.cache
+.php-cs-fixer.cache
+.DS_Store

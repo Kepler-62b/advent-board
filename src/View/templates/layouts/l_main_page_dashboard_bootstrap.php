@@ -17,7 +17,7 @@
             crossorigin="anonymous"></script>
 
     <!-- Bootstrap core CSS -->
-    <link href="/public/css/assets/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/assets/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <!--    <style>-->
 <!--        .bd-placeholder-img {-->
@@ -36,7 +36,7 @@
 <!--    </style>-->
 
     <!-- Custom styles for this template -->
-    <link href="/public/css/dashboard.css" rel="stylesheet">
+    <link href="/css/dashboard.css" rel="stylesheet">
 
 </head>
 
@@ -92,7 +92,7 @@
 </div>
 
 
-<!--<script src="./public/css/assets/dist/js/bootstrap.bundle.min.js"></script>-->
+<!--<script src="./css/assets/dist/js/bootstrap.bundle.min.js"></script>-->
 
 <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
         integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE"
@@ -100,7 +100,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"
         integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha"
         crossorigin="anonymous"></script>
-<script src="/public/css/dashboard.js"></script>
+<script src="/css/dashboard.js"></script>
 
 </body>
 </html>

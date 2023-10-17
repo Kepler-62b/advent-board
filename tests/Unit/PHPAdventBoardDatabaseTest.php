@@ -2,23 +2,23 @@
 
 namespace Tests\Unit;
 
-use App\Service\PHPAdventBoardDatabase;
+use Dev\trash\MySQLAdvertsBoard;
 use PHPUnit\Framework\TestCase;
 
 class PHPAdventBoardDatabaseTest extends TestCase
 {
 
-    private PHPAdventBoardDatabase $databaseConnection;
+    private MySQLAdvertsBoard $databaseConnection;
 
     protected function setUp(): void
     {
-        $this->databaseConnection = PHPAdventBoardDatabase::getInstance();
+        $this->databaseConnection = MySQLAdvertsBoard::getInstance();
     }
 
     public function testGetPDOConnection(): void
     {
         $result = $this->databaseConnection;
-        $this->assertInstanceOf(PHPAdventBoardDatabase::class, $result);
+        $this->assertInstanceOf(MySQLAdvertsBoard::class, $result);
     }
 
 }

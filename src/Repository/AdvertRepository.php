@@ -2,27 +2,35 @@
 
 namespace App\Repository;
 
-use App\Service\PHPAdventBoardDatabase;
-use App\Service\HydratorService;
-
 use App\Models\Advert;
-
-use App\Service\Relation;
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
+use Framework\Services\HydratorService;
+use Framework\Services\NoDBConnectionException;
+use Framework\Services\Relation;
 
 class AdvertRepository
 {
-    private PHPAdventBoardDatabase $pdo;
+    private \PDO $pdo;
     private string $table = 'adverts';
     private ?int $lastInsertId;
 
     /** @var int задает количество извлекаемых строк из таблицы */
     public const SELECT_LIMIT = 10;
 
-    public function __construct(PHPAdventBoardDatabase $pdo)
+    public function __construct(\PDO $pdo)
     {
         $this->pdo = $pdo;
+    }
+
+    public function getCount(): int
+    {
+        $connection = $this->pdo;
+        $table = $this->table;
+
+        $sql = "SELECT COUNT(*) FROM $table";
+
+        $pdo_statment = $connection->query($sql);
+        [$count] = $pdo_statment->fetch(\PDO::FETCH_NUM);
+        return $count;
     }
 
     /**
@@ -44,7 +52,6 @@ class AdvertRepository
             $pdo_statement = $connection->prepare($sql);
             $pdo_statement->bindValue(":offset", $offset, \PDO::PARAM_INT);
             $pdo_statement->execute();
-
             $result = $pdo_statement->fetchAll(\PDO::FETCH_ASSOC);
 
             $hydrator = new HydratorService();
@@ -69,8 +76,10 @@ class AdvertRepository
             return $modelsStorage;
 
         } catch (\PDOException $exception) {
-            throw new \PDOException($exception);
+//            throw new \PDOException($exception);
+            throw new NoDBConnectionException("No database connection / $exception");
         }
+
     }
 
     /**
@@ -114,7 +123,7 @@ class AdvertRepository
                 return NULL;
             }
         } catch (\PDOException $exception) {
-            die('Ошибка: ' . $exception->getMessage());
+            throw new \PDOException('Ошибка: ' . $exception->getMessage());
         }
     }
 
@@ -165,18 +174,6 @@ class AdvertRepository
         }
     }
 
-    public function getCount(): int
-    {
-        $connection = $this->pdo;
-        $table = $this->table;
-
-        $sql = "SELECT COUNT(*) FROM $table";
-
-        $pdo_statment = $connection->query($sql);
-        [$count] = $pdo_statment->fetch(\PDO::FETCH_NUM);
-        return $count;
-    }
-
     public function getMax(int $page, string $filter): array
     {
         $connection = $this->pdo;
@@ -211,7 +208,6 @@ class AdvertRepository
                     ]
                 );
             }
-
             return $modelsStorage;
         } catch (\PDOException $exception) {
             throw new \PDOException($exception);
@@ -251,11 +247,9 @@ class AdvertRepository
                     ]
                 );
             }
-
             return $modelsStorage;
         } catch (\PDOException $exception) {
             throw new \PDOException($exception);
         }
     }
-
 }

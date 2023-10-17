@@ -20,7 +20,7 @@ return
         ],
         'localhost' => [
             'adapter' => 'mysql',
-            'host' => '127.0.0.1',
+            'host' => 'adverts-mysql',
             'name' => 'adverts-board',
             'user' => 'root',
             'pass' => 'secret',

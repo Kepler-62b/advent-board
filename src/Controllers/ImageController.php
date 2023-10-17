@@ -2,18 +2,13 @@
 
 namespace App\Controllers;
 
-use App\Models\Advert;
-use App\Models\Image;
 use App\Repository\ImageRepository;
-use App\Service\HydratorService;
-use App\Service\NotFoundHttpException;
-use App\Service\RenderTemplateService;
-use App\Service\Template;
-use App\Service\Widgets\GetFormWidget;
-use App\Service\Widgets\NavigationWidget;
-use App\Service\Widgets\PaginationWidget;
-use App\Service\Widgets\SortWidget;
-use App\Service\Widgets\TableWidget;
+use Framework\Services\NotFoundHttpException;
+use Framework\Services\RenderTemplateService;
+use Framework\Services\Template;
+use Framework\Services\Widgets\GetFormWidget;
+use Framework\Services\Widgets\NavigationWidget;
+use Framework\Services\Widgets\TableWidget;
 use Symfony\Component\HttpFoundation\Response;
 
 class ImageController

@@ -3,9 +3,9 @@
 namespace Tests\Unit;
 
 use App\Models\Advent;
-use App\Models\Image;
 use App\Models\Advert;
-use App\Service\OneToManyRelation;
+use App\Models\Image;
+use Framework\Services\OneToManyRelation;
 use PHPUnit\Framework\TestCase;
 
 final class OneToManyRelationTest extends TestCase
