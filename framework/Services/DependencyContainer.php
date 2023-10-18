@@ -2,14 +2,12 @@
 
 namespace Framework\Services;
 
-use App\Controllers\AdventController;
 use App\Controllers\AdvertController;
 use App\Controllers\ImageController;
-use App\Repository\AdventRepository;
 use App\Repository\AdvertRepository;
-use App\Repository\CityRepository;
 use App\Repository\ImageRepository;
 use Framework\Services\Database\PDOConnection;
+use Framework\Services\Database\SQLStorage;
 
 class DependencyContainer
 {
@@ -20,11 +18,12 @@ class DependencyContainer
         // @TODO подумать над структурой массива - контейнера
         $this->objects = [
             // @TODO создание объекта при каждом подключении
-            /** база данных */
 //            'App\Service\MySQLAdvertsBoard' => fn() => new DatabaseConnection(),
+            /** сервисы */
             'Framework\Service\Database\PDOConnection' => fn() => PDOConnection::getInstance(),
+            'Framework\Service\Database\SQLStorage' => fn() => new SQLStorage($this->get('Framework\Service\Database\PDOConnection')),
             /** репозитории */
-            'App\Repository\AdvertRepository' => fn() => new AdvertRepository($this->get('Framework\Service\Database\PDOConnection')),
+            'App\Repository\AdvertRepository' => fn() => new AdvertRepository($this->get('Framework\Service\Database\SQLStorage')),
             'App\Repository\ImageRepository' => fn() => new ImageRepository($this->get('Framework\Service\Database\PDOConnection')),
             /** контроллеры */
             'App\Controllers\AdvertController' => fn() => new AdvertController($this->get('App\Repository\AdvertRepository')),
