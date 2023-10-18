@@ -4,19 +4,11 @@ namespace App\Controllers;
 
 use App\Models\Advert;
 use App\Models\ViewModels\AdvertView;
-use App\Repository\AdvertRepository;
 use Dev\Service\ActionParamsValidation;
+use App\Repository\AdvertRepository;
 use Framework\Services\Helpers\LinkManager;
 use Framework\Services\HydratorService;
 use Framework\Services\NotFoundHttpException;
-use Framework\Services\RenderTemplateService;
-use Framework\Services\Template;
-use Framework\Services\Widgets\GetFormWidget;
-use Framework\Services\Widgets\NavigationWidget;
-use Framework\Services\Widgets\PaginationWidget;
-use Framework\Services\Widgets\SortWidget;
-use Framework\Services\Widgets\TableWidget;
-use http\Exception\InvalidArgumentException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -37,9 +29,9 @@ class AdvertController extends DefaultController
         $repository = $this->repository;
 
         if ($page = filter_input(INPUT_GET, 'page')) {
-            $adverts = $repository->fetchAll($page);
+            $adverts = $repository->selectAllWithOffset($page);
         } else {
-            $adverts = $repository->fetchAll();
+            $adverts = $repository->selectAllWithOffset();
         }
 
         $view = (new AdvertView())->displayAll([
@@ -51,17 +43,16 @@ class AdvertController extends DefaultController
     }
 
     /**
-     * @param ActionParamsValidation $actionParams
      * @TODO принимать не весь массив из query string, а указанное значение в аргументе
+     * @param ActionParamsValidation $actionParams
      * @throws NotFoundHttpException
      */
-    public function showById(ActionParamsValidation $actionParams): Response
+    public function showById(int $id): Response
     {
-        // какая-то валидация
-        $id = (int)$actionParams->validateKey('id');
-        $repository = $this->repository;
+        // @TODO то не валидация - переделать класс
+//        $id = (int)$actionParams->validateKey('id');
 
-        $advert = $repository->findById($id) ?? throw new NotFoundHttpException('Not found item ID ', $id);
+        $advert = $this->repository->find($id) ?? throw new NotFoundHttpException('Not found item ID ', $id);
 
         $view = (new AdvertView())->displayById(['data' => $advert]);
 
