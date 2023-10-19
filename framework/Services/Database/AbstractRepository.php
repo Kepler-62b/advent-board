@@ -5,10 +5,10 @@ namespace Framework\Services\Database;
 use Doctrine\Persistence\ObjectRepository;
 use Framework\Services\HydratorService;
 
-class AbstractRepository
+class AbstractRepository implements ObjectRepository
 {
-    private StorageInterface $storage;
-    private string $entityClass;
+    protected StorageInterface $storage;
+    protected string $entityClass;
 
     public function __construct(StorageInterface $storage, string $entityClass)
     {
@@ -16,7 +16,7 @@ class AbstractRepository
         $this->entityClass = $entityClass;
     }
 
-    public function find(int $id): object
+    public function find($id): ?object
     {
         $data = $this->storage->selectById($id);
 
@@ -63,8 +63,10 @@ class AbstractRepository
         return $modelsStorage;
     }
 
-    public function findBy(array $criteria, ?string $orderBy = null, ?int $limit = null, ?int $offset = null): ?array
+    public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null): ?array
     {
+        // @TODO заглушка для аргумента $orderBy - в SQLStorage реализованна обработка только строки, а не массива
+        $orderBy = current($orderBy);
 
         if (!$data = $this->storage->selectBy($criteria, $orderBy, $limit, $offset)) {
             return null;
@@ -91,7 +93,7 @@ class AbstractRepository
         }
     }
 
-    public function findByOne(array $criteria): ?object
+    public function findOneBy(array $criteria): ?object
     {
         if ($data = $this->storage->selectByOne($criteria)) {
             return null;
@@ -113,6 +115,11 @@ class AbstractRepository
 
             return $model;
         }
+    }
+
+    public function getClassName(): object
+    {
+        return $this->entityClass;
     }
 
 
