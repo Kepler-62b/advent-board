@@ -8,8 +8,8 @@ use Symfony\Component\HttpFoundation\Request;
 class ParseURLService
 {
     // @TODO вынести пути к файлам из классов
-    private const APP_MAP =  'config/app_route_map.json';
-    private const API_MAP = '/config/api_route_map.json';
+    private const APP_MAP = '/app/config/app_route_map.json';
+    private const API_MAP = '/app/config/api_route_map.json';
     public array $matchURL = [];
     private array $parseURL = [];
 

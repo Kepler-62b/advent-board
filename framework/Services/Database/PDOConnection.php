@@ -20,7 +20,7 @@ class PDOConnection extends \PDO
 
     private function getConfigMap(): array
     {
-        return json_decode(file_get_contents('config/database_config.json'), JSON_OBJECT_AS_ARRAY);
+        return json_decode(file_get_contents('/app/config/database_config.json'), JSON_OBJECT_AS_ARRAY);
     }
 
     private function initPDOParams(): void
