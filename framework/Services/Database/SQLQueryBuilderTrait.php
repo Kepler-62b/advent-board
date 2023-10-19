@@ -2,7 +2,7 @@
 
 namespace Framework\Services\Database;
 
-trait SQLQueryTrait
+trait SQLQueryBuilderTrait
 {
     private array $inputKeywordStorage = [
         '%TABLE' => null,
@@ -46,25 +46,37 @@ trait SQLQueryTrait
     }
 
     /** @param array<string, strimg|int>|null $criteria */
-    public function whereA(array $criteria = null): self
+    public function whereA(array $criteria = null, bool $binding = null): self
     {
         if (isset($criteria)) {
-            $whereKey = $criteria['key'];
-            $whereValue = $criteria['value'];
-            $operator = $criteria['operator'];
-            $this->outputKeywordStorage['%WHERE'] = " WHERE $whereKey $operator $whereValue";
+            $whereKey = $criteria[0];
+
+            if ($binding) {
+                $operator = $criteria[2];
+                $this->outputKeywordStorage['%WHERE'] = " WHERE $whereKey $operator ?";
+            } else {
+                $whereValue = $criteria[1];
+                $operator = $criteria[2];
+
+                $this->outputKeywordStorage['%WHERE'] = " WHERE $whereKey $operator $whereValue";
+            }
+
             $this->remove();
         }
 
         return $this;
     }
 
-    public function orderBy(string|int $orderBy = null): self
+    public function orderBy(string|int $orderBy = null, bool $binding = null): self
     {
         $this->inputKeywordStorage['%ORDERBY'] = $orderBy;
 
         if (isset($orderBy)) {
-            $this->outputKeywordStorage['%ORDERBY'] = " ORDER BY ?";
+            if ($binding) {
+                $this->outputKeywordStorage['%ORDERBY'] = " ORDER BY ?";
+            } else {
+                $this->outputKeywordStorage['%ORDERBY'] = " ORDER BY $orderBy";
+            }
         }
         $this->remove();
 
@@ -78,29 +90,41 @@ trait SQLQueryTrait
         if (isset($sortDirection)) {
             $this->outputKeywordStorage['%SORT'] = " $sortDirection";
         }
+
         $this->remove();
 
         return $this;
     }
 
-    public function limit(int $limit = null): self
+    public function limit(int $limit = null, bool $binding = null): self
     {
         $this->inputKeywordStorage['%LIMIT'] = $limit;
 
         if (isset($limit)) {
-            $this->outputKeywordStorage['%LIMIT'] = " LIMIT $limit";
+
+            if ($binding) {
+                $this->outputKeywordStorage['%LIMIT'] = " LIMIT ?";
+            } else {
+                $this->outputKeywordStorage['%LIMIT'] = " LIMIT $limit";
+            }
         }
+
         $this->remove();
 
         return $this;
     }
 
-    public function offset(int $offset = null): self
+    public function offset(int $offset = null, bool $binding = null): self
     {
         $this->inputKeywordStorage['%OFFSET'] = $offset;
 
         if (isset($offset)) {
-            $this->outputKeywordStorage['%OFFSET'] = " OFFSET ?";
+
+            if ($binding) {
+                $this->outputKeywordStorage['%OFFSET'] = " OFFSET ?";
+            } else {
+                $this->outputKeywordStorage['%OFFSET'] = " OFFSET $offset";
+            }
         }
         $this->remove();
 

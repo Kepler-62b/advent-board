@@ -10,7 +10,7 @@ use Framework\Services\Relation;
 class SQLStorage implements StorageInterface
 {
 
-    use SQLQueryTrait;
+    use SQLQueryBuilderTrait;
 
     private \PDO $pdo;
 
@@ -22,36 +22,39 @@ class SQLStorage implements StorageInterface
         $this->pdo = $pdo;
     }
 
-    private function pdoStatementHandler(string $sql)
+    private function pdoStatementHandler(\PDOStatement $pdoStmt, array $bindValue): bool
     {
-        $pdoStmt = $this->pdo->prepare($sql);
         // @TODO логика связывания параметров запроса
+        for ($i = 1; $i <= count($bindValue); $i++) {
+            $pdoStmt->bindValue($i, $bindValue[$i -1], \PDO::PARAM_INT);
+        }
 
-        $pdoStmt->execute();
-        $data = $pdoStmt->fetch(\PDO::FETCH_ASSOC);
-        return $data;
+        return true;
     }
 
-    public function selectById(int $id): array
+    public function selectById($id): ?array
     {
         $sql = $this->select('*', $this->table)
-            ->where('id', $id, '=')
+            ->whereA(['id', null, '='], true)
             ->build();
-
-        var_dump($sql);
 
         try {
             $pdoStmt = $this->pdo->prepare($sql);
-            $pdoStmt->bindValue(1, $id, \PDO::PARAM_INT);
-            $pdoStmt->execute();
-            $result = $pdoStmt->fetch(\PDO::FETCH_ASSOC);
-            return $result;
+
+            $this->pdoStatementHandler($pdoStmt, [$id]);
+
+            if ($pdoStmt->execute()) {
+                return $pdoStmt->fetch(\PDO::FETCH_ASSOC);
+            } else {
+                return null;
+            }
         } catch (\PDOException $exception) {
             throw new \PDOException('Ошибка: ' . $exception->getMessage());
         }
     }
 
-    public function selectAll(): ?array
+    public
+    function selectAll(): ?array
     {
         $sql = $this->select('*', $this->table);
 
@@ -64,17 +67,22 @@ class SQLStorage implements StorageInterface
         }
     }
 
-    public function selectBy(array $criteria = null, string $orderBy = null, int $limit = null, int $offset = null): ?array
+    public
+    function selectBy(array|string $criteria = null, array|string $orderBy = null, int $limit = null, int $offset = null): ?array
     {
         $sql = $this->select('*', $this->table)
-            ->where($criteria)
-            ->orderBy($orderBy)
+            ->whereA($criteria)
+            ->orderBy($orderBy, true)
             ->limit($limit)
-            ->offset($offset)
+            ->offset($offset, true)
             ->build();
 
         try {
-            if ($pdoStmt = $this->pdo->prepare($sql)->execute()) {
+            $pdoStmt = $this->pdo->prepare($sql);
+
+            $this->pdoStatementHandler($pdoStmt, [$orderBy, $offset]);
+
+            if ($pdoStmt->execute()) {
                 return $pdoStmt->fetchAll(\PDO::FETCH_ASSOC);
             } else {
                 return null;
@@ -85,15 +93,23 @@ class SQLStorage implements StorageInterface
         }
     }
 
-    public function selectByOne(array $criteria): ?array
+    public
+    function selectByOne(array $criteria): ?array
     {
         $sql = $this->select('*', $this->table)
-            ->where($criteria)
+            ->whereA($criteria, true)
             ->build();
 
         try {
-            $pdoStmt = $this->pdo->prepare($sql)->execute();
-            return $pdoStmt->fetchAll(\PDO::FETCH_ASSOC);
+            $pdoStmt = $this->pdo->prepare($sql);
+
+            $this->pdoStatementHandler($pdoStmt, [$criteria]);
+
+            if ($pdoStmt->execute()) {
+                return $pdoStmt->fetchAll(\PDO::FETCH_ASSOC);
+            } else {
+                return null;
+            }
         } catch (\PDOException $exception) {
 //            throw new \PDOException($exception);
             throw new NoDBConnectionException("No database connection / $exception");
@@ -107,43 +123,27 @@ class SQLStorage implements StorageInterface
 
         $sql = $this->select('*', $this->table)
             ->limit(self::SELECT_LIMIT)
-            ->offset($offset)
+            ->offset($offset, true)
             ->build();
 
         try {
-            $pdo_statement = $this->pdo->prepare($sql);
-            $pdo_statement->bindValue(":offset", $offset, \PDO::PARAM_INT);
-            $pdo_statement->execute();
-            $result = $pdo_statement->fetchAll(\PDO::FETCH_ASSOC);
+            $pdoStmt = $this->pdo->prepare($sql);
 
-            $hydrator = new HydratorService();
-            $modelsStorage = [];
-            foreach ($result as $data) {
-                $model = $hydrator->hydrate(
-                    Advert::class,
-                    $data,
-                    [
-                        'id' => 'id',
-                        'item' => 'item',
-                        'description' => 'description',
-                        'price' => 'price',
-                        'image' => 'image',
-                        'created_date' => 'createdDate',
-                        'modified_date' => 'modifiedDate',
-                    ]
-                );
-                $relationModel = (new Relation($model))->getRelation('id');
-                $modelsStorage[] = $relationModel;
+            $this->pdoStatementHandler($pdoStmt, [$offset]);
+
+            if ($pdoStmt->execute()) {
+                return $pdoStmt->fetchAll(\PDO::FETCH_ASSOC);
+            } else {
+                return null;
             }
-            return $modelsStorage;
-
         } catch (\PDOException $exception) {
 //            throw new \PDOException($exception);
             throw new NoDBConnectionException("No database connection / $exception");
         }
     }
 
-    public function selectAllWithOffSortByMax(string $orderBy, int $offset): ?array
+    public
+    function selectAllWithOffSortByMax(string $orderBy, int $offset): ?array
     {
         $offset = ($offset - 1) * self::SELECT_LIMIT;
 
@@ -184,7 +184,8 @@ class SQLStorage implements StorageInterface
         }
     }
 
-    public function selectAllWithOffSortByMin(string $orderBy, int $offset): ?array
+    public
+    function selectAllWithOffSortByMin(string $orderBy, int $offset): ?array
     {
         $offset = ($offset - 1) * self::SELECT_LIMIT;
 
