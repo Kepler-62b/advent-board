@@ -4,8 +4,8 @@ namespace App\Controllers;
 
 use App\Models\Advert;
 use App\Models\ViewModels\AdvertView;
-use Dev\Service\ActionParamsValidation;
 use App\Repository\AdvertRepository;
+use Dev\Service\ActionParamsValidation;
 use Framework\Services\Helpers\LinkManager;
 use Framework\Services\HydratorService;
 use Framework\Services\NotFoundHttpException;
@@ -29,14 +29,14 @@ class AdvertController extends DefaultController
         $repository = $this->repository;
 
         if ($page = filter_input(INPUT_GET, 'page')) {
-            $adverts = $repository->selectAllWithOffset($page);
+            $adverts = $repository->findAllWithOffest($page);
         } else {
-            $adverts = $repository->selectAllWithOffset();
+            $adverts = $repository->findAllWithOffest(1);
         }
 
         $view = (new AdvertView())->displayAll([
             'data' => $adverts,
-            'count' => $repository->getCount()
+            'count' => 27
         ]);
 
         return (new Response($view))->send();
