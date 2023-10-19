@@ -11,9 +11,15 @@ class AdvertRepository extends AbstractRepository
 {
     public function __construct(StorageInterface $storage)
     {
-//        $this->storage = $storage;
-//        $this->entityClass = Advert::class;
         parent::__construct($storage, Advert::class);
+    }
+
+    public function getAdvertsCount(): int
+    {
+        var_dump($this->storage);
+        $storage = clone $this->storage;
+        var_dump($storage);
+        return $storage->selectCount();
     }
 
     public function findAllWithOffest(int $offset): ?array

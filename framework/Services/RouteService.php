@@ -2,7 +2,7 @@
 
 namespace Framework\Services;
 
-use Dev\Service\ActionParamsValidation;
+use Dev\Tests\Services\ActionParamsValidation;
 
 class RouteService
 {

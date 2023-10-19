@@ -26,7 +26,7 @@ class SQLStorage implements StorageInterface
     {
         // @TODO логика связывания параметров запроса
         for ($i = 1; $i <= count($bindValue); $i++) {
-            $pdoStmt->bindValue($i, $bindValue[$i -1], \PDO::PARAM_INT);
+            $pdoStmt->bindValue($i, $bindValue[$i - 1], \PDO::PARAM_INT);
         }
 
         return true;
@@ -142,8 +142,7 @@ class SQLStorage implements StorageInterface
         }
     }
 
-    public
-    function selectAllWithOffSortByMax(string $orderBy, int $offset): ?array
+    public function selectAllWithOffSortByMax(string $orderBy, int $offset): ?array
     {
         $offset = ($offset - 1) * self::SELECT_LIMIT;
 
@@ -184,8 +183,7 @@ class SQLStorage implements StorageInterface
         }
     }
 
-    public
-    function selectAllWithOffSortByMin(string $orderBy, int $offset): ?array
+    public function selectAllWithOffSortByMin(string $orderBy, int $offset): ?array
     {
         $offset = ($offset - 1) * self::SELECT_LIMIT;
 
@@ -224,5 +222,16 @@ class SQLStorage implements StorageInterface
         } catch (\PDOException $exception) {
             throw new \PDOException($exception);
         }
+    }
+
+    public function selectCount(): int
+    {
+        var_dump($this->selectSQL);
+        $sql = $this->select('COUNT(*)', $this->table)
+            ->build();
+        var_dump($sql);
+        die;
+        $pdoStmt = $this->pdo->query($sql);
+        return $pdoStmt->fetch(\PDO::FETCH_NUM);
     }
 }

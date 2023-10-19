@@ -5,7 +5,7 @@ namespace App\Controllers;
 use App\Models\Advert;
 use App\Models\ViewModels\AdvertView;
 use App\Repository\AdvertRepository;
-use Dev\Service\ActionParamsValidation;
+use Dev\Tests\Services\ActionParamsValidation;
 use Framework\Services\Helpers\LinkManager;
 use Framework\Services\HydratorService;
 use Framework\Services\NotFoundHttpException;
@@ -26,6 +26,7 @@ class AdvertController extends DefaultController
      */
     public function showAll(): Response
     {
+        $count = clone $this->repository;
         $repository = $this->repository;
 
         if ($page = filter_input(INPUT_GET, 'page')) {
@@ -36,7 +37,7 @@ class AdvertController extends DefaultController
 
         $view = (new AdvertView())->displayAll([
             'data' => $adverts,
-            'count' => 27
+            'count' => $count->getAdvertsCount(),
         ]);
 
         return (new Response($view))->send();
