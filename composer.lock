@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b839cdbf25fa7634fee8e88ada53d075",
+    "content-hash": "aaccb256e827404bf0cfb54e1a5614db",
     "packages": [
         {
             "name": "cakephp/chronos",
@@ -296,6 +296,195 @@
                 "source": "https://github.com/cakephp/utility"
             },
             "time": "2023-04-18T02:40:01+00:00"
+        },
+        {
+            "name": "doctrine/event-manager",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/event-manager.git",
+                "reference": "750671534e0241a7c50ea5b43f67e23eb5c96f32"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine/event-manager/zipball/750671534e0241a7c50ea5b43f67e23eb5c96f32",
+                "reference": "750671534e0241a7c50ea5b43f67e23eb5c96f32",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1"
+            },
+            "conflict": {
+                "doctrine/common": "<2.9"
+            },
+            "require-dev": {
+                "doctrine/coding-standard": "^10",
+                "phpstan/phpstan": "^1.8.8",
+                "phpunit/phpunit": "^9.5",
+                "vimeo/psalm": "^4.28"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Doctrine\\Common\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com"
+                },
+                {
+                    "name": "Marco Pivetta",
+                    "email": "ocramius@gmail.com"
+                }
+            ],
+            "description": "The Doctrine Event Manager is a simple PHP event system that was built to be used with the various Doctrine projects.",
+            "homepage": "https://www.doctrine-project.org/projects/event-manager.html",
+            "keywords": [
+                "event",
+                "event dispatcher",
+                "event manager",
+                "event system",
+                "events"
+            ],
+            "support": {
+                "issues": "https://github.com/doctrine/event-manager/issues",
+                "source": "https://github.com/doctrine/event-manager/tree/2.0.0"
+            },
+            "funding": [
+                {
+                    "url": "https://www.doctrine-project.org/sponsorship.html",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://www.patreon.com/phpdoctrine",
+                    "type": "patreon"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/doctrine%2Fevent-manager",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2022-10-12T20:59:15+00:00"
+        },
+        {
+            "name": "doctrine/persistence",
+            "version": "3.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/persistence.git",
+                "reference": "63fee8c33bef740db6730eb2a750cd3da6495603"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine/persistence/zipball/63fee8c33bef740db6730eb2a750cd3da6495603",
+                "reference": "63fee8c33bef740db6730eb2a750cd3da6495603",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/event-manager": "^1 || ^2",
+                "php": "^7.2 || ^8.0",
+                "psr/cache": "^1.0 || ^2.0 || ^3.0"
+            },
+            "conflict": {
+                "doctrine/common": "<2.10"
+            },
+            "require-dev": {
+                "composer/package-versions-deprecated": "^1.11",
+                "doctrine/coding-standard": "^11",
+                "doctrine/common": "^3.0",
+                "phpstan/phpstan": "1.9.4",
+                "phpstan/phpstan-phpunit": "^1",
+                "phpstan/phpstan-strict-rules": "^1.1",
+                "phpunit/phpunit": "^8.5 || ^9.5",
+                "symfony/cache": "^4.4 || ^5.4 || ^6.0",
+                "vimeo/psalm": "4.30.0 || 5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Doctrine\\Persistence\\": "src/Persistence"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com"
+                },
+                {
+                    "name": "Marco Pivetta",
+                    "email": "ocramius@gmail.com"
+                }
+            ],
+            "description": "The Doctrine Persistence project is a set of shared interfaces and functionality that the different Doctrine object mappers share.",
+            "homepage": "https://www.doctrine-project.org/projects/persistence.html",
+            "keywords": [
+                "mapper",
+                "object",
+                "odm",
+                "orm",
+                "persistence"
+            ],
+            "support": {
+                "issues": "https://github.com/doctrine/persistence/issues",
+                "source": "https://github.com/doctrine/persistence/tree/3.2.0"
+            },
+            "funding": [
+                {
+                    "url": "https://www.doctrine-project.org/sponsorship.html",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://www.patreon.com/phpdoctrine",
+                    "type": "patreon"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/doctrine%2Fpersistence",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2023-05-17T18:32:04+00:00"
         },
         {
             "name": "league/container",
@@ -6010,5 +6199,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
