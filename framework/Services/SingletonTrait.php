@@ -23,6 +23,7 @@ trait SingletonTrait
         }
 
 //        var_dump(self::$instances);
+//        var_dump(self::$instances);
 //        var_dump(debug_backtrace());
         return self::$instances[$cls];
     }

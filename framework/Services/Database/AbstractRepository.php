@@ -19,6 +19,7 @@ class AbstractRepository implements ObjectRepository
     public function find($id): ?object
     {
         $data = $this->storage->selectById($id);
+        var_dump($data);
 
         $hydrator = new HydratorService();
         $model = $hydrator->hydrate(
@@ -40,27 +41,30 @@ class AbstractRepository implements ObjectRepository
 
     public function findAll(): array
     {
-        $data = $this->storage->selectAll();
+        if(!$data = $this->storage->selectAll()) {
+            return [];
+        } else {
+            $hydrator = new HydratorService();
+            $modelsStorage = [];
+            foreach ($data as $model) {
+                $modelsStorage[] = $hydrator->hydrate(
+                    $this->entityClass,
+                    $model,
+                    [
+                        'id' => 'id',
+                        'item' => 'item',
+                        'description' => 'description',
+                        'price' => 'price',
+                        'image' => 'image',
+                        'created_date' => 'createdDate',
+                        'modified_date' => 'modifiedDate',
+                    ]
+                );
+            }
 
-        $hydrator = new HydratorService();
-        $modelsStorage = [];
-        foreach ($data as $model) {
-            $modelsStorage[] = $hydrator->hydrate(
-                $this->entityClass,
-                $model,
-                [
-                    'id' => 'id',
-                    'item' => 'item',
-                    'description' => 'description',
-                    'price' => 'price',
-                    'image' => 'image',
-                    'created_date' => 'createdDate',
-                    'modified_date' => 'modifiedDate',
-                ]
-            );
+            return $modelsStorage;
         }
 
-        return $modelsStorage;
     }
 
     public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null): ?array

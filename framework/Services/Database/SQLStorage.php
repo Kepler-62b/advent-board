@@ -5,21 +5,25 @@ namespace Framework\Services\Database;
 use App\Models\Advert;
 use Framework\Services\HydratorService;
 use Framework\Services\NoDBConnectionException;
-use Framework\Services\Relation;
 
 class SQLStorage implements StorageInterface
 {
 
     use SQLQueryBuilderTrait;
 
-    private \PDO $pdo;
+    private \PDO|\PDOException $pdo;
 
     private $table = 'adverts';
     private const SELECT_LIMIT = 10;
 
     public function __construct(\PDO $pdo)
     {
-        $this->pdo = $pdo;
+        if ($pdo->connect) {
+            $this->pdo = $pdo;
+        } else {
+            $this->pdo = $pdo->exception;
+//            throw new NoDBConnectionException("No database connection /");
+        }
     }
 
     private function pdoStatementHandler(\PDOStatement $pdoStmt, array $bindValue): bool
@@ -56,15 +60,16 @@ class SQLStorage implements StorageInterface
     public
     function selectAll(): ?array
     {
-        $sql = $this->select('*', $this->table);
-
-        try {
-            $pdoStmt = $this->pdo->prepare($sql)->execute();
-            return $pdoStmt->fetchAll(\PDO::FETCH_ASSOC);
-        } catch (\PDOException $exception) {
-//            throw new \PDOException($exception);
-            throw new NoDBConnectionException("No database connection / $exception");
+        if ($this->pdo instanceof \PDOException) {
+            return null;
         }
+
+        $sql = $this->select('*', $this->table)
+            ->build();
+
+        $pdoStmt = $this->pdo->prepare($sql);
+        $pdoStmt->execute();
+        return $pdoStmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     public
@@ -119,6 +124,10 @@ class SQLStorage implements StorageInterface
 
     public function selectAllWithOffset(int $offset): ?array
     {
+        if ($this->pdo instanceof \PDOException) {
+            return null;
+        }
+
         $offset = ($offset - 1) * self::SELECT_LIMIT;
 
         $sql = $this->select('*', $this->table)
@@ -126,19 +135,14 @@ class SQLStorage implements StorageInterface
             ->offset($offset, true)
             ->build();
 
-        try {
-            $pdoStmt = $this->pdo->prepare($sql);
+        $pdoStmt = $this->pdo->prepare($sql);
 
-            $this->pdoStatementHandler($pdoStmt, [$offset]);
+        $this->pdoStatementHandler($pdoStmt, [$offset]);
 
-            if ($pdoStmt->execute()) {
-                return $pdoStmt->fetchAll(\PDO::FETCH_ASSOC);
-            } else {
-                return null;
-            }
-        } catch (\PDOException $exception) {
-//            throw new \PDOException($exception);
-            throw new NoDBConnectionException("No database connection / $exception");
+        if ($pdoStmt->execute()) {
+            return $pdoStmt->fetchAll(\PDO::FETCH_ASSOC);
+        } else {
+            return null;
         }
     }
 
@@ -226,11 +230,11 @@ class SQLStorage implements StorageInterface
 
     public function selectCount(): int
     {
-        var_dump($this->selectSQL);
+//        var_dump($this->selectSQL);
         $sql = $this->select('COUNT(*)', $this->table)
             ->build();
-        var_dump($sql);
-        die;
+//        var_dump($sql);
+//        die;
         $pdoStmt = $this->pdo->query($sql);
         return $pdoStmt->fetch(\PDO::FETCH_NUM);
     }

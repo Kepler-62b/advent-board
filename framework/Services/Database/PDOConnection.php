@@ -2,6 +2,7 @@
 
 namespace Framework\Services\Database;
 
+use Framework\Services\NoDBConnectionException;
 use Framework\Services\SingletonTrait;
 
 class PDOConnection extends \PDO
@@ -12,10 +13,23 @@ class PDOConnection extends \PDO
     private string $user;
     private string $pass;
 
+    public bool $connect;
+
+    public \PDOException $exception;
+
+    /**
+     * @throws NoDBConnectionException
+     */
     public function __construct()
     {
         $this->initPDOParams();
-        parent::__construct($this->dsn, $this->user, $this->pass);
+        try {
+            parent::__construct($this->dsn, $this->user, $this->pass);
+            $this->connect = true;
+        } catch (\PDOException $exception) {
+            $this->connect = false;
+            $this->exception = $exception;
+        }
     }
 
     private function getConfigMap(): array
