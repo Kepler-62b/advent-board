@@ -24,28 +24,40 @@ class AdvertRepository extends AbstractRepository
 
     public function findAllWithOffest(int $offset): ?array
     {
-        $data = $this->storage->selectAllWithOffset($offset);
+        if (is_null($data = $this->storage->selectAllWithOffset($offset))) {
+            return [];
+        } else {
+            $hydrator = new HydratorService();
 
-        $hydrator = new HydratorService();
+            $modelsStorage = [];
 
-        $modelsStorage = [];
+            foreach ($data as $model) {
+                $modelsStorage[] = $hydrator->hydrate(
+                    $this->entityClass,
+                    $model,
+                    [
+                        'id' => 'id',
+                        'item' => 'item',
+                        'description' => 'description',
+                        'price' => 'price',
+                        'image' => 'image',
+                        'created_date' => 'createdDate',
+                        'modified_date' => 'modifiedDate',
+                    ]
+                );
+            }
 
-        foreach ($data as $model) {
-            $modelsStorage[] = $hydrator->hydrate(
-                $this->entityClass,
-                $model,
-                [
-                    'id' => 'id',
-                    'item' => 'item',
-                    'description' => 'description',
-                    'price' => 'price',
-                    'image' => 'image',
-                    'created_date' => 'createdDate',
-                    'modified_date' => 'modifiedDate',
-                ]
-            );
+            return $modelsStorage;
         }
+    }
 
-        return $modelsStorage;
+    public function set(string $key, string $value): bool
+    {
+        return $this->storage->set($key, $value);
+    }
+
+    public function hMSet(string $key, array $value)
+    {
+        return $this->storage->hMSet($key, $value);
     }
 }

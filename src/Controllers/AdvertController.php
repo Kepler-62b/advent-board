@@ -6,41 +6,54 @@ use App\Models\Advert;
 use App\Models\ViewModels\AdvertView;
 use App\Repository\AdvertRepository;
 use Dev\Tests\Services\ActionParamsValidation;
+use Framework\Services\Database\AbstractRepository;
+use Framework\Services\Database\RedisStorage;
+use Framework\Services\DependencyContainer;
 use Framework\Services\Helpers\LinkManager;
 use Framework\Services\HydratorService;
+use Framework\Services\NoDBConnectionException;
 use Framework\Services\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class AdvertController extends DefaultController
 {
-    private AdvertRepository $repository;
+    private AbstractRepository $sqlRepository;
+    private ?AbstractRepository $redisRepository;
 
-    public function __construct(AdvertRepository $repository)
+    public function __construct(AbstractRepository $sqlRepository, AbstractRepository $redisRepository = null)
     {
-        $this->repository = $repository;
+        $this->sqlRepository = $sqlRepository;
+        $this->redisRepository = $redisRepository;
     }
 
-    /**
-     * @TODO метод занимается валидацией входящих данных - подумать, куда ее убрать
-     */
     public function showAll(): Response
     {
-        $count = clone $this->repository;
-        $repository = $this->repository;
+//        if ($page = filter_input(INPUT_GET, 'page')) {
+//            $adverts = $sqlRepository->findAllWithOffest($page) ?? throw new NoDBConnectionException('No database connection');
+//        } else {
+//            $adverts = $sqlRepository->findAllWithOffest(1) ?? throw new NoDBConnectionException('No database connection');
+//        }
 
-        if ($page = filter_input(INPUT_GET, 'page')) {
-            $adverts = $repository->findAllWithOffest($page);
-        } else {
-            $adverts = $repository->findAllWithOffest(1);
+        $sqlRepository = $this->sqlRepository;
+        $redisRepository = $this->redisRepository;
+
+        $page = filter_input(INPUT_GET, 'page');
+
+        !empty($adverts = $sqlRepository->findAll()) ?: $adverts = $redisRepository->findAll();
+
+        foreach ($adverts as $key => $model) {
+//            $redisRepository->hMSet("advert: $key", json_decode((json_encode($model)), JSON_OBJECT_AS_ARRAY));
+                $redisRepository->set("adverts: $key", (json_encode($model)));
         }
 
         $view = (new AdvertView())->displayAll([
             'data' => $adverts,
-            'count' => $count->getAdvertsCount(),
+            'count' => 27,
         ]);
 
         return (new Response($view))->send();
+
     }
 
     /**
