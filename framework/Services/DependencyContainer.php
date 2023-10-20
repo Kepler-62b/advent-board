@@ -2,14 +2,15 @@
 
 namespace Framework\Services;
 
-use App\Controllers\AdventController;
 use App\Controllers\AdvertController;
 use App\Controllers\ImageController;
-use App\Models\Advent;
-use App\Repository\AdventRepository;
 use App\Repository\AdvertRepository;
-use App\Repository\CityRepository;
 use App\Repository\ImageRepository;
+use Framework\Services\Database\AbstractRepository;
+use Framework\Services\Database\PDOConnection;
+use Framework\Services\Database\SQLStorage;
+use Framework\Services\Database\RedisStorage;
+use Framework\Services\Database\StorageInterface;
 
 class DependencyContainer
 {
@@ -19,19 +20,19 @@ class DependencyContainer
     {
         // @TODO подумать над структурой массива - контейнера
         $this->objects = [
-            // @TODO создание объекта при каждом подключении
-            /** база данных */
-//            'App\Service\MySQLAdvertsBoard' => fn() => new DatabaseConnection(),
-            'Framework\Service\DatabaseConnection' => fn() => DatabaseConnection::getInstance(),
+            /** сервисы */
+            'Framework\Service\Database\PDOConnection' => fn(): PDOConnection => PDOConnection::getInstance(),
+            'Framework\Service\Database\SQLStorage' => fn(): SQLStorage => new SQLStorage($this->get('Framework\Service\Database\PDOConnection')),
+            'Framework\Services\Database\RedisStorage' => fn(): RedisStorage => new RedisStorage(new \Redis()),
             /** репозитории */
-            'App\Repository\AdvertRepository' => fn() => new AdvertRepository($this->get('Framework\Service\DatabaseConnection')),
-            'App\Repository\ImageRepository' => fn() => new ImageRepository($this->get('Framework\Service\DatabaseConnection')),
+            'App\Repository\AdvertRepository' => fn(): AbstractRepository => new AdvertRepository($this->get('Framework\Service\Database\SQLStorage')),
+            'App\Repository\ImageRepository' => fn(): ImageRepository => new ImageRepository($this->get('Framework\Service\Database\PDOConnection')),
             /** контроллеры */
-            'App\Controllers\AdvertController' => fn() => new AdvertController($this->get('App\Repository\AdvertRepository')),
-            'App\Controllers\ImageController' => fn() => new ImageController($this->get('App\Repository\ImageRepository')),
+            'App\Controllers\AdvertController' => fn(): AdvertController  => new AdvertController($this->get('App\Repository\AdvertRepository'), new AdvertRepository(new RedisStorage(new \Redis))),
+            'App\Controllers\ImageController' => fn(): ImageController => new ImageController($this->get('App\Repository\ImageRepository')),
             /** модели */
-            'App\Models\Image' => fn(): ImageRepository => new ImageRepository($this->get('Framework\Service\DatabaseConnection')),
-            'App\Models\Advert' => fn(): AdvertRepository => new AdvertRepository($this->get('Framework\Service\DatabaseConnection')),
+            'App\Models\Image' => fn(): ImageRepository => new ImageRepository($this->get('Framework\Service\Database\PDOConnection')),
+            'App\Models\Advert' => fn(): AdvertRepository => new AdvertRepository($this->get('Framework\Service\Database\PDOConnection')),
         ];
     }
 

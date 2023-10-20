@@ -5,10 +5,10 @@ namespace Framework\Services;
 class Template
 {
     private const VIEW_PATH_MAP = [
-        'layouts' => 'src/View/templates/layouts/',
-        'content' => 'src/View/templates/content/',
-        'content/exceptions' => 'src/View/templates/content/exceptions/',
-        'widgets' => 'src/View/templates/widgets/',
+        'layouts' => '/app/src/View/templates/layouts/',
+        'content' => '/app/src/View/templates/content/',
+        'content/exceptions' => '/app/src/View/templates/content/exceptions/',
+        'widgets' => '/app/src/View/templates/widgets/',
     ];
 
     public string $templateName;

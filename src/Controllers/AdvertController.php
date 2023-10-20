@@ -5,63 +5,68 @@ namespace App\Controllers;
 use App\Models\Advert;
 use App\Models\ViewModels\AdvertView;
 use App\Repository\AdvertRepository;
-use Dev\Service\ActionParamsValidation;
+use Dev\Tests\Services\ActionParamsValidation;
+use Framework\Services\Database\AbstractRepository;
+use Framework\Services\Database\RedisStorage;
+use Framework\Services\DependencyContainer;
 use Framework\Services\Helpers\LinkManager;
 use Framework\Services\HydratorService;
+use Framework\Services\NoDBConnectionException;
 use Framework\Services\NotFoundHttpException;
-use Framework\Services\RenderTemplateService;
-use Framework\Services\Template;
-use Framework\Services\Widgets\GetFormWidget;
-use Framework\Services\Widgets\NavigationWidget;
-use Framework\Services\Widgets\PaginationWidget;
-use Framework\Services\Widgets\SortWidget;
-use Framework\Services\Widgets\TableWidget;
-use http\Exception\InvalidArgumentException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class AdvertController extends DefaultController
 {
-    private AdvertRepository $repository;
+    private AbstractRepository $sqlRepository;
+    private ?AbstractRepository $redisRepository;
 
-    public function __construct(AdvertRepository $repository)
+    public function __construct(AbstractRepository $sqlRepository, AbstractRepository $redisRepository = null)
     {
-        $this->repository = $repository;
+        $this->sqlRepository = $sqlRepository;
+        $this->redisRepository = $redisRepository;
     }
 
-    /**
-     * @TODO метод занимается валидацией входящих данных - подумать, куда ее убрать
-     */
     public function showAll(): Response
     {
-        $repository = $this->repository;
+//        if ($page = filter_input(INPUT_GET, 'page')) {
+//            $adverts = $sqlRepository->findAllWithOffest($page) ?? throw new NoDBConnectionException('No database connection');
+//        } else {
+//            $adverts = $sqlRepository->findAllWithOffest(1) ?? throw new NoDBConnectionException('No database connection');
+//        }
 
-        if ($page = filter_input(INPUT_GET, 'page')) {
-            $adverts = $repository->fetchAll($page);
-        } else {
-            $adverts = $repository->fetchAll();
+        $sqlRepository = $this->sqlRepository;
+        $redisRepository = $this->redisRepository;
+
+        $page = filter_input(INPUT_GET, 'page');
+
+        !empty($adverts = $sqlRepository->findAll()) ?: $adverts = $redisRepository->findAll();
+
+        foreach ($adverts as $key => $model) {
+//            $redisRepository->hMSet("advert: $key", json_decode((json_encode($model)), JSON_OBJECT_AS_ARRAY));
+                $redisRepository->set("adverts: $key", (json_encode($model)));
         }
 
         $view = (new AdvertView())->displayAll([
             'data' => $adverts,
-            'count' => $repository->getCount()
+            'count' => 27,
         ]);
 
         return (new Response($view))->send();
+
     }
 
     /**
-     * @param ActionParamsValidation $actionParams
      * @TODO принимать не весь массив из query string, а указанное значение в аргументе
+     * @param ActionParamsValidation $actionParams
      * @throws NotFoundHttpException
      */
-    public function showById(ActionParamsValidation $actionParams): Response
+    public function showById(int $id): Response
     {
-        // какая-то валидация
-        $id = (int)$actionParams->validateKey('id');
-        $repository = $this->repository;
+        // @TODO то не валидация - переделать класс
+//        $id = (int)$actionParams->validateKey('id');
 
-        $advert = $repository->findById($id) ?? throw new NotFoundHttpException('Not found item ID ', $id);
+        $advert = $this->repository->find($id) ?? throw new NotFoundHttpException('Not found item ID ', $id);
 
         $view = (new AdvertView())->displayById(['data' => $advert]);
 

@@ -5,7 +5,7 @@ namespace App\Models;
 use Framework\Services\Attributes\RelationAttribute;
 use Framework\Services\ManyToOneRelation;
 
-class Advert
+class Advert implements \JsonSerializable
 {
     // @TODO убрать неиспользуесые сеттеры
 
@@ -65,6 +65,19 @@ class Advert
     public function getRelation(): ?ManyToOneRelation
     {
         return $this->relationModel;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'item' => $this->item,
+            'description' => $this->description,
+            'price' => $this->price,
+            'image' => $this->image,
+            'created_date' => $this->createdDate->format('Y-m-d'),
+            'modified_date' => $this->modifiedDate->format('Y-m-d'),
+        ];
     }
 
 }

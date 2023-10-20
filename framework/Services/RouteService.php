@@ -2,7 +2,7 @@
 
 namespace Framework\Services;
 
-use Dev\Service\ActionParamsValidation;
+use Dev\Tests\Services\ActionParamsValidation;
 
 class RouteService
 {
@@ -18,7 +18,7 @@ class RouteService
     {
         $matchURL = $this->parseURL->matchURL;
 
-        dump($matchURL);
+//        dump($matchURL);
 
         $interface = $matchURL['interface'];
         $controller = $matchURL['controller'];

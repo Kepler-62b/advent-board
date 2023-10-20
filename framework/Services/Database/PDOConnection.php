@@ -1,8 +1,11 @@
 <?php
 
-namespace Framework\Services;
+namespace Framework\Services\Database;
 
-class DatabaseConnection extends \PDO
+use Framework\Services\NoDBConnectionException;
+use Framework\Services\SingletonTrait;
+
+class PDOConnection extends \PDO
 {
     use SingletonTrait;
 
@@ -10,18 +13,28 @@ class DatabaseConnection extends \PDO
     private string $user;
     private string $pass;
 
+    public bool $connect;
+
+    public \PDOException $exception;
+
+    /**
+     * @throws NoDBConnectionException
+     */
     public function __construct()
     {
         $this->initPDOParams();
-        parent::__construct($this->dsn, $this->user, $this->pass);
+        try {
+            parent::__construct($this->dsn, $this->user, $this->pass);
+            $this->connect = true;
+        } catch (\PDOException $exception) {
+            $this->connect = false;
+            $this->exception = $exception;
+        }
     }
 
     private function getConfigMap(): array
     {
-        $resourse = fopen('config/database_config.json', "r+");
-        $configMap = json_decode(file_get_contents('config/database_config.json'), JSON_OBJECT_AS_ARRAY);
-        fclose($resourse);
-        return $configMap;
+        return json_decode(file_get_contents('/app/config/database_config.json'), JSON_OBJECT_AS_ARRAY);
     }
 
     private function initPDOParams(): void
@@ -39,6 +52,4 @@ class DatabaseConnection extends \PDO
         $this->user = $mapParams['User'];
         $this->pass = $mapParams['Password'];
     }
-
-
 }
