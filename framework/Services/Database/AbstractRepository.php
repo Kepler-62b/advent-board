@@ -41,30 +41,26 @@ class AbstractRepository implements ObjectRepository
 
     public function findAll(): array
     {
-        if(!$data = $this->storage->selectAll()) {
-            return [];
-        } else {
-            $hydrator = new HydratorService();
-            $modelsStorage = [];
-            foreach ($data as $model) {
-                $modelsStorage[] = $hydrator->hydrate(
-                    $this->entityClass,
-                    $model,
-                    [
-                        'id' => 'id',
-                        'item' => 'item',
-                        'description' => 'description',
-                        'price' => 'price',
-                        'image' => 'image',
-                        'created_date' => 'createdDate',
-                        'modified_date' => 'modifiedDate',
-                    ]
-                );
-            }
-
-            return $modelsStorage;
+        // @TODO пиходит null - что делать, чтобы foreach не работал с null
+        $hydrator = new HydratorService();
+        $modelsStorage = [];
+        foreach ($this->storage->selectAll() as $model) {
+            $modelsStorage[] = $hydrator->hydrate(
+                $this->entityClass,
+                $model,
+                [
+                    'id' => 'id',
+                    'item' => 'item',
+                    'description' => 'description',
+                    'price' => 'price',
+                    'image' => 'image',
+                    'created_date' => 'createdDate',
+                    'modified_date' => 'modifiedDate',
+                ]
+            );
         }
 
+        return $modelsStorage;
     }
 
     public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null): ?array

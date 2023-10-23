@@ -28,6 +28,8 @@ class DependencyContainer
             'App\Repository\AdvertRepository' => fn(): AbstractRepository => new AdvertRepository($this->get('Framework\Service\Database\SQLStorage')),
             'App\Repository\ImageRepository' => fn(): ImageRepository => new ImageRepository($this->get('Framework\Service\Database\PDOConnection')),
             /** контроллеры */
+//            'App\Controllers\AdvertController' => fn(DependencyContainer $c): AdvertController  => new AdvertController($c->get(AdvertRepository::class), new AdvertRepository($c->get('Framework\Services\Database\RedisStorage'))),
+
             'App\Controllers\AdvertController' => fn(): AdvertController  => new AdvertController($this->get('App\Repository\AdvertRepository'), new AdvertRepository(new RedisStorage(new \Redis))),
             'App\Controllers\ImageController' => fn(): ImageController => new ImageController($this->get('App\Repository\ImageRepository')),
             /** модели */

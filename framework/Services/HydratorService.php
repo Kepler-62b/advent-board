@@ -5,11 +5,11 @@ namespace Framework\Services;
 class HydratorService
 {
     /**
-     * @param class-string $className
-     * @param array<string, mixed> $data
+     * @param class-string               $className
+     * @param array<string, mixed>       $data
      * @param array<string, string>|null $map
+     *
      * @throws \ReflectionException
-     * @return object
      */
     public function hydrate(string $className, array $data, array $map = null): object
     {
@@ -40,7 +40,6 @@ class HydratorService
                     if ($propertyType->isBuiltin()) {
                         $property->setValue($model, $value);
                     } else {
-
                         $propertyName = $propertyType->getName();
 
                         // @TODO подумать как еще можно проверять $propertyName для инстанса класса с конструктором
@@ -51,46 +50,8 @@ class HydratorService
                 }
             }
         }
+
         return $model;
     }
 
-    //  @TODO тестировать метод и доделать после тестирования
-    //  public function hydrateWithConstructor(string $className, array $data, array $map): object
-    //  {
-    //    $reflection = new \ReflectionClass($className);
-    //
-    //
-    //    foreach ($reflection->getConstructor()->getParameters() as $param) {
-    //      $constructPropertyMap[$param->getName()] = $param->getType();
-    //    }
-    //
-    //    foreach ($data as $key => $value) {
-    //      if (array_key_exists($map[$key], $constructPropertyMap)) {
-    //        $propertyType = $constructPropertyMap[$map[$key]];
-    //
-    //        if ($propertyType->isBuiltin()) {
-    //          $constructArgStorage[] = $value;
-    //        } else {
-    //          $class = $propertyType->getName();
-    //          $constructArgStorage[] = new $class($value);
-    //        }
-    //      } else {
-    //        $notConstructPropertyMap[$value] = $reflection->getProperty($map[$key]);
-    //      }
-    //    }
-    //    $this->model = new $className(...$constructArgStorage);
-    //
-    //    foreach ($notConstructPropertyMap as $value => $propery) {
-    //      if (!$propery->isInitialized($this->model)) {
-    //        if ($propery->getType()->isBuiltin()) {
-    //          $propery->setValue($this->model, $value);
-    //        } else {
-    //          $class = $propery->getType()->getName();
-    //          $propery->setValue($this->model, new $class($value));
-    //        }
-    //      }
-    //    }
-    //
-    //    return $this->model;
-    //  }
 }

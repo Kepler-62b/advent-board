@@ -56,7 +56,17 @@ class AdvertRepository extends AbstractRepository
         return $this->storage->set($key, $value);
     }
 
-    public function hMSet(string $key, array $value)
+    public function mSet(array $data): bool
+    {
+        return $this->storage->mSet($data);
+    }
+
+    public function mSetNx(array $data): bool
+    {
+        return $this->storage->mSetNx($data);
+    }
+
+    public function hMSet(string $key, array $value): bool
     {
         return $this->storage->hMSet($key, $value);
     }

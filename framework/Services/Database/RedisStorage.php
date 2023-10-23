@@ -10,7 +10,7 @@ class RedisStorage implements StorageInterface
     {
         $this->redis = $redis;
         try {
-            $this->redis->connect('adverts-redis', 6379);
+            $this->redis->pconnect('redis', 6379);
         } catch (\RedisException $exception) {
             throw new \RedisException('Error from RedisStorage');
         }
@@ -32,7 +32,7 @@ class RedisStorage implements StorageInterface
         $values = [];
 
         foreach ($keys as $key) {
-//            $values[] = $this->redis->hGetAll($key);
+            //            $values[] = $this->redis->hGetAll($key);
             $values[] = json_decode($this->redis->get($key), JSON_OBJECT_AS_ARRAY);
         }
 
@@ -51,7 +51,6 @@ class RedisStorage implements StorageInterface
 
     public function selectAllWithOffset(int $offset)
     {
-
     }
 
     public function set(string $key, string $value): bool
@@ -59,14 +58,18 @@ class RedisStorage implements StorageInterface
         return $this->redis->set($key, $value);
     }
 
-    public function mSet()
+    public function mSet(array $data): bool
     {
-        return $this->redis->mSet();
+        return $this->redis->mSet($data);
+    }
+
+    public function mSetNx(array $data): bool
+    {
+        return $this->redis->msetnx($data);
     }
 
     public function hMSet(string $key, array $value)
     {
         return $this->redis->hMSet($key, $value);
     }
-
 }

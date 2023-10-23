@@ -6,22 +6,19 @@ use App\Models\Advert;
 use App\Models\ViewModels\AdvertView;
 use App\Repository\AdvertRepository;
 use Dev\Tests\Services\ActionParamsValidation;
-use Framework\Services\Database\AbstractRepository;
-use Framework\Services\Database\RedisStorage;
-use Framework\Services\DependencyContainer;
 use Framework\Services\Helpers\LinkManager;
 use Framework\Services\HydratorService;
-use Framework\Services\NoDBConnectionException;
 use Framework\Services\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class AdvertController extends DefaultController
 {
-    private AbstractRepository $sqlRepository;
-    private ?AbstractRepository $redisRepository;
+    private AdvertRepository $sqlRepository;
+    private ?AdvertRepository $redisRepository;
 
-    public function __construct(AbstractRepository $sqlRepository, AbstractRepository $redisRepository = null)
+    // @TODO один входной аргумент в конструкторе
+    public function __construct(AdvertRepository $sqlRepository, AdvertRepository $redisRepository = null)
     {
         $this->sqlRepository = $sqlRepository;
         $this->redisRepository = $redisRepository;
@@ -29,22 +26,27 @@ class AdvertController extends DefaultController
 
     public function showAll(): Response
     {
-//        if ($page = filter_input(INPUT_GET, 'page')) {
-//            $adverts = $sqlRepository->findAllWithOffest($page) ?? throw new NoDBConnectionException('No database connection');
-//        } else {
-//            $adverts = $sqlRepository->findAllWithOffest(1) ?? throw new NoDBConnectionException('No database connection');
-//        }
+        //        if ($page = filter_input(INPUT_GET, 'page')) {
+        //            $adverts = $sqlRepository->findAllWithOffest($page) ?? throw new NoDBConnectionException('No database connection');
+        //        } else {
+        //            $adverts = $sqlRepository->findAllWithOffest(1) ?? throw new NoDBConnectionException('No database connection');
+        //        }
 
         $sqlRepository = $this->sqlRepository;
         $redisRepository = $this->redisRepository;
 
         $page = filter_input(INPUT_GET, 'page');
 
-        !empty($adverts = $sqlRepository->findAll()) ?: $adverts = $redisRepository->findAll();
+        if (!empty($adverts = $sqlRepository->findAll())) {
+            //            $redisRepository->mSet($adverts);
+            //            $redisRepository->mSetNx($adverts);
 
-        foreach ($adverts as $key => $model) {
-//            $redisRepository->hMSet("advert: $key", json_decode((json_encode($model)), JSON_OBJECT_AS_ARRAY));
-                $redisRepository->set("adverts: $key", (json_encode($model)));
+            foreach ($adverts as $key => $model) {
+                //            $redisRepository->hMSet("advert: $key", json_decode((json_encode($model)), JSON_OBJECT_AS_ARRAY));
+                $redisRepository->set("adverts:$key", json_encode($model));
+            }
+        } else {
+            $adverts = $redisRepository->findAll();
         }
 
         $view = (new AdvertView())->displayAll([
@@ -53,18 +55,17 @@ class AdvertController extends DefaultController
         ]);
 
         return (new Response($view))->send();
-
     }
 
     /**
      * @TODO принимать не весь массив из query string, а указанное значение в аргументе
-     * @param ActionParamsValidation $actionParams
+     *
      * @throws NotFoundHttpException
      */
     public function showById(int $id): Response
     {
         // @TODO то не валидация - переделать класс
-//        $id = (int)$actionParams->validateKey('id');
+        //        $id = (int)$actionParams->validateKey('id');
 
         $advert = $this->repository->find($id) ?? throw new NotFoundHttpException('Not found item ID ', $id);
 
@@ -73,13 +74,10 @@ class AdvertController extends DefaultController
         return (new Response($view))->send();
     }
 
-    /**
-     * @param ActionParamsValidation $actionParams
-     */
     public function showByMin(ActionParamsValidation $actionParams): Response
     {
         $repository = $this->repository;
-//        extract($actionParams, EXTR_OVERWRITE);
+        //        extract($actionParams, EXTR_OVERWRITE);
 
         $page = $actionParams->validateKey('page');
         $filter = $actionParams->validateKey('filter');
@@ -88,7 +86,7 @@ class AdvertController extends DefaultController
 
         $view = (new AdvertView())->displayAll([
             'data' => $adverts,
-            'count' => $repository->getCount()
+            'count' => $repository->getCount(),
         ]);
 
         return (new Response($view))->send();
@@ -97,7 +95,7 @@ class AdvertController extends DefaultController
     public function showByMax(ActionParamsValidation $actionParams): Response
     {
         $repository = $this->repository;
-//        extract($actionParams, EXTR_OVERWRITE);
+        //        extract($actionParams, EXTR_OVERWRITE);
 
         $page = $actionParams->validateKey('page');
         $filter = $actionParams->validateKey('filter');
@@ -105,7 +103,7 @@ class AdvertController extends DefaultController
 
         $view = (new AdvertView())->displayAll([
             'data' => $adverts,
-            'count' => $repository->getCount()
+            'count' => $repository->getCount(),
         ]);
 
         return (new Response($view))->send();
