@@ -2,74 +2,94 @@
 
 namespace Framework\Services\Database;
 
+use Framework\Services\Database\ConnectionException;
+
 class RedisStorage implements StorageInterface
 {
-    private \Redis $redis;
-
-    public function __construct(\Redis $redis)
+    public function __construct(
+        private RedisDriver $redisDriver,
+    )
     {
-        $this->redis = $redis;
+    }
+
+    public function connect(): void
+    {
         try {
-            $this->redis->pconnect('redis', 6379);
-        } catch (\RedisException $exception) {
-            throw new \RedisException('Error from RedisStorage');
+            $this->redisDriver->connect();
+        } catch (ConnectionException $connectionException) {
+            throw new ConnectionException('Connection error from SQLStorage' . $connectionException);
         }
     }
 
-    public function selectById($id): ?array
+    public function get(string $id): ?array
     {
-        if (!($data = $this->redis->get($id))) {
+        if (!$data = $this->redisDriver->get($id)) {
             return null;
         } else {
-            return [$id => $data];
+            return $data;
         }
     }
 
-    public function selectAll(): array
+    public function set(string $key)
     {
-        $keys = $this->redis->keys('*');
 
-        $values = [];
-
-        foreach ($keys as $key) {
-            //            $values[] = $this->redis->hGetAll($key);
-            $values[] = json_decode($this->redis->get($key), JSON_OBJECT_AS_ARRAY);
-        }
-
-        return $values;
     }
 
-    public function selectBy(array|string $criteria = null, array|string $orderBy = null, int $limit = null, int $offset = null)
-    {
-        // TODO: Implement selectBy() method.
-    }
-
-    public function selectByOne(array $criteria)
-    {
-        // TODO: Implement selectByOne() method.
-    }
-
-    public function selectAllWithOffset(int $offset)
-    {
-    }
-
-    public function set(string $key, string $value): bool
-    {
-        return $this->redis->set($key, $value);
-    }
-
-    public function mSet(array $data): bool
-    {
-        return $this->redis->mSet($data);
-    }
-
-    public function mSetNx(array $data): bool
-    {
-        return $this->redis->msetnx($data);
-    }
-
-    public function hMSet(string $key, array $value)
-    {
-        return $this->redis->hMSet($key, $value);
-    }
+    //
+    //    public function selectById($id): ?array
+    //    {
+    //        if (!($data = $this->redis->get($id))) {
+    //            return null;
+    //        } else {
+    //            return [$id => $data];
+    //        }
+    //    }
+    //
+    //    public function selectAll(): array
+    //    {
+    //        $keys = $this->redis->keys('*');
+    //
+    //        $values = [];
+    //
+    //        foreach ($keys as $key) {
+    //            //            $values[] = $this->redis->hGetAll($key);
+    //            $values[] = json_decode($this->redis->get($key), JSON_OBJECT_AS_ARRAY);
+    //        }
+    //
+    //        return $values;
+    //    }
+    //
+    //    public function selectBy(array|string $criteria = null, array|string $orderBy = null, int $limit = null, int $offset = null)
+    //    {
+    //        // TODO: Implement selectBy() method.
+    //    }
+    //
+    //    public function selectByOne(array $criteria)
+    //    {
+    //        // TODO: Implement selectByOne() method.
+    //    }
+    //
+    //    public function selectAllWithOffset(int $offset)
+    //    {
+    //    }
+    //
+    //    public function set(string $key, string $value): bool
+    //    {
+    //        return $this->redis->set($key, $value);
+    //    }
+    //
+    //    public function mSet(array $data): bool
+    //    {
+    //        return $this->redis->mSet($data);
+    //    }
+    //
+    //    public function mSetNx(array $data): bool
+    //    {
+    //        return $this->redis->msetnx($data);
+    //    }
+    //
+    //    public function hMSet(string $key, array $value)
+    //    {
+    //        return $this->redis->hMSet($key, $value);
+    //    }
 }
