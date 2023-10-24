@@ -2,7 +2,7 @@
 
 namespace Framework\Services\Database;
 
-trait SQLQueryBuilderTrait
+class SQLQueryBuilder
 {
     private array $inputKeywordStorage = [
         '%TABLE' => null,
