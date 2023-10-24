@@ -4,33 +4,42 @@ namespace Framework\Services;
 
 use App\Controllers\AdvertController;
 use App\Controllers\ImageController;
+use App\Models\Image;
 use App\Repository\AdvertRepository;
 use App\Repository\ImageRepository;
-use Framework\Services\Database\AbstractRepository;
+use Framework\Services\Database\DatabaseConfigs;
+use Framework\Services\Database\LoggerStorageDecorator;
 use Framework\Services\Database\PDOConnection;
-use Framework\Services\Database\SQLStorage;
-use Framework\Services\Database\RedisStorage;
-use Framework\Services\Database\StorageInterface;
+use Framework\Services\Database\PDOSQLDriver;
+use Framework\Services\Database\RedisDriver;
+use Framework\Services\Database\StorageFactory;
 
 class DependencyContainer
 {
     private array $objects = [];
 
+    // @TODO вынести зависимости из класса в отдельный файл
     public function __construct()
     {
-        // @TODO подумать над структурой массива - контейнера
         $this->objects = [
             /** сервисы */
             'Framework\Service\Database\PDOConnection' => fn(): PDOConnection => PDOConnection::getInstance(),
-            'Framework\Service\Database\SQLStorage' => fn(): SQLStorage => new SQLStorage($this->get('Framework\Service\Database\PDOConnection')),
-            'Framework\Services\Database\RedisStorage' => fn(): RedisStorage => new RedisStorage(new \Redis()),
+
+            DatabaseConfigs::class => fn() => new DatabaseConfigs(),
+            RedisDriver::class => fn() => new RedisDriver(...$this->get(DatabaseConfigs::class)->setConfig('Redis')),
+            PDOSQLDriver::class => fn() => new PDOSQLDriver(...$this->get(DatabaseConfigs::class)->setConfig('PostgreSQL')),
+            StorageFactory::class => fn() => new StorageFactory(
+                $this->get(PDOSQLDriver::class),
+                $this->get(RedisDriver::class)),
+
             /** репозитории */
-            'App\Repository\AdvertRepository' => fn(): AbstractRepository => new AdvertRepository($this->get('Framework\Service\Database\SQLStorage')),
+            AdvertRepository::class => fn(): AdvertRepository => new AdvertRepository($this->get(StorageFactory::class)->create()),
             'App\Repository\ImageRepository' => fn(): ImageRepository => new ImageRepository($this->get('Framework\Service\Database\PDOConnection')),
             /** контроллеры */
+            // @TODO не понял, как это должно работать
 //            'App\Controllers\AdvertController' => fn(DependencyContainer $c): AdvertController  => new AdvertController($c->get(AdvertRepository::class), new AdvertRepository($c->get('Framework\Services\Database\RedisStorage'))),
 
-            'App\Controllers\AdvertController' => fn(): AdvertController  => new AdvertController($this->get('App\Repository\AdvertRepository'), new AdvertRepository(new RedisStorage(new \Redis))),
+            AdvertController::class => fn(): AdvertController => new AdvertController($this->get(AdvertRepository::class)),
             'App\Controllers\ImageController' => fn(): ImageController => new ImageController($this->get('App\Repository\ImageRepository')),
             /** модели */
             'App\Models\Image' => fn(): ImageRepository => new ImageRepository($this->get('Framework\Service\Database\PDOConnection')),
