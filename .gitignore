@@ -5,6 +5,7 @@
 /.idea/
 /docker/database/postgres/data
 /docker/database/mysql/data
+/log/
 
 # Files
 .*
