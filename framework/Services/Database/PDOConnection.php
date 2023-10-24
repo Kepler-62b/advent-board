@@ -44,10 +44,11 @@ class PDOConnection extends \PDO
         $mapParams = $configMap[$driverPDO];
 
         switch ($driverPDO) {
-            case "MySQL":
-                $this->dsn = strtr("Driver:host=Host;dbname=Database", $mapParams);
-            case "PostgreSQL":
-                $this->dsn = strtr("Driver:host=Host;port=5432;dbname=Database", $mapParams);
+            case 'MySQL':
+                $this->dsn = strtr('Driver:host=Host;dbname=Database', $mapParams);
+                // no break
+            case 'PostgreSQL':
+                $this->dsn = strtr('Driver:host=Host;port=5432;dbname=Database', $mapParams);
         }
         $this->user = $mapParams['User'];
         $this->pass = $mapParams['Password'];
