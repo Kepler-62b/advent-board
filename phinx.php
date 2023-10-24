@@ -19,7 +19,7 @@ return [
         ],
         'container' => [
             'adapter' => 'pgsql',
-            'host' => 'adverts-postgres',
+            'host' => 'postgres',
             'name' => 'adverts-board',
             'user' => 'postgres',
             'pass' => 'secret',

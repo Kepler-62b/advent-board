@@ -18,7 +18,7 @@ class AbstractRepository implements ObjectRepository
 
     public function find($id): ?object
     {
-        $data = $this->storage->selectById($id);
+        [$data] = $this->storage->get($id);
         var_dump($data);
 
         $hydrator = new HydratorService();
@@ -42,9 +42,14 @@ class AbstractRepository implements ObjectRepository
     public function findAll(): array
     {
         // @TODO пиходит null - что делать, чтобы foreach не работал с null
+        $data = $this->storage->getAll();
+        var_dump($data);
+
+        die;
+
         $hydrator = new HydratorService();
         $modelsStorage = [];
-        foreach ($this->storage->selectAll() as $model) {
+        foreach ($data as $model) {
             $modelsStorage[] = $hydrator->hydrate(
                 $this->entityClass,
                 $model,
@@ -59,6 +64,8 @@ class AbstractRepository implements ObjectRepository
                 ]
             );
         }
+
+
 
         return $modelsStorage;
     }

@@ -14,14 +14,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AdvertController extends DefaultController
 {
-    private AdvertRepository $sqlRepository;
-    private ?AdvertRepository $redisRepository;
+    private AdvertRepository $repository;
 
     // @TODO один входной аргумент в конструкторе
-    public function __construct(AdvertRepository $sqlRepository, AdvertRepository $redisRepository = null)
+    public function __construct(AdvertRepository $repository)
     {
-        $this->sqlRepository = $sqlRepository;
-        $this->redisRepository = $redisRepository;
+        $this->repository = $repository;
     }
 
     public function showAll(): Response
@@ -32,10 +30,13 @@ class AdvertController extends DefaultController
         //            $adverts = $sqlRepository->findAllWithOffest(1) ?? throw new NoDBConnectionException('No database connection');
         //        }
 
-        $sqlRepository = $this->sqlRepository;
-        $redisRepository = $this->redisRepository;
+        $sqlRepository = $this->repository;
 
         $page = filter_input(INPUT_GET, 'page');
+
+        $adverts = $this->repository->find('1');
+        var_dump($adverts);
+        die;
 
         if (!empty($adverts = $sqlRepository->findAll())) {
             //            $redisRepository->mSet($adverts);

@@ -27,7 +27,6 @@ services:
     depends_on:
       - nginx
   postgres:
-    container_name: adverts-postgres
     image: postgres
     restart: on-failure
     ports:
@@ -47,6 +46,7 @@ services:
        - adverts-board
   migration:
     build: ./docker/images/php8.1-fpm
+    restart: on-failure
     volumes:
       - ./:/app
     entrypoint: php
