@@ -7,21 +7,21 @@ class LazyStorageDecorator implements StorageInterface
     private bool $connected = false;
 
     public function __construct(
-        private StorageInterface $switchStorage,
+        private StorageInterface $storage,
     ) {
     }
 
     public function connect(): void
     {
-        $this->switchStorage->connect();
+        $this->storage->connect();
+        $this->connected = true;
     }
 
     public function lazyConnect(): void
     {
         if (!$this->connected) {
-            $this->switchStorage->connect();
+            $this->storage->connect();
         }
-
         $this->connected = true;
     }
 
@@ -29,8 +29,6 @@ class LazyStorageDecorator implements StorageInterface
     {
         $this->lazyConnect();
 
-        return $this->switchStorage->get($id);
+        return $this->storage->get($id);
     }
-
-
 }

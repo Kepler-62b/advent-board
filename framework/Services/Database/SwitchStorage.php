@@ -28,18 +28,15 @@ class SwitchStorage implements StorageInterface
                 continue;
             }
         }
-        throw new \Exception('Connection error');
+        throw new ConnectionException('Connection error from SwitchStorage');
     }
 
     public function get(string $id): ?array
     {
-        $this->connect();
-
         try {
             return $this->activeStorage->get($id);
-        } catch (ConnectionException){
+        } catch (ConnectionException) {
             return $this->get($id);
         }
-
     }
 }

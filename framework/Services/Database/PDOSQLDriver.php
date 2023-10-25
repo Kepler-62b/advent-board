@@ -2,8 +2,6 @@
 
 namespace Framework\Services\Database;
 
-use Framework\Services\Database\ConnectionException;
-
 final class PDOSQLDriver implements DriverInterface
 {
     private \PDO $pdo;
@@ -12,23 +10,22 @@ final class PDOSQLDriver implements DriverInterface
         private string $dsn,
         private string $user,
         private string $pass,
-    )
-    {
+    ) {
     }
 
     /**
-     * @throws \ConnectionException
+     * @throws ConnectionException
      */
     public function connect(): void
     {
         try {
             $this->pdo = new \PDO($this->dsn, $this->user, $this->pass);
         } catch (\PDOException $exception) {
-            throw new ConnectionException('PDOException / PDOSQLDriver connect error ' . $exception);
+            throw new ConnectionException('Connect error from PDOSQLDriver / PDOException /  '.$exception);
         }
     }
 
-    // вернет массив с занчениями из БД или пустой массив
+    // надстройка над pdo_stmt->execute
     public function execute(string $sql, array $params = null): array
     {
         $pdo = $this->pdo;
@@ -47,4 +44,8 @@ final class PDOSQLDriver implements DriverInterface
         return $pdoStmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
+    public function getDriverName(): string
+    {
+        return \PDO::class;
+    }
 }

@@ -18,7 +18,7 @@ class RedisDriver implements DriverInterface
             $this->redis = new \Redis();
             $this->redis->pconnect($this->host, $this->port);
         } catch (\RedisException $exception) {
-            throw new ConnectionException('Error from RedisStorage' . $exception);
+            throw new ConnectionException('Connection Error from RedisStorage / RedisException '.$exception);
         }
     }
 
@@ -32,4 +32,8 @@ class RedisDriver implements DriverInterface
         $this->redis->set($key, $value, $options);
     }
 
+    public function getDriverName(): string
+    {
+        return \Redis::class;
+    }
 }

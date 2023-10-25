@@ -2,14 +2,11 @@
 
 namespace Framework\Services\Database;
 
-use Framework\Services\Database\ConnectionException;
-
 class RedisStorage implements StorageInterface
 {
     public function __construct(
-        private RedisDriver $redisDriver,
-    )
-    {
+        private DriverInterface $redisDriver,
+    ) {
     }
 
     public function connect(): void
@@ -17,7 +14,7 @@ class RedisStorage implements StorageInterface
         try {
             $this->redisDriver->connect();
         } catch (ConnectionException $connectionException) {
-            throw new ConnectionException('Connection error from SQLStorage' . $connectionException);
+            throw new ConnectionException('Connection error from RedisStorage'.$connectionException);
         }
     }
 
@@ -30,9 +27,9 @@ class RedisStorage implements StorageInterface
         }
     }
 
-    public function set(string $key)
+    public function set(string $key, string $value): void
     {
-
+        $this->redisDriver->set($key, $value);
     }
 
     //
@@ -57,20 +54,6 @@ class RedisStorage implements StorageInterface
     //        }
     //
     //        return $values;
-    //    }
-    //
-    //    public function selectBy(array|string $criteria = null, array|string $orderBy = null, int $limit = null, int $offset = null)
-    //    {
-    //        // TODO: Implement selectBy() method.
-    //    }
-    //
-    //    public function selectByOne(array $criteria)
-    //    {
-    //        // TODO: Implement selectByOne() method.
-    //    }
-    //
-    //    public function selectAllWithOffset(int $offset)
-    //    {
     //    }
     //
     //    public function set(string $key, string $value): bool

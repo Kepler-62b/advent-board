@@ -18,8 +18,13 @@ class AbstractRepository implements ObjectRepository
 
     public function find($id): ?object
     {
-        [$data] = $this->storage->get($id);
-        var_dump($data);
+        var_dump($this->storage->connect());
+        var_dump($this->storage->get('1'));
+//        var_dump($this->storage);
+
+//        [$data] = $this->storage->get($id);
+//        var_dump($data);
+        die;
 
         $hydrator = new HydratorService();
         $model = $hydrator->hydrate(

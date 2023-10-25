@@ -16,7 +16,6 @@ class AdvertController extends DefaultController
 {
     private AdvertRepository $repository;
 
-    // @TODO один входной аргумент в конструкторе
     public function __construct(AdvertRepository $repository)
     {
         $this->repository = $repository;
