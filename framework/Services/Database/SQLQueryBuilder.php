@@ -15,6 +15,8 @@ class SQLQueryBuilder
     ];
 
     private array $outputKeywordStorage = [];
+    public array $bindValue = [];
+
 
     private string $selectSQL = 'SELECT%RANGEFROM%TABLE%WHERE%ORDERBY%SORT%LIMIT%OFFSET';
 
@@ -53,6 +55,8 @@ class SQLQueryBuilder
             $whereKey = $criteria[0];
 
             if ($binding) {
+                $this->bindValue[] = $criteria[1];
+
                 $operator = $criteria[2];
                 $this->outputKeywordStorage['%WHERE'] = " WHERE $whereKey $operator ?";
             } else {

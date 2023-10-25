@@ -6,7 +6,8 @@ class SQLStorage implements StorageInterface
 {
     public function __construct(
         private DriverInterface $PDOSQLDriver
-    ) {
+    )
+    {
     }
 
     /**
@@ -17,7 +18,7 @@ class SQLStorage implements StorageInterface
         try {
             $this->PDOSQLDriver->connect();
         } catch (ConnectionException $connectionException) {
-            throw new ConnectionException('Connection error from SQLStorage'.$connectionException);
+            throw new ConnectionException('Connection error from SQLStorage' . $connectionException);
         }
     }
 
@@ -26,10 +27,9 @@ class SQLStorage implements StorageInterface
 
         $sql = (new SQLQueryBuilder())
             ->select('*', 'adverts')
-            ->whereA(['id', null, '='], true)
-            ->build();
+            ->whereA(['id', $id, '='], true);
 
-        return $this->PDOSQLDriver->execute($sql, [$id]);
+        return $this->PDOSQLDriver->get($sql);
     }
 
     //    use SQLQueryBuilderTrait;

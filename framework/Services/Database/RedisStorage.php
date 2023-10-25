@@ -20,11 +20,16 @@ class RedisStorage implements StorageInterface
 
     public function get(string $id): ?array
     {
-        if (!$data = $this->redisDriver->get($id)) {
-            return null;
-        } else {
-            return $data;
-        }
+        $sql = (new SQLQueryBuilder())
+            ->select('*', 'adverts')
+            ->whereA(['id', $id, '='], true);
+
+        return $this->redisDriver->get($sql);
+//        if (!$data = $this->redisDriver->get($id)) {
+//            return null;
+//        } else {
+//            return $data;
+//        }
     }
 
     public function set(string $key, string $value): void

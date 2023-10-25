@@ -26,16 +26,16 @@ final class PDOSQLDriver implements DriverInterface
     }
 
     // надстройка над pdo_stmt->execute
-    public function execute(string $sql, array $params = null): array
+    public function get(SQLQueryBuilder $queryBuilder): array
     {
         $pdo = $this->pdo;
 
-        $pdoStmt = $pdo->prepare($sql);
+        $pdoStmt = $pdo->prepare($queryBuilder->build());
 
-        if (isset($params)) {
-            for ($i = 1; $i <= count($params); ++$i) {
+        if (!empty($queryBuilder->bindValue)) {
+            for ($i = 1; $i <= count($queryBuilder->bindValue); ++$i) {
                 // подумать как задавать через массив параметов для связанного параметра константу типа - \PDO::PARAM_INT, \PDO::PARAM_STRING, etc
-                $pdoStmt->bindValue($i, $params[$i - 1], \PDO::PARAM_INT);
+                $pdoStmt->bindValue($i, $queryBuilder->bindValue[$i - 1], \PDO::PARAM_INT);
             }
         }
 

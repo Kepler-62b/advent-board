@@ -22,9 +22,10 @@ class RedisDriver implements DriverInterface
         }
     }
 
-    public function get(string $id): array
+    public function get(SQLQueryBuilder $queryBuilder): array
     {
-        return [$this->redis->get($id)];
+        $key = $queryBuilder->bindValue[0];
+        return [$this->redis->get($key)];
     }
 
     public function set(string $key, string $value, array $options = null): void

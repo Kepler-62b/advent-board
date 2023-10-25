@@ -26,9 +26,9 @@ class LoggerDriverDecorator implements DriverInterface
         }
     }
 
-    public function get(string $sql, array $params = null)
+    public function get(SQLQueryBuilder $sql): array
     {
-        return $this->driver->get($sql, $params);
+        return $this->driver->get($sql);
     }
 
     public function getDriverName(): string
