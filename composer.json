@@ -11,6 +11,9 @@
       "Dev\\": "dev\\"
     }
   },
+  "scripts": {
+    "php-cs-fixer": "php-cs-fixer"
+  },
   "require": {
     "symfony/http-kernel": "^6.3",
     "symfony/framework-bundle": "^6.3",

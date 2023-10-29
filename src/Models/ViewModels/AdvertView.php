@@ -31,7 +31,7 @@ class AdvertView
                 'Image',
                 new SortWidget('w_sort_bootstrap', 'Created', 'created_date')
             ],
-            ['adverts' => $data]
+            ['adverts' => [$data]]
         ))->getTemplate();
 
         $content = new Template('c_show_page_adverts_bootstrap', 'content');

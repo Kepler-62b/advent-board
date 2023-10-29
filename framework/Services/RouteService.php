@@ -2,15 +2,14 @@
 
 namespace Framework\Services;
 
-use Dev\Tests\Services\ActionParamsValidation;
+use Psr\Container\ContainerInterface;
 
 class RouteService
 {
-    private ParseURLService $parseURL;
-
-    public function __construct(ParseURLService $parseURL)
-    {
-        $this->parseURL = $parseURL;
+    public function __construct(
+        private ParseURLService    $parseURL,
+        private ContainerInterface $container
+    ) {
     }
 
     /** @TODO подумать что помещать в action_params, если параметров нет при Not Found */
@@ -24,12 +23,12 @@ class RouteService
         $controller = $matchURL['controller'];
         $action = $matchURL['action'];
 //        $actionParams = $matchURL['action_params'];
-        $actionParams = new ActionParamsValidation($matchURL['action_params']);
+        $actionParams = new ActionParams($matchURL['action_params']);
 
         if (empty($actionParams)) {
-            (new DependencyContainer())->get($controller)->$action();
+            $this->container->get($controller)->$action();
         } else {
-            (new DependencyContainer())->get($controller)->$action($actionParams, $interface);
+            $this->container->get($controller)->$action($actionParams, $interface);
         }
     }
 }

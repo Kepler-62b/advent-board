@@ -2,7 +2,7 @@
 
 namespace Framework\Services\Database;
 
-trait SQLQueryBuilderTrait
+class SQLQueryBuilder implements QueryBuilderInterface
 {
     private array $inputKeywordStorage = [
         '%TABLE' => null,
@@ -16,13 +16,21 @@ trait SQLQueryBuilderTrait
 
     private array $outputKeywordStorage = [];
 
-    private string $selectSQL = "SELECT%RANGEFROM%TABLE%WHERE%ORDERBY%SORT%LIMIT%OFFSET";
+    private ?array $bindValueStorage = null;
+
+    private string $selectSQL = 'SELECT%RANGEFROM%TABLE%WHERE%ORDERBY%SORT%LIMIT%OFFSET';
 
     private function remove()
     {
         $this->selectSQL = strtr($this->selectSQL, $this->outputKeywordStorage);
     }
 
+    public function get(): ?array
+    {
+        return $this->bindValueStorage;
+    }
+
+    // @TODO подумать над названием
     public function build(): string
     {
         foreach ($this->inputKeywordStorage as $key => $value) {
@@ -30,6 +38,7 @@ trait SQLQueryBuilderTrait
                 $this->selectSQL = str_replace($key, '', $this->selectSQL);
             }
         }
+
         return $this->selectSQL;
     }
 
@@ -45,13 +54,15 @@ trait SQLQueryBuilderTrait
         return $this;
     }
 
-    /** @param array<string, strimg|int>|null $criteria */
-    public function whereA(array $criteria = null, bool $binding = null): self
+    /** @param array<string, string|int>|null $criteria */
+    public function where(array $criteria = null, bool $binding = null): self
     {
         if (isset($criteria)) {
             $whereKey = $criteria[0];
 
             if ($binding) {
+                $this->bindValueStorage[] = $criteria[1];
+
                 $operator = $criteria[2];
                 $this->outputKeywordStorage['%WHERE'] = " WHERE $whereKey $operator ?";
             } else {
@@ -73,7 +84,7 @@ trait SQLQueryBuilderTrait
 
         if (isset($orderBy)) {
             if ($binding) {
-                $this->outputKeywordStorage['%ORDERBY'] = " ORDER BY ?";
+                $this->outputKeywordStorage['%ORDERBY'] = ' ORDER BY ?';
             } else {
                 $this->outputKeywordStorage['%ORDERBY'] = " ORDER BY $orderBy";
             }
@@ -101,9 +112,8 @@ trait SQLQueryBuilderTrait
         $this->inputKeywordStorage['%LIMIT'] = $limit;
 
         if (isset($limit)) {
-
             if ($binding) {
-                $this->outputKeywordStorage['%LIMIT'] = " LIMIT ?";
+                $this->outputKeywordStorage['%LIMIT'] = ' LIMIT ?';
             } else {
                 $this->outputKeywordStorage['%LIMIT'] = " LIMIT $limit";
             }
@@ -119,9 +129,8 @@ trait SQLQueryBuilderTrait
         $this->inputKeywordStorage['%OFFSET'] = $offset;
 
         if (isset($offset)) {
-
             if ($binding) {
-                $this->outputKeywordStorage['%OFFSET'] = " OFFSET ?";
+                $this->outputKeywordStorage['%OFFSET'] = ' OFFSET ?';
             } else {
                 $this->outputKeywordStorage['%OFFSET'] = " OFFSET $offset";
             }

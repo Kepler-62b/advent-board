@@ -3,7 +3,9 @@
 namespace Framework\Services\Database;
 
 use Doctrine\Persistence\ObjectRepository;
+use Framework\Services\DependencyContainer;
 use Framework\Services\HydratorService;
+use Framework\Services\NoDBConnectionException;
 
 class AbstractRepository implements ObjectRepository
 {
@@ -18,8 +20,27 @@ class AbstractRepository implements ObjectRepository
 
     public function find($id): ?object
     {
-        $data = $this->storage->selectById($id);
-        var_dump($data);
+        try {
+            $this->storage->connect();
+        } catch (ConnectionException $exception) {
+            throw new NoDBConnectionException('No database connection');
+        }
+
+        if ($this->storage->getStorageName() === SQLStorage::class) {
+            [$data] = $this->storage->get($id);
+
+            /** @var RedisStorage $redis */
+            $redis = (new DependencyContainer())->get(RedisStorage::class);
+            try {
+                $redis->connect();
+                $redis->set($id, json_encode($data));
+            } catch (ConnectionException $exception) {
+                throw new NoDBConnectionException('No connect' .\Redis::class);
+            }
+        } else {
+            [$data] = $this->storage->get($id);
+            $data = json_decode($data, JSON_OBJECT_AS_ARRAY);
+        }
 
         $hydrator = new HydratorService();
         $model = $hydrator->hydrate(
@@ -41,30 +62,34 @@ class AbstractRepository implements ObjectRepository
 
     public function findAll(): array
     {
-        if(!$data = $this->storage->selectAll()) {
-            return [];
-        } else {
-            $hydrator = new HydratorService();
-            $modelsStorage = [];
-            foreach ($data as $model) {
-                $modelsStorage[] = $hydrator->hydrate(
-                    $this->entityClass,
-                    $model,
-                    [
-                        'id' => 'id',
-                        'item' => 'item',
-                        'description' => 'description',
-                        'price' => 'price',
-                        'image' => 'image',
-                        'created_date' => 'createdDate',
-                        'modified_date' => 'modifiedDate',
-                    ]
-                );
-            }
+        $this->storage->connect();
 
-            return $modelsStorage;
+        // @TODO пиходит null - что делать, чтобы foreach не работал с null
+        $data = $this->storage->get(0);
+        var_dump($data);
+
+        die;
+
+        $hydrator = new HydratorService();
+        $modelsStorage = [];
+        foreach ($data as $model) {
+            $modelsStorage[] = $hydrator->hydrate(
+                $this->entityClass,
+                $model,
+                [
+                    'id' => 'id',
+                    'item' => 'item',
+                    'description' => 'description',
+                    'price' => 'price',
+                    'image' => 'image',
+                    'created_date' => 'createdDate',
+                    'modified_date' => 'modifiedDate',
+                ]
+            );
         }
 
+
+        return $modelsStorage;
     }
 
     public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null): ?array

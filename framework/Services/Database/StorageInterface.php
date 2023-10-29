@@ -4,12 +4,10 @@ namespace Framework\Services\Database;
 
 interface StorageInterface
 {
-    public function selectById($id);
+    /** @throws ConnectionException */
+    public function connect(): void;
 
-    public function selectAll();
+    public function get(string $id): ?array;
 
-    public function selectBy(array|string $criteria = null, array|string $orderBy = null, int $limit = null, int $offset = null);
-
-    public function selectByOne(array $criteria);
-
+    public function getStorageName(): string;
 }
