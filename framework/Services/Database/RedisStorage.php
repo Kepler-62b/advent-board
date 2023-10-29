@@ -2,29 +2,33 @@
 
 namespace Framework\Services\Database;
 
+use Framework\Services\Database\RedisQueryBuilder;
+
 class RedisStorage implements StorageInterface
 {
     public function __construct(
         private DriverInterface $redisDriver,
-    ) {
+    )
+    {
     }
 
     public function connect(): void
     {
         try {
             $this->redisDriver->connect();
-        } catch (ConnectionException $connectionException) {
-            throw new ConnectionException('Connection error from RedisStorage'.$connectionException);
+        } catch (DriverException $exception) {
+            throw new ConnectionException('Connection error from RedisStorage' . $exception);
         }
     }
 
     public function get(string $id): ?array
     {
-        $sql = (new SQLQueryBuilder())
-            ->select('*', 'adverts')
-            ->whereA(['id', $id, '='], true);
 
-        return $this->redisDriver->get($sql);
+        $queryBuilder = (new RedisQueryBuilder());
+        $queryBuilder->set(0, $id);
+
+        return $this->redisDriver->get($queryBuilder);
+
 //        if (!$data = $this->redisDriver->get($id)) {
 //            return null;
 //        } else {
@@ -32,9 +36,18 @@ class RedisStorage implements StorageInterface
 //        }
     }
 
-    public function set(string $key, string $value): void
+    public function set(string $key, mixed $data): void
     {
-        $this->redisDriver->set($key, $value);
+
+        $queryBuilder = new RedisQueryBuilder();
+        $queryBuilder->set($key, $data);
+
+        $this->redisDriver->set($queryBuilder);
+    }
+
+    public function getStorageName(): string
+    {
+        return RedisStorage::class;
     }
 
     //
