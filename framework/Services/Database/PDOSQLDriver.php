@@ -2,16 +2,24 @@
 
 namespace Framework\Services\Database;
 
+
 final class PDOSQLDriver implements DriverInterface
 {
+
+//    use PDOSingletonTrait;
+
+    private ?\PDO $pdoS = null;
+
     private \PDO $pdo;
 
     public function __construct(
         private string $dsn,
         private string $user,
         private string $pass,
-    ) {
+    )
+    {
     }
+
 
     /**
      * @throws ConnectionException
@@ -20,22 +28,44 @@ final class PDOSQLDriver implements DriverInterface
     {
         try {
             $this->pdo = new \PDO($this->dsn, $this->user, $this->pass);
+            var_dump($this->pdo);
         } catch (\PDOException $exception) {
-            throw new ConnectionException('Connect error from PDOSQLDriver / PDOException /  '.$exception);
+            throw new ConnectionException('Connect error from PDOSQLDriver / PDOException /  ' . $exception);
         }
     }
 
-    // надстройка над pdo_stmt->execute
-    public function get(SQLQueryBuilder $queryBuilder): array
+    /**
+     * @throws ConnectionException
+     */
+
+    public function connect(): void
     {
-        $pdo = $this->pdo;
+        try {
 
-        $pdoStmt = $pdo->prepare($queryBuilder->build());
+            if(!isset($this->pdoS)) {
+                $this->pdoS = new \PDO($this->dsn, $this->user, $this->pass);
+            }
 
-        if (!empty($queryBuilder->bindValue)) {
-            for ($i = 1; $i <= count($queryBuilder->bindValue); ++$i) {
-                // подумать как задавать через массив параметов для связанного параметра константу типа - \PDO::PARAM_INT, \PDO::PARAM_STRING, etc
-                $pdoStmt->bindValue($i, $queryBuilder->bindValue[$i - 1], \PDO::PARAM_INT);
+        } catch (\PDOException $exception) {
+            throw new DriverException('PDOException /  ' . $exception);
+        }
+    }
+
+    public function get(QueryBuilderInterface $queryBuilder): array
+    {
+        $pdoStmt = $this->pdoS->prepare($queryBuilder->build());
+//        $pdoStmt = $this->pdo->prepare($queryBuilder->build());
+
+        $bindValue = $queryBuilder->get();
+
+        $typeMap = [
+            'integer' => \PDO::PARAM_INT,
+            'string' => \PDO::PARAM_STR,
+        ];
+
+        if ($bindValue) {
+            for ($i = 1; $i <= count($bindValue); ++$i) {
+                $pdoStmt->bindValue($i, $bindValue[$i - 1], $typeMap[gettype($bindValue[$i - 1])]);
             }
         }
 
@@ -46,6 +76,6 @@ final class PDOSQLDriver implements DriverInterface
 
     public function getDriverName(): string
     {
-        return \PDO::class;
+        return PDOSQLDriver::class;
     }
 }

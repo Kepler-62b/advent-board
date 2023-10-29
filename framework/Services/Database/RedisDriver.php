@@ -9,32 +9,38 @@ class RedisDriver implements DriverInterface
     public function __construct(
         private string $host,
         private string $port,
-    ) {
+    )
+    {
     }
 
     public function connect(): void
     {
         try {
             $this->redis = new \Redis();
+//            var_dump($this->redis);
             $this->redis->pconnect($this->host, $this->port);
         } catch (\RedisException $exception) {
-            throw new ConnectionException('Connection Error from RedisStorage / RedisException '.$exception);
+            throw new DriverException('RedisException / ' . $exception);
         }
     }
 
-    public function get(SQLQueryBuilder $queryBuilder): array
+    public function get(RedisQueryBuilder $queryBuilder): array
     {
-        $key = $queryBuilder->bindValue[0];
-        return [$this->redis->get($key)];
+        $key = $queryBuilder->get();
+        return [$this->redis->get(current($key))];
     }
 
-    public function set(string $key, string $value, array $options = null): void
+    public function set(RedisQueryBuilder $queryBuilder): void
     {
-        $this->redis->set($key, $value, $options);
+        $data = $queryBuilder->get();
+        $key = key($data);
+        $value = current($data);
+
+        $this->redis->set($key, $value);
     }
 
     public function getDriverName(): string
     {
-        return \Redis::class;
+        return RedisDriver::class;
     }
 }
