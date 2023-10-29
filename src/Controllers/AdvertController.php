@@ -6,6 +6,7 @@ use App\Models\Advert;
 use App\Models\ViewModels\AdvertView;
 use App\Repository\AdvertRepository;
 use Dev\Tests\Services\ActionParamsValidation;
+use Framework\Services\ActionParams;
 use Framework\Services\Helpers\LinkManager;
 use Framework\Services\HydratorService;
 use Framework\Services\NotFoundHttpException;
@@ -33,7 +34,7 @@ class AdvertController extends DefaultController
 
         $page = filter_input(INPUT_GET, 'page');
 
-        $adverts = $this->repository->find('1');
+        $adverts = $this->repository->findAll();
         var_dump($adverts);
         die;
 
@@ -62,14 +63,14 @@ class AdvertController extends DefaultController
      *
      * @throws NotFoundHttpException
      */
-    public function showById(int $id): Response
+    public function showById(ActionParams $actionParams): Response
     {
         // @TODO то не валидация - переделать класс
-        //        $id = (int)$actionParams->validateKey('id');
+        $id = (int)$actionParams->get('id');
 
         $advert = $this->repository->find($id) ?? throw new NotFoundHttpException('Not found item ID ', $id);
 
-        $view = (new AdvertView())->displayById(['data' => $advert]);
+        $view = (new AdvertView())->displayById(['data' => [$advert]]);
 
         return (new Response($view))->send();
     }

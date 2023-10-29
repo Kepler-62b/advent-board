@@ -3,7 +3,9 @@
 namespace Framework\Services\Database;
 
 use Doctrine\Persistence\ObjectRepository;
+use Framework\Services\DependencyContainer;
 use Framework\Services\HydratorService;
+use Framework\Services\NoDBConnectionException;
 
 class AbstractRepository implements ObjectRepository
 {
@@ -18,13 +20,27 @@ class AbstractRepository implements ObjectRepository
 
     public function find($id): ?object
     {
-        var_dump($this->storage->connect());
-        var_dump($this->storage->get('1'));
-//        var_dump($this->storage);
+        try {
+            $this->storage->connect();
+        } catch (ConnectionException $exception) {
+            throw new NoDBConnectionException('No database connection');
+        }
 
-//        [$data] = $this->storage->get($id);
-//        var_dump($data);
-        die;
+        if ($this->storage->getStorageName() === SQLStorage::class) {
+            [$data] = $this->storage->get($id);
+
+            /** @var RedisStorage $redis */
+            $redis = (new DependencyContainer())->get(RedisStorage::class);
+            try {
+                $redis->connect();
+                $redis->set($id, json_encode($data));
+            } catch (ConnectionException $exception) {
+                throw new NoDBConnectionException('No connect' .\Redis::class);
+            }
+        } else {
+            [$data] = $this->storage->get($id);
+            $data = json_decode($data, JSON_OBJECT_AS_ARRAY);
+        }
 
         $hydrator = new HydratorService();
         $model = $hydrator->hydrate(
@@ -46,8 +62,10 @@ class AbstractRepository implements ObjectRepository
 
     public function findAll(): array
     {
+        $this->storage->connect();
+
         // @TODO пиходит null - что делать, чтобы foreach не работал с null
-        $data = $this->storage->getAll();
+        $data = $this->storage->get(0);
         var_dump($data);
 
         die;
@@ -69,7 +87,6 @@ class AbstractRepository implements ObjectRepository
                 ]
             );
         }
-
 
 
         return $modelsStorage;
