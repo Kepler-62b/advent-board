@@ -17,18 +17,26 @@ class LoggerDriverDecorator implements DriverInterface
     public function connect(): void
     {
         $this->logger->pushHandler(new StreamHandler('/app/log/database_connect.log'));
-        $this->logger->info($this->getDriverName().' driver connect');
+        $this->logger->info($this->getDriverName().'  connect');
         try {
             $this->driver->connect();
-        } catch (ConnectionException $exception) {
+        } catch (DriverException $exception) {
             $this->logger->error($exception->getMessage(), ['exception' => $exception]);
-            throw new ConnectionException('PDOException / PDOSQLDriver connect error '.$exception);
+            throw new DriverException('LoggerDriverDecorator connect error '.$exception);
         }
     }
 
-    public function get(SQLQueryBuilder $sql): array
+    public function get(QueryBuilderInterface $queryBuilder): array
     {
-        return $this->driver->get($sql);
+        $this->logger->pushHandler(new StreamHandler('/app/log/database_get_data.log'));
+        $this->logger->info($this->getDriverName().'  get', ['data' => $queryBuilder->get()]);
+
+        return $this->driver->get($queryBuilder);
+    }
+
+    public function set(QueryBuilderInterface $queryBuilder): void
+    {
+        $this->driver->set($queryBuilder);
     }
 
     public function getDriverName(): string
