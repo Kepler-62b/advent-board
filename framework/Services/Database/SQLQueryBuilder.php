@@ -2,7 +2,7 @@
 
 namespace Framework\Services\Database;
 
-class SQLQueryBuilder
+class SQLQueryBuilder implements QueryBuilderInterface
 {
     private array $inputKeywordStorage = [
         '%TABLE' => null,
@@ -15,8 +15,8 @@ class SQLQueryBuilder
     ];
 
     private array $outputKeywordStorage = [];
-    public array $bindValue = [];
 
+    private ?array $bindValueStorage = null;
 
     private string $selectSQL = 'SELECT%RANGEFROM%TABLE%WHERE%ORDERBY%SORT%LIMIT%OFFSET';
 
@@ -25,6 +25,12 @@ class SQLQueryBuilder
         $this->selectSQL = strtr($this->selectSQL, $this->outputKeywordStorage);
     }
 
+    public function get(): ?array
+    {
+        return $this->bindValueStorage;
+    }
+
+    // @TODO подумать над названием
     public function build(): string
     {
         foreach ($this->inputKeywordStorage as $key => $value) {
@@ -49,13 +55,13 @@ class SQLQueryBuilder
     }
 
     /** @param array<string, string|int>|null $criteria */
-    public function whereA(array $criteria = null, bool $binding = null): self
+    public function where(array $criteria = null, bool $binding = null): self
     {
         if (isset($criteria)) {
             $whereKey = $criteria[0];
 
             if ($binding) {
-                $this->bindValue[] = $criteria[1];
+                $this->bindValueStorage[] = $criteria[1];
 
                 $operator = $criteria[2];
                 $this->outputKeywordStorage['%WHERE'] = " WHERE $whereKey $operator ?";
