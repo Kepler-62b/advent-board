@@ -19,6 +19,7 @@ class SwitchStorage implements StorageInterface
         foreach ($this->storages as $storage) {
             try {
 
+                /** @var SQLStorage|RedisStorage $storage */
                 $storage->connect();
 
                 $this->activeStorage = $storage;
@@ -28,7 +29,7 @@ class SwitchStorage implements StorageInterface
                 continue;
             }
         }
-        throw new ConnectionException('Connection error from SwitchStorage');
+        throw new ConnectionException('SwitchStorage: All database die');
     }
 
     public function get(string $id): ?array
@@ -38,5 +39,15 @@ class SwitchStorage implements StorageInterface
         } catch (ConnectionException) {
             return $this->get($id);
         }
+    }
+
+    public function set(string $key, mixed $data): void
+    {
+        $this->activeStorage->set($key, $data);
+    }
+
+    public function getStorageName(): string
+    {
+        return $this->activeStorage->getStorageName();
     }
 }

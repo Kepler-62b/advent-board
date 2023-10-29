@@ -44,7 +44,7 @@ class DatabaseConfigs
                 $configs[] = $mapParams['Password'];
                 break;
             case 'PostgreSQL':
-                $configs[] = strtr('Driver:host=Host;port=5432;dbname=Database', $mapParams);
+                $configs[] = strtr('Driver:host=Host;port=Port;dbname=Database', $mapParams);
                 $configs[] = $mapParams['User'];
                 $configs[] = $mapParams['Password'];
                 break;
