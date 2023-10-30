@@ -3,48 +3,69 @@
 namespace Tests\Unit;
 
 use App\Models\Image;
-use App\Repository\ImageRepository;
-use Dev\trash\MySQLAdvertsBoard;
+use Framework\Services\Database\DatabaseConfigs;
+use Framework\Services\Database\RedisDriver;
 use Framework\Services\DependencyContainer;
+use League\Container\Exception\NotFoundException;
 use PHPUnit\Framework\TestCase;
 
 class DependencyContainerTest extends TestCase
 {
+    private array $services;
     private DependencyContainer $container;
 
     protected function setUp(): void
     {
-        $this->container = new DependencyContainer();
+        $this->services = include "../../config/services.php";
+        $this->container = new DependencyContainer($this->services['container']);
     }
 
-    public static function toPositiveTesting(): array
+    public static function toGetInstance(): array
     {
         return [
-            'RepositoryInstance' => ['className' => Image::class, 'instanceExpected' => ImageRepository::class],
-            'PDOConnectionInstance' => ['className' => MySQLAdvertsBoard::class, 'instanceExpected' => MySQLAdvertsBoard::class],
+            'DatabaseConfigInstance' => ['className' => DatabaseConfigs::class, 'instanceExpected' => DatabaseConfigs::class],
+            'RedisDriverInstance' => ['className' => RedisDriver::class, 'instanceExpected' => RedisDriver::class],
         ];
     }
 
-    public static function toNegativeTesting(): array
+    public static function toExceptionFromContainer(): array
     {
         return [
-            'ClassNotContainsException' => ['className' => \StdClass::class, 'exceptionType' => \Exception::class],
+            'NotFoundException' => ['className' => \StdClass::class, 'exceptionType' => NotFoundException::class],
         ];
     }
 
-    /** @dataProvider toPositiveTesting */
-    public function testGetInstanceFromContainer(string $className, string $instanceExpected): void
+    public static function toEqualInstance(): array
+    {
+        return [
+            'ImageInstance' => ['firstInstance' => Image::class, 'secondInstance' => Image::class],
+        ];
+
+    }
+
+    /** @dataProvider toGetInstance */
+    public function testGetInstance(string $className, string $instanceExpected): void
     {
         $container = $this->container;
         $instanceContainer = $container->get($className);
         $this->assertInstanceOf($instanceExpected, $instanceContainer);
     }
 
-    /** @dataProvider toNegativeTesting */
+    /** @dataProvider toExceptionFromContainer */
     public function testExceptionFromContainer(string $className, string $exceptionType): void
     {
         $container = $this->container;
         $this->expectException($exceptionType);
         $container->get($className);
+    }
+
+    /** @dataProvider toEqualInstance */
+    public function testEqualInstance(string $firstInstance, string $secondInstance): void
+    {
+        $firstInstance = $this->container->get($firstInstance);
+        $firstInstance->setItemId(100);
+        $secondInstance = $this->container->get($secondInstance);
+
+        $this->assertEquals($firstInstance, $secondInstance);
     }
 }
