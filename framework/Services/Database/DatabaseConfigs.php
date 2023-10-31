@@ -6,7 +6,7 @@ class DatabaseConfigs
 {
     public function setConfig(string $driver): array
     {
-        $configMap = include 'config/databases.php';
+        $configMap = include __DIR__ . '/../../../config/databases.php';
 
         $mapParams = $configMap[$driver];
 
@@ -24,8 +24,8 @@ class DatabaseConfigs
                 $configs[] = $mapParams['Password'];
                 break;
             case 'Redis':
-                $configs[] = $mapParams['Host'];
-                $configs[] = $mapParams['Port'];
+                $configs['host'] = $mapParams['Host'];
+                $configs['port'] = (int)$mapParams['Port'];
                 break;
         }
 
