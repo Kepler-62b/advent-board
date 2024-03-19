@@ -5,9 +5,6 @@ namespace Framework\Services\Database;
 
 final class PDOSQLDriver implements DriverInterface
 {
-
-//    use PDOSingletonTrait;
-
     private ?\PDO $pdoS = null;
 
     private \PDO $pdo;
@@ -16,10 +13,8 @@ final class PDOSQLDriver implements DriverInterface
         private string $dsn,
         private string $user,
         private string $pass,
-    )
-    {
+    ) {
     }
-
 
     /**
      * @throws ConnectionException
@@ -34,27 +29,9 @@ final class PDOSQLDriver implements DriverInterface
         }
     }
 
-    /**
-     * @throws ConnectionException
-     */
-
-    public function connect(): void
-    {
-        try {
-
-            if(!isset($this->pdoS)) {
-                $this->pdoS = new \PDO($this->dsn, $this->user, $this->pass);
-            }
-
-        } catch (\PDOException $exception) {
-            throw new DriverException('PDOException /  ' . $exception);
-        }
-    }
-
     public function get(QueryBuilderInterface $queryBuilder): array
     {
         $pdoStmt = $this->pdoS->prepare($queryBuilder->build());
-//        $pdoStmt = $this->pdo->prepare($queryBuilder->build());
 
         $bindValue = $queryBuilder->get();
 
@@ -77,5 +54,19 @@ final class PDOSQLDriver implements DriverInterface
     public function getDriverName(): string
     {
         return PDOSQLDriver::class;
+    }
+
+    // метод с проверкой существования экземпляра класса \PDO
+    public function connectS(): void
+    {
+        try {
+
+            if(!isset($this->pdoS)) {
+                $this->pdoS = new \PDO($this->dsn, $this->user, $this->pass);
+            }
+
+        } catch (\PDOException $exception) {
+            throw new DriverException('PDOException /  ' . $exception);
+        }
     }
 }
